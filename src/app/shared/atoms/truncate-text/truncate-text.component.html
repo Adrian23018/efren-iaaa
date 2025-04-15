@@ -1,0 +1,4 @@
+<div class="truncated-container" [style.max-width.px]="maxWidth" pTooltip="{{ showTooltip ? text : '' }}"
+    tooltipPosition="top">
+    {{ text | slice:0:limit }}{{ text.length > limit ? '...' : '' }}
+</div>
