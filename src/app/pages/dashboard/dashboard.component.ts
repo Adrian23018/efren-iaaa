@@ -5,11 +5,22 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { ChartModule } from 'primeng/chart';
 import { DashboardService } from './dashboard.service';
-import { DashboardMetrics } from './dashboard.model';
+import { DashboardMetrics, DashboardUsers } from './dashboard.model';
+
+import { CardStatisticComponent } from '@shared/atoms/card-statistic/card-statistic.component';
+import { CardStatistic } from '@app/shared/atoms/card-statistic/card-statistic.model';
+import { MONTHS } from '@app/shared/constants';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, CardModule, ButtonModule, TableModule, ChartModule],
+  imports: [
+    CommonModule,
+    CardModule,
+    ButtonModule,
+    TableModule,
+    ChartModule,
+    CardStatisticComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -20,8 +31,43 @@ export class DashboardComponent {
 
   metrics!: DashboardMetrics;
 
-  constructor(private readonly dashboardService: DashboardService) {
+  statistics: CardStatistic[] = [
+    {
+      id: 'users',
+      title: 'Total Usuarios',
+      value: this.metrics?.users || '',
+      iconClass: 'pi pi-users',
+      iconBgClass: 'bg-primary',
+      loading: true,
+    },
+    {
+      id: 'companies',
+      title: 'Total Empresas',
+      value: this.metrics?.companies || '',
+      iconClass: 'pi pi-building',
+      iconBgClass: 'bg-green-500',
+      loading: true,
+    },
+    {
+      id: 'interactions',
+      title: 'Interacciones',
+      value: this.metrics?.interactions || '',
+      iconClass: 'pi pi-chart-line',
+      iconBgClass: 'bg-indigo-500',
+      loading: true,
+    },
+    {
+      id: 'monthlyIncome',
+      title: 'Ingresos Mensuales',
+      value: this.metrics?.monthlyIncome || '',
+      iconClass: 'pi pi-dollar',
+      iconBgClass: 'bg-orange-500',
+      loading: true,
+      prefixValue: '$',
+    },
+  ];
 
+  constructor(private readonly dashboardService: DashboardService) {
     this.alerts = [
       {
         id: 'AL-4491C',
@@ -59,65 +105,98 @@ export class DashboardComponent {
   ngOnInit() {
     this.loadMetrics();
     this.initChartData();
-    this.initChartOptions();
-
   }
 
   loadMetrics(): void {
     this.dashboardService.getMetrics().subscribe({
-      next: (data) => {
-        console.log("DATa", data);
-        
+      next: (data: DashboardMetrics) => {
         this.metrics = data;
+        this.statistics = this.statistics.map((stat) => {
+          const key = stat.id as keyof DashboardMetrics;
+          if (key in data) {
+            return {
+              ...stat,
+              value: data[key],
+              loading: false,
+            };
+          }
+          return stat;
+        });
       },
       error: (err) => {
-        console.log("Error", err);
-        
-        //this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las métricas' });
-      }
+        console.log('Error', err);
+      },
     });
   }
 
   initChartData() {
-    this.chartData = {
-      labels: ['Dic', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago'],
-      datasets: [
-        {
-          label: 'Usuarios',
-          data: [110, 145, 165, 180, 150, 220, 240, 260, 290],
-          fill: true,
-          backgroundColor: 'rgba(33, 100, 243, 0.1)',
-          borderColor: 'rgba(33, 100, 243, 1)',
-          tension: 0.4
-        }
-      ]
-    };
-  }
+    this.dashboardService.getUsers().subscribe({
+      next: (data: DashboardUsers[]) => {
+        const chartData = data.map((item) => ({
+          month: MONTHS[new Date(item.date).getMonth()],
+          totalUsers: item.totalUsers,
+        }));
 
-  initChartOptions() {
-    this.chartOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        }
+        this.chartData = {
+          labels: chartData.map((item) => item.month),
+          datasets: [
+            {
+              label: 'Usuarios',
+              data: chartData.map((item) => item.totalUsers),
+              fill: true,
+              backgroundColor: 'rgba(33, 100, 243, 0.1)',
+              borderColor: 'rgba(33, 100, 243, 1)',
+              tension: 0.4,
+            },
+          ],
+        };
+
+        const maxDataValue = Math.max(
+          ...chartData.map((item) => item.totalUsers)
+        );
+        const stepSize = Math.ceil(maxDataValue / 4);
+
+        this.chartOptions = {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                color: '#495057',
+              },
+            },
+          },
+          scales: {
+            x: {
+              grid: {
+                display: false,
+              },
+            },
+            y: {
+              beginAtZero: true,
+              min: 0,
+              max: maxDataValue,
+              ticks: {
+                stepSize: stepSize > 0 ? stepSize : 1,
+                color: '#495057',
+              },
+              title: {
+                display: true,
+                text: 'Usuarios',
+                color: '#495057',
+                font: {
+                  size: 14,
+                  weight: 'bold',
+                },
+              },
+            },
+          },
+        };
       },
-      scales: {
-        x: {
-          grid: {
-            display: false
-          }
-        },
-        y: {
-          beginAtZero: true,
-          min: 0,
-          max: 300,
-          ticks: {
-            stepSize: 75
-          }
-        }
-      }
-    };
+      error: (err) => {
+        console.log('Error', err);
+      },
+    });
   }
 }

@@ -2,67 +2,10 @@
     <h1 class="text-xl font-medium mb-4 text-gray-800">Dashboard</h1>
 
     <div class="grid">
-        <div class="col-12 md:col-6 lg:col-3">
-            <div class="bg-white p-3 border-round shadow-1">
-                <div class="flex justify-content-between align-items-center">
-                    <div>
-                        <span class="block text-sm text-gray-600 mb-2">Total Usuarios</span>
-                        <div class="text-xl font-medium" *ngIf="metrics?.users">{{ metrics.users }}</div>
-                        <!-- <div class="text-green-500 text-xs font-medium">+9.1%</div> -->
-                    </div>
-                    <div class="flex align-items-center justify-content-center w-3rem h-3rem border-round bg-primary">
-                        <i class="pi pi-users text-white text-xl"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 md:col-6 lg:col-3">
-            <div class="bg-white p-3 border-round shadow-1">
-                <div class="flex justify-content-between align-items-center">
-                    <div>
-                        <span class="block text-sm text-gray-600 mb-2">Total Empresas</span>
-                        <div class="text-xl font-medium" *ngIf="metrics?.companies">{{ metrics.companies }}</div>
-                        <!-- <div class="text-green-500 text-xs font-medium">+2.1%</div> -->
-                    </div>
-                    <div class="flex align-items-center justify-content-center w-3rem h-3rem border-round bg-green-500">
-                        <i class="pi pi-building text-white text-xl"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 md:col-6 lg:col-3">
-            <div class="bg-white p-3 border-round shadow-1">
-                <div class="flex justify-content-between align-items-center">
-                    <div>
-                        <span class="block text-sm text-gray-600 mb-2">Interacciones</span>
-                        <div class="text-xl font-medium" *ngIf="metrics?.interactions">{{ metrics.interactions }}</div>
-                        <!-- <div class="text-green-500 text-xs font-medium">+12.3%</div> -->
-                    </div>
-                    <div
-                        class="flex align-items-center justify-content-center w-3rem h-3rem border-round bg-indigo-500">
-                        <i class="pi pi-chart-line text-white text-xl"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 md:col-6 lg:col-3">
-            <div class="bg-white p-3 border-round shadow-1">
-                <div class="flex justify-content-between align-items-center">
-                    <div>
-                        <span class="block text-sm text-gray-600 mb-2">Ingresos Mensuales</span>
-                        <!-- <div class="text-xl font-medium">$ 15.000.000</div> -->
-                        <div class="text-xl font-medium" *ngIf="metrics?.monthlyIncome">{{ metrics.monthlyIncome }}</div>
-                        <!-- <div class="text-red-500 text-xs font-medium">-1%</div> -->
-                    </div>
-                    <div
-                        class="flex align-items-center justify-content-center w-3rem h-3rem border-round bg-orange-500">
-                        <i class="pi pi-dollar text-white text-xl"></i>
-                    </div>
-                </div>
-            </div>
+        <div class="col-12 md:col-6 lg:col-3" *ngFor="let statistic of statistics">
+            <app-card-statistic 
+                [data]="statistic">
+            </app-card-statistic>
         </div>
     </div>
 
@@ -72,7 +15,7 @@
                 <div class="p-3 border-bottom-1 border-gray-200">
                     <h2 class="text-base font-medium m-0">Usuarios mensuales</h2>
                 </div>
-                <div class="p-3" style="height: 300px">
+                <div class="p-3" style="width: 100%; height: 300px">
                     <p-chart type="line" [data]="chartData" [options]="chartOptions"></p-chart>
                 </div>
             </div>

@@ -1,0 +1,31 @@
+<div class="bg-white p-3 border-round shadow-1">
+    <div class="flex justify-content-between align-items-center">
+        <div>
+            <span class="block text-sm text-gray-600 mb-2">
+                <p-skeleton *ngIf="data.loading; else showTitle" width="100px" height="1rem" styleClass="mb-2"></p-skeleton>
+                <ng-template #showTitle>
+                    {{ data.title }}
+                </ng-template>
+            </span>
+            
+            <div class="text-xl font-medium" *ngIf="data.value; else loadingValue">
+                <span *ngIf="data.prefixValue">{{ data.prefixValue }}</span> {{ data.value | number:'1.0-2' }}
+            </div>
+            <ng-template #loadingValue>
+                <p-skeleton *ngIf="data.loading" width="150px" height="1.7rem" styleClass="mb-2"></p-skeleton>
+            </ng-template>
+            
+            <div *ngIf="data.percentage" [ngClass]="{'text-green-500': data.percentage > 0, 'text-red-500': data.percentage < 0}" class="text-xs font-medium">
+                {{ data.percentage > 0 ? '+' : '' }}{{ data.percentage }}%
+            </div>
+        </div>
+
+        <p-skeleton *ngIf="data.loading; else showIcon" width="3rem" height="3rem" styleClass="mb-2"></p-skeleton>
+        <ng-template #showIcon>
+            <div class="flex align-items-center justify-content-center w-3rem h-3rem border-round" [ngClass]="data.iconBgClass">
+                <i [class]="data.iconClass + ' text-white text-xl'"></i>
+            </div>
+        </ng-template>
+
+    </div>
+</div>

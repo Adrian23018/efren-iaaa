@@ -5,5 +5,6 @@ export const environment = {
     endpoints: {
         statistics: 'statistics',
         metrics: 'metrics',
+        users: 'users',
     }
 };
