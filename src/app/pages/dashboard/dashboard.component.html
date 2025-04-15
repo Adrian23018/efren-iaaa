@@ -7,8 +7,8 @@
                 <div class="flex justify-content-between align-items-center">
                     <div>
                         <span class="block text-sm text-gray-600 mb-2">Total Usuarios</span>
-                        <div class="text-xl font-medium">1,423</div>
-                        <div class="text-green-500 text-xs font-medium">+9.1%</div>
+                        <div class="text-xl font-medium" *ngIf="metrics?.users">{{ metrics.users }}</div>
+                        <!-- <div class="text-green-500 text-xs font-medium">+9.1%</div> -->
                     </div>
                     <div class="flex align-items-center justify-content-center w-3rem h-3rem border-round bg-primary">
                         <i class="pi pi-users text-white text-xl"></i>
@@ -22,8 +22,8 @@
                 <div class="flex justify-content-between align-items-center">
                     <div>
                         <span class="block text-sm text-gray-600 mb-2">Total Empresas</span>
-                        <div class="text-xl font-medium">37</div>
-                        <div class="text-green-500 text-xs font-medium">+2.1%</div>
+                        <div class="text-xl font-medium" *ngIf="metrics?.companies">{{ metrics.companies }}</div>
+                        <!-- <div class="text-green-500 text-xs font-medium">+2.1%</div> -->
                     </div>
                     <div class="flex align-items-center justify-content-center w-3rem h-3rem border-round bg-green-500">
                         <i class="pi pi-building text-white text-xl"></i>
@@ -37,8 +37,8 @@
                 <div class="flex justify-content-between align-items-center">
                     <div>
                         <span class="block text-sm text-gray-600 mb-2">Interacciones</span>
-                        <div class="text-xl font-medium">2,221</div>
-                        <div class="text-green-500 text-xs font-medium">+12.3%</div>
+                        <div class="text-xl font-medium" *ngIf="metrics?.interactions">{{ metrics.interactions }}</div>
+                        <!-- <div class="text-green-500 text-xs font-medium">+12.3%</div> -->
                     </div>
                     <div
                         class="flex align-items-center justify-content-center w-3rem h-3rem border-round bg-indigo-500">
@@ -53,8 +53,9 @@
                 <div class="flex justify-content-between align-items-center">
                     <div>
                         <span class="block text-sm text-gray-600 mb-2">Ingresos Mensuales</span>
-                        <div class="text-xl font-medium">$ 15.000.000</div>
-                        <div class="text-red-500 text-xs font-medium">-1%</div>
+                        <!-- <div class="text-xl font-medium">$ 15.000.000</div> -->
+                        <div class="text-xl font-medium" *ngIf="metrics?.monthlyIncome">{{ metrics.monthlyIncome }}</div>
+                        <!-- <div class="text-red-500 text-xs font-medium">-1%</div> -->
                     </div>
                     <div
                         class="flex align-items-center justify-content-center w-3rem h-3rem border-round bg-orange-500">
@@ -103,12 +104,12 @@
                 <p-table [value]="alerts" styleClass="p-datatable-sm" [tableStyle]="{'min-width': '50rem'}">
                     <ng-template pTemplate="header">
                         <tr>
-                            <th>ID</th>
-                            <th>Usuario</th>
-                            <th>Plan</th>
-                            <th>Tipo</th>
-                            <th>Prioridad</th>
-                            <th>Acción</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Plan</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Prioridad</th>
+                            <th scope="col">Acción</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-alert>

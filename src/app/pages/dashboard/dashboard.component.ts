@@ -4,6 +4,8 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { ChartModule } from 'primeng/chart';
+import { DashboardService } from './dashboard.service';
+import { DashboardMetrics } from './dashboard.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,7 +18,10 @@ export class DashboardComponent {
   chartOptions: any;
   alerts: any[] = [];
 
-  constructor() {
+  metrics!: DashboardMetrics;
+
+  constructor(private readonly dashboardService: DashboardService) {
+
     this.alerts = [
       {
         id: 'AL-4491C',
@@ -52,8 +57,25 @@ export class DashboardComponent {
   }
 
   ngOnInit() {
+    this.loadMetrics();
     this.initChartData();
     this.initChartOptions();
+
+  }
+
+  loadMetrics(): void {
+    this.dashboardService.getMetrics().subscribe({
+      next: (data) => {
+        console.log("DATa", data);
+        
+        this.metrics = data;
+      },
+      error: (err) => {
+        console.log("Error", err);
+        
+        //this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las métricas' });
+      }
+    });
   }
 
   initChartData() {

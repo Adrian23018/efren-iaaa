@@ -1,4 +1,8 @@
 export const environment = {
     production: true,
-    baseApiUrl: 'http://localhost:8080/api'
+    baseApiUrl: 'https://api.efrenmartinezortiz-ia.com/webhook',
+    endpoints: {
+        statistics: 'statistics',
+        metrics: 'metrics',
+    }
 };
