@@ -4,12 +4,18 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { ChartModule } from 'primeng/chart';
+import { DialogModule } from 'primeng/dialog';
 import { DashboardService } from './dashboard.service';
-import { DashboardMetrics, DashboardUsers } from './dashboard.model';
+import { DashboardIncomes, DashboardMetrics, DashboardUsers } from './dashboard.model';
 
-import { CardStatisticComponent } from '@shared/atoms/card-statistic/card-statistic.component';
+import { AtomCardStatisticComponent } from '@shared/atoms/card-statistic/card-statistic.component';
 import { CardStatistic } from '@app/shared/atoms/card-statistic/card-statistic.model';
 import { MONTHS } from '@app/shared/constants';
+import { ChartOptionsService } from '@app/shared/service/chart-options/chart-options.service';
+import { AtomTruncateTextComponent } from '@app/shared/atoms/truncate-text/truncate-text.component';
+import { Alert } from '@app/interfaces/alert.model';
+import { MoleculeAlertDetailDialogComponent } from '@app/shared/molecules/alert-detail-dialog/alert-detail-dialog.component';
+import { MoleculeChartSkeletonComponent } from '@app/shared/molecules/chart-skeleton/chart-skeleton.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,15 +25,24 @@ import { MONTHS } from '@app/shared/constants';
     ButtonModule,
     TableModule,
     ChartModule,
-    CardStatisticComponent,
+    DialogModule,
+    AtomCardStatisticComponent,
+    AtomTruncateTextComponent,
+    MoleculeAlertDetailDialogComponent,
+    MoleculeChartSkeletonComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-  chartData: any;
-  chartOptions: any;
-  alerts: any[] = [];
+  chartDataUsers: any;
+  chartOptionsUsers: any;
+  chartDataIncomes: any;
+  chartOptionsIncomes: any;
+  alerts: Alert[] = [];
+
+  displayModal: boolean = false;
+  selectedAlert!: Alert;
 
   metrics!: DashboardMetrics;
 
@@ -66,45 +81,19 @@ export class DashboardComponent {
       prefixValue: '$',
     },
   ];
+  loadingUsers: boolean = true;
+  loadingIncomes: boolean = true;
 
-  constructor(private readonly dashboardService: DashboardService) {
-    this.alerts = [
-      {
-        id: 'AL-4491C',
-        user: {
-          name: 'Daniel Padilla',
-          email: 'daniel@ejemplo.com',
-        },
-        plan: 'Plan Elite',
-        type: 'Inactividad',
-        priority: 'Alta',
-      },
-      {
-        id: 'AL-4492C',
-        user: {
-          name: 'María Rodríguez',
-          email: 'maria@ejemplo.com',
-        },
-        plan: 'Plan Básico',
-        type: 'Error de pago',
-        priority: 'Media',
-      },
-      {
-        id: 'AL-4493C',
-        user: {
-          name: 'Jorge Méndez',
-          email: 'jorge@ejemplo.com',
-        },
-        plan: 'Plan Pro',
-        type: 'Soporte',
-        priority: 'Baja',
-      },
-    ];
-  }
+  constructor(
+    private readonly dashboardService: DashboardService,
+    private readonly chartOptionsService: ChartOptionsService,
+  ) {}
 
   ngOnInit() {
     this.loadMetrics();
-    this.initChartData();
+    this.initChartDataUsers();
+    this.loadAlerts();
+    this.initChartDataIncomes();
   }
 
   loadMetrics(): void {
@@ -129,20 +118,20 @@ export class DashboardComponent {
     });
   }
 
-  initChartData() {
+  initChartDataUsers() {
     this.dashboardService.getUsers().subscribe({
       next: (data: DashboardUsers[]) => {
-        const chartData = data.map((item) => ({
+        const chartDataUsers = data.map((item) => ({
           month: MONTHS[new Date(item.date).getMonth()],
           totalUsers: item.totalUsers,
         }));
 
-        this.chartData = {
-          labels: chartData.map((item) => item.month),
+        this.chartDataUsers = {
+          labels: chartDataUsers.map((item) => item.month),
           datasets: [
             {
               label: 'Usuarios',
-              data: chartData.map((item) => item.totalUsers),
+              data: chartDataUsers.map((item) => item.totalUsers),
               fill: true,
               backgroundColor: 'rgba(33, 100, 243, 0.1)',
               borderColor: 'rgba(33, 100, 243, 1)',
@@ -152,51 +141,88 @@ export class DashboardComponent {
         };
 
         const maxDataValue = Math.max(
-          ...chartData.map((item) => item.totalUsers)
+          ...chartDataUsers.map((item) => item.totalUsers)
         );
         const stepSize = Math.ceil(maxDataValue / 4);
+        this.chartOptionsUsers = this.chartOptionsService.getLineChartOptions(maxDataValue, 'Usuarios', stepSize);
+        this.loadingUsers = false;
+      },
+      error: (err) => {
+        this.loadingUsers = false;
+        console.log('Error', err);
+      },
+    });
+  }
 
-        this.chartOptions = {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: true,
-              labels: {
-                color: '#495057',
-              },
-            },
-          },
-          scales: {
-            x: {
-              grid: {
-                display: false,
-              },
-            },
-            y: {
-              beginAtZero: true,
-              min: 0,
-              max: maxDataValue,
-              ticks: {
-                stepSize: stepSize > 0 ? stepSize : 1,
-                color: '#495057',
-              },
-              title: {
-                display: true,
-                text: 'Usuarios',
-                color: '#495057',
-                font: {
-                  size: 14,
-                  weight: 'bold',
-                },
-              },
-            },
-          },
-        };
+  loadAlerts(): void {
+    this.dashboardService.getAlerts().subscribe({
+      next: (data: Alert[]) => {
+        this.alerts = data;
       },
       error: (err) => {
         console.log('Error', err);
       },
     });
+  }
+
+  initChartDataIncomes() {
+    this.dashboardService.getIncomes().subscribe({
+      next: (data: DashboardIncomes[]) => {
+        const chartDataIncomes = data.map((item) => ({
+          month: MONTHS[new Date(item.date).getMonth()],
+          value: item.value,
+        }));
+
+        this.chartDataIncomes = {
+          labels: chartDataIncomes.map((item) => item.month),
+          datasets: [
+            {
+              label: 'Ingresos',
+              data: chartDataIncomes.map((item) => item.value),
+              fill: true,
+              backgroundColor: '#CFF1E6',
+              borderColor: '#10B981',
+              tension: 0.4,
+            },
+          ],
+        };
+
+        const maxDataValue = Math.max(
+          ...chartDataIncomes.map((item) => item.value)
+        );
+        const stepSize = Math.ceil(maxDataValue / 4);
+        this.chartOptionsIncomes = this.chartOptionsService.getLineChartOptions(maxDataValue, 'Ingresos', stepSize);
+        this.chartOptionsIncomes.plugins = {
+          ...this.chartOptionsIncomes.plugins,
+          tooltip: {
+            callbacks: {
+              label: (context: any) => {
+                const value = context.raw;
+                return `$${value.toLocaleString()}`;
+              },
+            },
+          },
+        };
+        this.chartOptionsIncomes.scales = {
+          ...this.chartOptionsIncomes.scales,
+          y: {
+            ...this.chartOptionsIncomes.scales?.y,
+            ticks: {
+              callback: (value: number) => `$${value.toLocaleString()}`,
+            },
+          },
+        };
+        this.loadingIncomes = false;
+      },
+      error: (err) => {
+        this.loadingIncomes = false;
+        console.log('Error', err);
+      },
+    });
+  }
+
+  showAlertDetails(alert: Alert): void {
+    this.selectedAlert = alert;
+    this.displayModal = true;
   }
 }

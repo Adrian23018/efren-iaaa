@@ -3,22 +3,26 @@
 
     <div class="grid">
         <div class="col-12 md:col-6 lg:col-3" *ngFor="let statistic of statistics">
-            <app-card-statistic 
-                [data]="statistic">
-            </app-card-statistic>
+            <atom-card-statistic [data]="statistic">
+            </atom-card-statistic>
         </div>
     </div>
 
     <div class="grid mt-4">
         <div class="col-12 lg:col-8">
-            <div class="bg-white border-round shadow-1">
-                <div class="p-3 border-bottom-1 border-gray-200">
-                    <h2 class="text-base font-medium m-0">Usuarios mensuales</h2>
-                </div>
-                <div class="p-3" style="width: 100%; height: 300px">
-                    <p-chart type="line" [data]="chartData" [options]="chartOptions"></p-chart>
-                </div>
+            <div *ngIf="loadingUsers; else loadedChart">
+                <molecule-chart-skeleton></molecule-chart-skeleton>
             </div>
+            <ng-template #loadedChart>
+                <div class="bg-white border-round shadow-1">
+                    <div class="p-3 border-bottom-1 border-gray-200">
+                        <h2 class="text-base font-medium m-0">Usuarios mensuales</h2>
+                    </div>
+                    <div class="p-3" style="width: 100%; height: 300px">
+                        <p-chart type="line" [data]="chartDataUsers" [options]="chartOptionsUsers"></p-chart>
+                    </div>
+                </div>
+            </ng-template>
         </div>
 
         <div class="col-12 lg:col-4">
@@ -51,33 +55,27 @@
                             <th scope="col">Usuario</th>
                             <th scope="col">Plan</th>
                             <th scope="col">Tipo</th>
-                            <th scope="col">Prioridad</th>
                             <th scope="col">Acción</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-alert>
                         <tr>
-                            <td>{{ alert.id }}</td>
+                            <td>{{ alert.alertId }}</td>
                             <td>
                                 <div class="flex flex-column">
-                                    <span class="font-medium">{{ alert.user.name }}</span>
-                                    <span class="text-xs text-gray-500">{{ alert.user.email }}</span>
+                                    <span class="font-medium">{{ alert.userName }}</span>
+                                    <span class="text-xs text-gray-500">{{ alert.userEmail }}</span>
                                 </div>
                             </td>
-                            <td>{{ alert.plan }}</td>
-                            <td>{{ alert.type }}</td>
+                            <td>{{ alert.planName }}</td>
                             <td>
-                                <span [ngClass]="{
-                    'bg-red-100 text-red-500': alert.priority === 'Alta',
-                    'bg-orange-100 text-orange-500': alert.priority === 'Media',
-                    'bg-blue-100 text-blue-500': alert.priority === 'Baja'
-                  }" class="py-1 px-2 text-xs font-medium border-round">
-                                    {{ alert.priority }}
-                                </span>
+                                <atom-truncate-text [text]="alert.alertType" [limit]="50"
+                                    [maxWidth]="250"></atom-truncate-text>
                             </td>
                             <td>
                                 <button pButton type="button" icon="pi pi-eye"
-                                    class="p-button-rounded p-button-text"></button>
+                                    class="p-button-rounded p-button-text"
+                                    (click)="showAlertDetails(alert)"></button>
                             </td>
                         </tr>
                     </ng-template>
@@ -122,4 +120,27 @@
             </div>
         </div>
     </div>
+
+    <div class="grid mt-4">
+        <div class="col-12 lg:col-12">
+            <div *ngIf="loadingIncomes; else loadedIncomes">
+                <molecule-chart-skeleton></molecule-chart-skeleton>
+            </div>
+            <ng-template #loadedIncomes>
+                <div class="bg-white border-round shadow-1">
+                    <div class="p-3 border-bottom-1 border-gray-200">
+                        <h2 class="text-base font-medium m-0">Ingresos mensuales</h2>
+                    </div>
+                    <div class="p-3" style="width: 100%; height: 300px">
+                        <p-chart type="line" [data]="chartDataIncomes" [options]="chartOptionsIncomes"></p-chart>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
 </div>
+
+<molecule-alert-detail-dialog 
+    [(visible)]="displayModal" 
+    [alert]="selectedAlert">
+</molecule-alert-detail-dialog>

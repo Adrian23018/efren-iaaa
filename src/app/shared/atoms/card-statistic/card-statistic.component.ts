@@ -4,7 +4,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { CardStatistic } from './card-statistic.model';
 
 @Component({
-  selector: 'app-card-statistic',
+  selector: 'atom-card-statistic',
   imports: [
     CommonModule,
     SkeletonModule
@@ -12,6 +12,6 @@ import { CardStatistic } from './card-statistic.model';
   templateUrl: './card-statistic.component.html',
   styleUrl: './card-statistic.component.scss'
 })
-export class CardStatisticComponent {
+export class AtomCardStatisticComponent {
   @Input() data!: CardStatistic;
 }

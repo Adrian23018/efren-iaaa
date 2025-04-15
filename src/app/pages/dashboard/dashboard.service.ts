@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '@environment';
-import { DashboardMetrics, DashboardUsers } from './dashboard.model';
+import { DashboardIncomes, DashboardMetrics, DashboardUsers } from './dashboard.model';
+import { Alert } from '@app/interfaces/alert.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,5 +20,13 @@ export class DashboardService {
 
   getUsers(): Observable<DashboardUsers[]> {
     return this.http.get<DashboardUsers[]>(`${this.apiDasboardUrl}/${environment.endpoints.users}`);
+  }
+
+  getAlerts(): Observable<Alert[]> {
+    return this.http.get<Alert[]>(`${this.apiDasboardUrl}/${environment.endpoints.alerts}`);
+  }
+
+  getIncomes(): Observable<DashboardIncomes[]> {
+    return this.http.get<DashboardIncomes[]>(`${this.apiDasboardUrl}/${environment.endpoints.incomes}`);
   }
 }
