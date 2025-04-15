@@ -16,7 +16,10 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     providePrimeNG({
       theme: {
-          preset: Aura
+        preset: Aura,
+        options: {
+          darkModeSelector: false,
+        }
       }
     }),
     provideHttpClient(),

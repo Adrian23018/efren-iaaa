@@ -1,82 +1,56 @@
-<header class="flex align-items-center justify-content-between px-4 py-2 bg-white border-bottom-1 border-gray-200 h-4rem">
+<header
+    class="flex align-items-center justify-content-between px-4 py-2 bg-white border-bottom-1 border-gray-200 h-4rem">
     <div class="flex align-items-center">
-      <span class="p-input-icon-left">
-        <i class="pi pi-search"></i>
-        <input type="text" pInputText placeholder="Buscar..." class="w-18rem" />
-      </span>
+        <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input type="text" pInputText placeholder="Buscar..." class="w-18rem" />
+        </span>
     </div>
     <div class="flex align-items-center">
-      <div class="mr-3 relative">
-        <button 
-          pButton 
-          type="button" 
-          class="p-button-text p-button-rounded"
-          (click)="op.toggle($event)">
-          <i class="pi pi-bell"></i>
-          <span class="absolute w-1rem h-1rem flex justify-content-center align-items-center bg-red-500 text-white border-circle text-xs" style="top: -5px; right: -5px;">1</span>
-        </button>
-        <p-overlayPanel #op>
-          <div class="w-20rem p-3">
-            <h3 class="text-base font-medium m-0 mb-2">Notificaciones</h3>
-            <div class="p-2 hover:bg-gray-100 border-round">
-              <div class="flex">
-                <i class="pi pi-exclamation-circle text-primary mr-2 text-xl"></i>
-                <div class="flex flex-column">
-                  <span class="font-medium mb-1">Nuevas alertas</span>
-                  <span class="text-sm text-gray-600">Hay 5 usuarios Pro sin actividad por más de 3 días.</span>
+        <div>
+            <button pButton type="button" class="p-button-text flex align-items-center"
+                (click)="userMenu.toggle($event)">
+                <p-avatar label="A" styleClass="mr-2" size="normal"></p-avatar>
+                <div class="flex flex-column align-items-start mr-2">
+                    <span class="text-sm font-medium">Admin</span>
+                    <span class="text-xs text-gray-500">Super Admin</span>
                 </div>
-              </div>
-            </div>
-            <div class="flex justify-content-end mt-3">
-              <button pButton type="button" label="Ver todas"></button>
-            </div>
-          </div>
-        </p-overlayPanel>
-      </div>
-      
-      <div>
-        <button 
-          pButton 
-          type="button" 
-          class="p-button-text flex align-items-center"
-          (click)="userMenu.toggle($event)">
-          <p-avatar label="A" styleClass="mr-2" size="normal"></p-avatar>
-          <div class="flex flex-column align-items-start mr-2">
-            <span class="text-sm font-medium">Admin</span>
-            <span class="text-xs text-gray-500">Super Admin</span>
-          </div>
-          <i class="pi pi-angle-down"></i>
-        </button>
-        <p-overlayPanel #userMenu>
-          <div class="w-15rem">
-            <div class="flex align-items-center p-3 border-bottom-1 border-gray-200">
-              <p-avatar label="A" styleClass="mr-2"></p-avatar>
-              <div class="flex flex-column">
-                <span class="font-medium">Admin</span>
-                <span class="text-xs text-gray-500">adminexample.com</span>
-              </div>
-            </div>
-            <div>
-              <a class="flex align-items-center p-3 text-gray-700 no-underline cursor-pointer hover:bg-gray-100">
-                <i class="pi pi-user mr-2"></i>
-                <span>Mi cuenta</span>
-              </a>
-              <a class="flex align-items-center p-3 text-gray-700 no-underline cursor-pointer hover:bg-gray-100">
-                <i class="pi pi-id-card mr-2"></i>
-                <span>Perfil</span>
-              </a>
-              <a class="flex align-items-center p-3 text-gray-700 no-underline cursor-pointer hover:bg-gray-100">
-                <i class="pi pi-cog mr-2"></i>
-                <span>Ajustes</span>
-              </a>
-              <div class="border-top-1 border-gray-200 mt-1"></div>
-              <a class="flex align-items-center p-3 text-gray-700 no-underline cursor-pointer hover:bg-gray-100">
-                <i class="pi pi-sign-out mr-2"></i>
-                <span>Cerrar sesión</span>
-              </a>
-            </div>
-          </div>
-        </p-overlayPanel>
-      </div>
+                <i class="pi pi-angle-down"></i>
+            </button>
+            <p-overlayPanel #userMenu>
+                <div class="w-15rem">
+                    <div class="flex align-items-center p-3 border-bottom-1 border-gray-200">
+                        <p-avatar label="A" styleClass="mr-2"></p-avatar>
+                        <div class="flex flex-column">
+                            <span class="font-medium">Admin</span>
+                            <span class="text-xs text-gray-500">adminexample.com</span>
+                        </div>
+                    </div>
+                    <div>
+                        <a
+                            class="flex align-items-center p-3 text-gray-700 no-underline cursor-pointer hover:bg-gray-100">
+                            <i class="pi pi-user mr-2"></i>
+                            <span>Mi cuenta</span>
+                        </a>
+                        <a
+                            class="flex align-items-center p-3 text-gray-700 no-underline cursor-pointer hover:bg-gray-100">
+                            <i class="pi pi-id-card mr-2"></i>
+                            <span>Perfil</span>
+                        </a>
+                        <a
+                            class="flex align-items-center p-3 text-gray-700 no-underline cursor-pointer hover:bg-gray-100">
+                            <i class="pi pi-cog mr-2"></i>
+                            <span>Ajustes</span>
+                        </a>
+                        <div class="border-top-1 border-gray-200 mt-1"></div>
+                        <a
+                            class="flex align-items-center p-3 text-gray-700 no-underline cursor-pointer hover:bg-gray-100">
+                            <i class="pi pi-sign-out mr-2"></i>
+                            <span>Cerrar sesión</span>
+                        </a>
+                    </div>
+                </div>
+            </p-overlayPanel>
+        </div>
     </div>
 </header>

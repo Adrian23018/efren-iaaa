@@ -1,1 +1,181 @@
-<p>dashboard works!</p>
+<div class="p-3">
+    <h1 class="text-xl font-medium mb-4 text-gray-800">Dashboard</h1>
+
+    <div class="grid">
+        <div class="col-12 md:col-6 lg:col-3">
+            <div class="bg-white p-3 border-round shadow-1">
+                <div class="flex justify-content-between align-items-center">
+                    <div>
+                        <span class="block text-sm text-gray-600 mb-2">Total Usuarios</span>
+                        <div class="text-xl font-medium">1,423</div>
+                        <div class="text-green-500 text-xs font-medium">+9.1%</div>
+                    </div>
+                    <div class="flex align-items-center justify-content-center w-3rem h-3rem border-round bg-primary">
+                        <i class="pi pi-users text-white text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 md:col-6 lg:col-3">
+            <div class="bg-white p-3 border-round shadow-1">
+                <div class="flex justify-content-between align-items-center">
+                    <div>
+                        <span class="block text-sm text-gray-600 mb-2">Total Empresas</span>
+                        <div class="text-xl font-medium">37</div>
+                        <div class="text-green-500 text-xs font-medium">+2.1%</div>
+                    </div>
+                    <div class="flex align-items-center justify-content-center w-3rem h-3rem border-round bg-green-500">
+                        <i class="pi pi-building text-white text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 md:col-6 lg:col-3">
+            <div class="bg-white p-3 border-round shadow-1">
+                <div class="flex justify-content-between align-items-center">
+                    <div>
+                        <span class="block text-sm text-gray-600 mb-2">Interacciones</span>
+                        <div class="text-xl font-medium">2,221</div>
+                        <div class="text-green-500 text-xs font-medium">+12.3%</div>
+                    </div>
+                    <div
+                        class="flex align-items-center justify-content-center w-3rem h-3rem border-round bg-indigo-500">
+                        <i class="pi pi-chart-line text-white text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 md:col-6 lg:col-3">
+            <div class="bg-white p-3 border-round shadow-1">
+                <div class="flex justify-content-between align-items-center">
+                    <div>
+                        <span class="block text-sm text-gray-600 mb-2">Ingresos Mensuales</span>
+                        <div class="text-xl font-medium">$ 15.000.000</div>
+                        <div class="text-red-500 text-xs font-medium">-1%</div>
+                    </div>
+                    <div
+                        class="flex align-items-center justify-content-center w-3rem h-3rem border-round bg-orange-500">
+                        <i class="pi pi-dollar text-white text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid mt-4">
+        <div class="col-12 lg:col-8">
+            <div class="bg-white border-round shadow-1">
+                <div class="p-3 border-bottom-1 border-gray-200">
+                    <h2 class="text-base font-medium m-0">Usuarios mensuales</h2>
+                </div>
+                <div class="p-3" style="height: 300px">
+                    <p-chart type="line" [data]="chartData" [options]="chartOptions"></p-chart>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 lg:col-4">
+            <div class="bg-primary border-round shadow-1 h-full">
+                <div class="p-3 flex align-items-center">
+                    <i class="pi pi-bell mr-2 text-white"></i>
+                    <h2 class="text-base font-medium m-0 text-white">Nuevas alertas</h2>
+                </div>
+                <div class="p-3 flex flex-column justify-content-between flex-1">
+                    <p class="text-white mb-3">Hay 5 usuarios Pro sin actividad por más de 3 días.</p>
+                    <button pButton type="button" label="Ver alertas"
+                        class="p-button-sm p-button-outlined p-button-light"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid mt-4">
+        <div class="col-12 lg:col-8">
+            <div class="bg-white border-round shadow-1">
+                <div class="p-3 border-bottom-1 border-gray-200 flex justify-content-between align-items-center">
+                    <h2 class="text-base font-medium m-0">Alertas recientes</h2>
+                    <button pButton type="button" label="Ver todas" icon="pi pi-angle-right"
+                        class="p-button-text p-button-sm"></button>
+                </div>
+                <p-table [value]="alerts" styleClass="p-datatable-sm" [tableStyle]="{'min-width': '50rem'}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Plan</th>
+                            <th>Tipo</th>
+                            <th>Prioridad</th>
+                            <th>Acción</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-alert>
+                        <tr>
+                            <td>{{ alert.id }}</td>
+                            <td>
+                                <div class="flex flex-column">
+                                    <span class="font-medium">{{ alert.user.name }}</span>
+                                    <span class="text-xs text-gray-500">{{ alert.user.email }}</span>
+                                </div>
+                            </td>
+                            <td>{{ alert.plan }}</td>
+                            <td>{{ alert.type }}</td>
+                            <td>
+                                <span [ngClass]="{
+                    'bg-red-100 text-red-500': alert.priority === 'Alta',
+                    'bg-orange-100 text-orange-500': alert.priority === 'Media',
+                    'bg-blue-100 text-blue-500': alert.priority === 'Baja'
+                  }" class="py-1 px-2 text-xs font-medium border-round">
+                                    {{ alert.priority }}
+                                </span>
+                            </td>
+                            <td>
+                                <button pButton type="button" icon="pi pi-eye"
+                                    class="p-button-rounded p-button-text"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+
+        <div class="col-12 lg:col-4">
+            <div class="bg-white border-round shadow-1">
+                <div class="p-3 border-bottom-1 border-gray-200">
+                    <h2 class="text-base font-medium m-0">Actividades recientes</h2>
+                </div>
+                <div class="p-0">
+                    <div class="p-3 border-bottom-1 border-gray-200">
+                        <div class="flex">
+                            <div
+                                class="flex align-items-center justify-content-center w-2rem h-2rem border-circle bg-primary-100 text-primary mr-3">
+                                <i class="pi pi-comments"></i>
+                            </div>
+                            <div class="flex flex-column">
+                                <span class="font-medium mb-1">Nuevo mensaje de ayuda</span>
+                                <span class="text-sm text-gray-600 mb-1">Usuario solicitó ayuda con su
+                                    suscripción</span>
+                                <span class="text-xs text-gray-500">Justo ahora</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-3 border-bottom-1 border-gray-200">
+                        <div class="flex">
+                            <div
+                                class="flex align-items-center justify-content-center w-2rem h-2rem border-circle bg-primary-100 text-primary mr-3">
+                                <i class="pi pi-exclamation-circle"></i>
+                            </div>
+                            <div class="flex flex-column">
+                                <span class="font-medium mb-1">Alerta de usuario inactivo</span>
+                                <span class="text-sm text-gray-600 mb-1">Usuario no ha iniciado sesión en 30 días</span>
+                                <span class="text-xs text-gray-500">Hace 2 horas</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
