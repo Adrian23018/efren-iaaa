@@ -24,3 +24,16 @@ body {
 .card{
     padding: 0.5rem;
 }
+
+:root {
+    --p-primary-50: var(--p-blue-50) !important;
+    --p-primary-100: var(--p-blue-100) !important;
+    --p-primary-200: var(--p-blue-200) !important;
+    --p-primary-300: var(--p-blue-300) !important;
+    --p-primary-400: var(--p-blue-400) !important;
+    --p-primary-500: var(--p-blue-500) !important;
+    --p-primary-600: var(--p-blue-600) !important;
+    --p-primary-700: var(--p-blue-700) !important;
+    --p-primary-800: var(--p-blue-800) !important;
+    --p-primary-900: var(--p-blue-900) !important;
+}
