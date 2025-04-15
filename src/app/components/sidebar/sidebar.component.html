@@ -1,34 +1,22 @@
 <div class="w-14rem h-full bg-white border-right-1 border-gray-200 flex flex-column">
     <div class="flex align-items-center p-3 border-bottom-1 border-gray-200">
-      <div class="flex align-items-center justify-content-center w-2rem h-2rem bg-primary border-round mr-2">
-        <span class="text-white font-bold">E</span>
-      </div>
-      <span class="text-lg font-medium">Efrén IA</span>
+        <div class="flex align-items-center justify-content-center w-2rem h-2rem bg-primary border-round mr-2">
+            <span class="text-white font-bold">E</span>
+        </div>
+        <span class="text-lg font-medium">Efrén IA</span>
     </div>
-    
+
     <div class="flex-1 overflow-y-auto">
-      <ul class="list-none p-0 m-0">
-        @for (item of menuItems; track item.label) {
-          <li [class.bg-primary-50]="item.selected">
-            <a [routerLink]="item.routerLink" 
-               routerLinkActive="text-primary bg-primary-50"
-               class="flex align-items-center no-underline p-3 text-gray-700 cursor-pointer transition-colors transition-duration-150 hover:bg-gray-100">
-              <i [class]="'pi ' + item.icon + ' mr-3 text-xl'"></i>
-              <span>{{ item.label }}</span>
-            </a>
-          </li>
-        }
-      </ul>
-    </div>
-    
-    <div class="border-top-1 border-gray-200">
-      <a class="flex align-items-center p-3 text-gray-700 no-underline cursor-pointer transition-colors transition-duration-150 hover:bg-gray-100">
-        <i class="pi pi-question-circle mr-3 text-xl"></i>
-        <span>Ayuda</span>
-      </a>
-      <a class="flex align-items-center p-3 text-gray-700 no-underline cursor-pointer transition-colors transition-duration-150 hover:bg-gray-100">
-        <i class="pi pi-sign-out mr-3 text-xl"></i>
-        <span>Cerrar sesión</span>
-      </a>
+        <ul class="list-none p-0 m-0">
+            @for (item of menuItems; track item.label) {
+            <li [class.bg-primary-50]="item.selected">
+                <a [routerLink]="item.routerLink" routerLinkActive="text-primary bg-primary-50"
+                    class="flex align-items-center no-underline p-3 text-gray-700 cursor-pointer transition-colors transition-duration-150 hover:bg-gray-100">
+                    <i [class]="'pi ' + item.icon + ' mr-3 text-xl'"></i>
+                    <span>{{ item.label }}</span>
+                </a>
+            </li>
+            }
+        </ul>
     </div>
 </div>
