@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '@environment';
-import { DashboardMetrics } from './dashboard.model';
+import { DashboardMetrics, DashboardUsers } from './dashboard.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,5 +15,9 @@ export class DashboardService {
 
   getMetrics(): Observable<DashboardMetrics> {
     return this.http.get<DashboardMetrics>(`${this.apiDasboardUrl}/${environment.endpoints.metrics}`);
+  }
+
+  getUsers(): Observable<DashboardUsers[]> {
+    return this.http.get<DashboardUsers[]>(`${this.apiDasboardUrl}/${environment.endpoints.users}`);
   }
 }
