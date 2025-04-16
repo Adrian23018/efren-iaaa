@@ -10,5 +10,6 @@ export const environment = {
         incomes: 'incomes',
         general: 'general',
         purcharses: 'purcharses',
+        earlies: 'earlies',
     }
 };

@@ -32,3 +32,25 @@ export interface PurchaseData {
     elitePurchases: number;
     eliteCancellations: number;
 }
+
+export interface AlertsMetrics {
+    activeAlerts: number;
+    affectedUsers: number;
+    valueAtRisk: number;
+}
+    
+export interface EarlyAlerts {
+    alertType: string;
+    quantity: number;
+    description: string;
+    affectedUsers: string[];
+    action: string;
+}
+
+export interface TypeButtonAlert {
+    contact?: string;
+    verify?: string;
+    notify?: string;
+    remind?: string;
+    toSurvey?: string;
+}

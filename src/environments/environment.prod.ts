@@ -7,6 +7,8 @@ export const environment = {
         users: 'users',
         alerts: 'alerts',
         incomes: 'incomes',
-
+        general: 'general',
+        purcharses: 'purcharses',
+        earlies: 'earlies',
     }
 };
