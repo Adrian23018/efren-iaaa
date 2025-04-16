@@ -9,6 +9,7 @@ import {
   EarlyAlerts,
   GeneralMetrics,
   PurchaseData,
+  UserMetric,
 } from '@app/interfaces/metrics.model';
 
 @Injectable({
@@ -52,6 +53,12 @@ export class MetricsService {
   getEarliesAlerts(): Observable<EarlyAlerts[]> {
     return this.http.get<EarlyAlerts[]>(
       `${this.apiDasboardUrl}/${environment.endpoints.metrics}/${environment.endpoints.earlies}/${environment.endpoints.alerts}`
+    );
+  }
+
+  getMetricsUsers(): Observable<UserMetric[]> {
+    return this.http.get<UserMetric[]>(
+      `${this.apiDasboardUrl}/${environment.endpoints.metricsUsersDetail}`
     );
   }
 }

@@ -54,3 +54,26 @@ export interface TypeButtonAlert {
     remind?: string;
     toSurvey?: string;
 }
+
+export interface UserMetric {
+    name: string;
+    email?: string;
+    phone: string;
+    plan: string;
+    startDate: string;
+    weeklyInteractions: number;
+    monthlyInteractions: number;
+    status: string;
+}
+
+export interface Stats {
+    label: string; 
+    value: string;
+}
+export interface PlanStats {
+    name: string;
+    activeUsers: number;
+    percentage: number;
+    color: string;
+    stats: Stats[];
+}
