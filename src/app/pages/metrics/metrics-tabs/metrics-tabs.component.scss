@@ -1,0 +1,19 @@
+.metrics-tabs {
+    overflow: hidden;
+}
+
+.tab-item {
+    border-bottom: 2px solid transparent;
+    font-weight: 500;
+    color: #6c757d;
+}
+
+.tab-item:hover {
+    background-color: #f8f9fa;
+}
+
+.active-tab {
+    border-bottom-color: #2164f3;
+    color: #2164f3;
+    background-color: #f5f7ff;
+}

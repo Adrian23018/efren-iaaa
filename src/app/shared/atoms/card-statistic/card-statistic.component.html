@@ -9,14 +9,16 @@
             </span>
             
             <div class="text-xl font-medium" *ngIf="data.value; else loadingValue">
-                <span *ngIf="data.prefixValue">{{ data.prefixValue }}</span> {{ data.value | number:'1.0-2' }}
+                <span *ngIf="data.prefixValue">{{ data.prefixValue }}</span> 
+                {{ data.value | number:'1.0-2' }}
+                <span *ngIf="data.sufixValue">{{ data.sufixValue }}</span> 
             </div>
             <ng-template #loadingValue>
                 <p-skeleton *ngIf="data.loading" width="150px" height="1.7rem" styleClass="mb-2"></p-skeleton>
             </ng-template>
             
             <div *ngIf="data.percentage" [ngClass]="{'text-green-500': data.percentage > 0, 'text-red-500': data.percentage < 0}" class="text-xs font-medium">
-                {{ data.percentage > 0 ? '+' : '' }}{{ data.percentage }}%
+                {{ data.percentage > 0 ? '+' : '' }}{{ data.percentage }}% <span *ngIf="data.sufixPercentage">{{ data.sufixPercentage }}</span> 
             </div>
         </div>
 

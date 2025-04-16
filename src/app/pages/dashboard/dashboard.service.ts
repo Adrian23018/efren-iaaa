@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '@environment';
-import { DashboardIncomes, DashboardMetrics, DashboardUsers } from './dashboard.model';
+import { DashboardIncomes, DashboardUsers } from './dashboard.model';
 import { Alert } from '@app/interfaces/alert.model';
+import { DashboardMetrics } from '@app/interfaces/metrics.model';
 
 @Injectable({
   providedIn: 'root'
