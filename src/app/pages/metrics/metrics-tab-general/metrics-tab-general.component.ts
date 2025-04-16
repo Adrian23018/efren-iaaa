@@ -1,108 +1,108 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CardModule } from 'primeng/card';
-import { ButtonModule } from 'primeng/button';
-import { TableModule } from 'primeng/table';
-import { ChartModule } from 'primeng/chart';
-import { DialogModule } from 'primeng/dialog';
-import { DashboardService } from './dashboard.service';
-import { DashboardIncomes, DashboardUsers } from './dashboard.model';
-
-import { AtomCardStatisticComponent } from '@shared/atoms/card-statistic/card-statistic.component';
+import { Component } from '@angular/core';
+import { AtomCardStatisticComponent } from '@app/shared/atoms/card-statistic/card-statistic.component';
 import { CardStatistic } from '@app/shared/atoms/card-statistic/card-statistic.model';
-import { MONTHS } from '@app/shared/constants';
+import { MetricsService } from '../metrics.service';
+import { ChartMetrics, GeneralMetrics, PurchaseData } from '@app/interfaces/metrics.model';
 import { ChartOptionsService } from '@app/shared/service/chart-options/chart-options.service';
-import { AtomTruncateTextComponent } from '@app/shared/atoms/truncate-text/truncate-text.component';
-import { Alert } from '@app/interfaces/alert.model';
-import { MoleculeAlertDetailDialogComponent } from '@app/shared/molecules/alert-detail-dialog/alert-detail-dialog.component';
+import { MONTHS } from '@app/shared/constants';
+import { ChartModule } from 'primeng/chart';
 import { MoleculeChartSkeletonComponent } from '@app/shared/molecules/chart-skeleton/chart-skeleton.component';
-import { DashboardMetrics } from '@app/interfaces/metrics.model';
+import { TableModule } from 'primeng/table';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-metrics-tab-general',
   imports: [
     CommonModule,
-    CardModule,
-    ButtonModule,
-    TableModule,
     ChartModule,
-    DialogModule,
+    TableModule,
     AtomCardStatisticComponent,
-    AtomTruncateTextComponent,
-    MoleculeAlertDetailDialogComponent,
     MoleculeChartSkeletonComponent,
   ],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss',
+  templateUrl: './metrics-tab-general.component.html',
+  styleUrl: './metrics-tab-general.component.scss'
 })
-export class DashboardComponent {
+export class MetricsTabGeneralComponent {
   chartDataUsers: any;
   chartOptionsUsers: any;
   chartDataIncomes: any;
   chartOptionsIncomes: any;
-  alerts: Alert[] = [];
 
-  displayModal: boolean = false;
-  selectedAlert!: Alert;
+  loadingUsers: boolean = true;
+  loadingIncomes: boolean = true;
 
-  metrics!: DashboardMetrics;
+  purchaseData: PurchaseData[] = [];
 
   statistics: CardStatistic[] = [
     {
-      id: 'users',
+      id: 'totalUsers',
       title: 'Total Usuarios',
-      value: this.metrics?.users || '',
+      value: '',
       iconClass: 'pi pi-users',
       iconBgClass: 'bg-primary',
       loading: true,
+      percentage: 8.2
     },
     {
-      id: 'companies',
-      title: 'Total Empresas',
-      value: this.metrics?.companies || '',
-      iconClass: 'pi pi-building',
-      iconBgClass: 'bg-green-500',
-      loading: true,
-    },
-    {
-      id: 'interactions',
-      title: 'Interacciones',
-      value: this.metrics?.interactions || '',
+      id: 'totalInteractions',
+      title: 'Interacciones Totales',
+      value: '',
       iconClass: 'pi pi-chart-line',
       iconBgClass: 'bg-indigo-500',
       loading: true,
+      percentage: 12.5
     },
     {
-      id: 'monthlyIncome',
+      id: 'demoToPlan',
+      title: 'Conversiones DEMO a Plan',
+      value: '',
+      iconClass: 'pi pi-user-plus',
+      iconBgClass: 'bg-green-500',
+      loading: true,
+      sufixValue: '%',
+      percentage: 5.7
+    },
+    {
+      id: 'monthlyRevenue',
       title: 'Ingresos Mensuales',
-      value: this.metrics?.monthlyIncome || '',
+      value: '',
       iconClass: 'pi pi-dollar',
       iconBgClass: 'bg-orange-500',
       loading: true,
       prefixValue: '$',
+      percentage: 15.3,
+      // sufixPercentage: 'este mes',
     },
   ];
-  loadingUsers: boolean = true;
-  loadingIncomes: boolean = true;
 
   constructor(
-    private readonly dashboardService: DashboardService,
+    private readonly metricsService: MetricsService,
     private readonly chartOptionsService: ChartOptionsService,
   ) {}
 
   ngOnInit() {
-    this.loadMetrics();
+    this.loadGeneralMetrics();
     this.initChartDataUsers();
-    this.loadAlerts();
     this.initChartDataIncomes();
+    this.getPurcharses();
   }
 
-  loadMetrics(): void {
-    this.dashboardService.getMetrics().subscribe({
-      next: (data: DashboardMetrics) => {
-        this.metrics = data;
+  getPurcharses(): void {
+    this.metricsService.getPurcharses().subscribe({
+      next: (data: PurchaseData[]) => {
+        this.purchaseData = data;
+      },
+      error: (err) => {
+        console.log('Error', err);
+      },
+    });
+  }
+
+  loadGeneralMetrics(): void {
+    this.metricsService.getGeneralMetrics().subscribe({
+      next: (data: GeneralMetrics) => {
         this.statistics = this.statistics.map((stat) => {
-          const key = stat.id as keyof DashboardMetrics;
+          const key = stat.id as keyof GeneralMetrics;
           if (key in data) {
             return {
               ...stat,
@@ -120,11 +120,11 @@ export class DashboardComponent {
   }
 
   initChartDataUsers() {
-    this.dashboardService.getUsers().subscribe({
-      next: (data: DashboardUsers[]) => {
+    this.metricsService.getGeneralUsers().subscribe({
+      next: (data: ChartMetrics[]) => {
         const chartDataUsers = data.map((item) => ({
           month: MONTHS[new Date(item.date).getMonth()],
-          totalUsers: item.totalUsers,
+          value: item.value,
         }));
 
         this.chartDataUsers = {
@@ -132,7 +132,7 @@ export class DashboardComponent {
           datasets: [
             {
               label: 'Usuarios',
-              data: chartDataUsers.map((item) => item.totalUsers),
+              data: chartDataUsers.map((item) => item.value),
               fill: true,
               backgroundColor: 'rgba(33, 100, 243, 0.1)',
               borderColor: 'rgba(33, 100, 243, 1)',
@@ -142,7 +142,7 @@ export class DashboardComponent {
         };
 
         const maxDataValue = Math.max(
-          ...chartDataUsers.map((item) => item.totalUsers)
+          ...chartDataUsers.map((item) => item.value)
         );
         const stepSize = Math.ceil(maxDataValue / 4);
         this.chartOptionsUsers = this.chartOptionsService.getLineChartOptions(maxDataValue, 'Usuarios', stepSize);
@@ -155,20 +155,9 @@ export class DashboardComponent {
     });
   }
 
-  loadAlerts(): void {
-    this.dashboardService.getAlerts().subscribe({
-      next: (data: Alert[]) => {
-        this.alerts = data;
-      },
-      error: (err) => {
-        console.log('Error', err);
-      },
-    });
-  }
-
   initChartDataIncomes() {
-    this.dashboardService.getIncomes().subscribe({
-      next: (data: DashboardIncomes[]) => {
+    this.metricsService.getIncomes().subscribe({
+      next: (data: ChartMetrics[]) => {
         const chartDataIncomes = data.map((item) => ({
           month: MONTHS[new Date(item.date).getMonth()],
           value: item.value,
@@ -192,7 +181,7 @@ export class DashboardComponent {
           ...chartDataIncomes.map((item) => item.value)
         );
         const stepSize = Math.ceil(maxDataValue / 4);
-        this.chartOptionsIncomes = this.chartOptionsService.getLineChartOptions(maxDataValue, 'Ingresos', stepSize);
+        this.chartOptionsIncomes = this.chartOptionsService.getLineChartOptions(maxDataValue, 'Ingresos USD', stepSize);
         this.chartOptionsIncomes.plugins = {
           ...this.chartOptionsIncomes.plugins,
           tooltip: {
@@ -220,10 +209,5 @@ export class DashboardComponent {
         console.log('Error', err);
       },
     });
-  }
-
-  showAlertDetails(alert: Alert): void {
-    this.selectedAlert = alert;
-    this.displayModal = true;
   }
 }

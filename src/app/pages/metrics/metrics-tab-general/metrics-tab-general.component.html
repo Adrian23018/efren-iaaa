@@ -1,0 +1,72 @@
+<div class="grid">
+    <div class="col-12 md:col-6 lg:col-3" *ngFor="let statistic of statistics">
+        <atom-card-statistic [data]="statistic">
+        </atom-card-statistic>
+    </div>
+</div>
+
+<div class="grid mt-4">
+    <div class="col-12 lg:col-6">
+        <div *ngIf="loadingUsers; else loadedChart">
+            <molecule-chart-skeleton></molecule-chart-skeleton>
+        </div>
+        <ng-template #loadedChart>
+            <div class="bg-white border-round shadow-1">
+                <div class="p-3 border-bottom-1 border-gray-200">
+                    <h2 class="text-base font-medium m-0">Usuarios mensuales</h2>
+                </div>
+                <div class="p-3" style="width: 100%; height: 300px">
+                    <p-chart type="line" [data]="chartDataUsers" [options]="chartOptionsUsers"></p-chart>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+
+    <div class="col-12 lg:col-6">
+        <div *ngIf="loadingIncomes; else loadedIncomes">
+            <molecule-chart-skeleton></molecule-chart-skeleton>
+        </div>
+        <ng-template #loadedIncomes>
+            <div class="bg-white border-round shadow-1">
+                <div class="p-3 border-bottom-1 border-gray-200">
+                    <h2 class="text-base font-medium m-0">Ingresos mensuales</h2>
+                </div>
+                <div class="p-3" style="width: 100%; height: 300px">
+                    <p-chart type="line" [data]="chartDataIncomes" [options]="chartOptionsIncomes"></p-chart>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+<div class="grid mt-4">
+    <div class="col-12 lg:col-12">
+        <div class="bg-white border-round shadow-1">
+            <div class="p-3 border-bottom-1 border-gray-200">
+                <h2 class="text-base font-medium m-0">Compras y cancelaciones por período</h2>
+            </div>
+            <div class="p-3">
+                <p-table [value]="purchaseData" styleClass="p-datatable-sm">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th scope="col">Período</th>
+                        <th scope="col">Compras Plan Pro</th>
+                        <th scope="col">Cancelaciones Plan Pro</th>
+                        <th scope="col">Compras Plan Élite</th>
+                        <th scope="col">Cancelaciones Plan Élite</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-data>
+                      <tr>
+                        <td>{{ data.period }}</td>
+                        <td class="text-green-500 font-medium">{{ data.proPurchases }}</td>
+                        <td class="text-red-500 font-medium">{{ data.proCancellations }}</td>
+                        <td class="text-green-500 font-medium">{{ data.elitePurchases }}</td>
+                        <td class="text-red-500 font-medium">{{ data.eliteCancellations }}</td>
+                      </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>
