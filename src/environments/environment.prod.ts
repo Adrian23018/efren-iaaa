@@ -5,5 +5,8 @@ export const environment = {
         statistics: 'statistics',
         metrics: 'metrics',
         users: 'users',
+        alerts: 'alerts',
+        incomes: 'incomes',
+
     }
 };

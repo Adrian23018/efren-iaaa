@@ -1,0 +1,42 @@
+<p-dialog [(visible)]="visible" [style]="{width: '500px'}" [modal]="true" [draggable]="false" [resizable]="false"
+    header="Detalles de Alerta" (onHide)="closeDialog()">
+    <div *ngIf="alert" class="p-3">
+        <div class="flex align-items-center mb-4">
+            <div
+                class="flex align-items-center justify-content-center mr-3 w-3rem h-3rem bg-primary-100 text-primary border-circle">
+                <i class="pi pi-exclamation-circle text-xl"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-medium mt-0 mb-1">Alerta #{{ alert.alertId }}</h3>
+                <p class="text-sm text-gray-600 m-0" *ngIf="alert.createdAt">
+                    Creada: {{ alert.createdAt | date:'fullDate':'es' }}
+                </p>
+            </div>
+        </div>
+
+        <div class="mb-4 pb-3 border-bottom-1 border-gray-200">
+            <div class="grid">
+                <div class="col-4 text-gray-600 font-medium">Usuario:</div>
+                <div class="col-8">{{ alert.userName }}</div>
+            </div>
+            <div class="grid mt-2">
+                <div class="col-4 text-gray-600 font-medium">Email:</div>
+                <div class="col-8">{{ alert.userEmail }}</div>
+            </div>
+            <div class="grid mt-2">
+                <div class="col-4 text-gray-600 font-medium">Plan:</div>
+                <div class="col-8">{{ alert.planName }}</div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <div class="text-gray-800 font-medium mb-2">Mensaje:</div>
+            <p class="m-0 line-height-3">{{ alert.alertType }}</p>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-end">
+            <button pButton icon="pi pi-check" label="Aceptar" (click)="closeDialog()"></button>
+        </div>
+    </ng-template>
+</p-dialog>
