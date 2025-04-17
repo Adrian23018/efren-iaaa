@@ -11,5 +11,6 @@ export const environment = {
         general: 'general',
         purcharses: 'purcharses',
         earlies: 'earlies',
+        metricsUsersDetail: 'metrics/users/detail',
     }
 };

@@ -10,6 +10,7 @@ import { MetricsFilterComponent } from './metrics-filter/metrics-filter.componen
 import { MetricsTabsComponent } from './metrics-tabs/metrics-tabs.component';
 import { MetricsTabGeneralComponent } from './metrics-tab-general/metrics-tab-general.component';
 import { MetricsTabAlertsComponent } from './metrics-tab-alerts/metrics-tab-alerts.component';
+import { MetricsTabUsersComponent } from './metrics-tab-users/metrics-tab-users.component';
 
 @Component({
   selector: 'app-metrics',
@@ -23,6 +24,7 @@ import { MetricsTabAlertsComponent } from './metrics-tab-alerts/metrics-tab-aler
     MetricsTabsComponent,
     MetricsTabGeneralComponent,
     MetricsTabAlertsComponent,
+    MetricsTabUsersComponent,
   ],
   templateUrl: './metrics.component.html',
   styleUrl: './metrics.component.scss'
