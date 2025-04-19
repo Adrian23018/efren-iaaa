@@ -1,1 +1,251 @@
-<p>companies works!</p>
+<!-- Sección principal -->
+<div class="px-2 py-1">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-1 p-1">
+        <!-- Título y descripción -->
+        <div class="col-6">
+            <h1 class="text-2xl font-bold text-gray-900 mb-1 mt-1
+          ">Empresas
+          </h1>
+            <p class="text-sm text-gray-500 mb-1 mt-1">Gestiona las empresas registradas en la plataforma</p>
+        </div>
+        <div class="col-6 filters">
+            <button pButton type="button" icon="pi pi-filter" label="Filtros"
+                class="p-button-outlined p-button-sm flex-shrink-0"></button>
+        </div>
+    </div>
+
+    <!-- Card contenedor -->
+    <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-5 table_border">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-3">
+            <!-- Título y subtítulo -->
+            <div class="col-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-1 mt-1">Empresas registradas</h2>
+                <p class="text-sm text-gray-500 mb-1 mt-1">Listado de todas las empresas en la plataforma</p>
+            </div>
+
+            <!-- Buscador -->
+            <div class="col-6 filters">
+                <span class="p-input-icon-left w-full md:w-80">
+                    <i class="pi pi-search text-gray-500 i_search"></i>
+                    <input pInputText type="text" placeholder=" Buscar por nombre de usuario..."
+                        (input)="onGlobalFilter($event)" class=" p-inputtext-sm search" />
+                </span>
+            </div>
+
+        </div>
+
+        <!-- {{myCompanies.isLoading()}} -->
+
+        <p-skeleton *ngIf="myCompanies.isLoading()" height="3rem" class="mb-3"></p-skeleton>
+
+        <!-- Skeleton tabla -->
+        <div *ngIf="myCompanies.isLoading()" class="border-1 border-300 border-round p-3">
+            <div *ngFor="let row of [1,2,3,4,5]"
+                class="flex justify-content-between align-items-center py-2 border-bottom-1 border-gray-200">
+                <p-skeleton width="3rem"></p-skeleton> <!-- ID -->
+                <p-skeleton width="10rem"></p-skeleton> <!-- Usuario -->
+                <p-skeleton width="6rem"></p-skeleton> <!-- Empresa -->
+                <p-skeleton width="6rem"></p-skeleton> <!-- Plan -->
+                <p-skeleton width="4rem"></p-skeleton> <!-- Uso -->
+                <p-skeleton width="5rem"></p-skeleton> <!-- Estado -->
+                <p-skeleton width="7rem"></p-skeleton> <!-- Registro -->
+                <p-skeleton shape="circle" size="1.5rem"></p-skeleton> <!-- Acciones -->
+            </div>
+        </div>
+
+        <!-- Tabla estilizada -->
+        <!-- Tabla estilizada -->
+        <p-table *ngIf="!myCompanies.isLoading()" #dt [value]="(myCompanies.data$ | async) || []" [paginator]="false"
+            [rows]="5" responsiveLayout="scroll"
+            [globalFilterFields]="['user_name', 'user_email', 'company_name', 'plan_name', 'status']" class="text-sm">
+
+            <!-- Encabezado -->
+            <ng-template pTemplate="header">
+                <tr class="text-gray-500 text-sm border-b">
+                    <th class="text-center tr_color">ID</th>
+                    <th class="text-center tr_color">Foto</th>
+                    <th class="text-center tr_color">Nit</th>
+                    <th class="text-center tr_color">Empresa</th>
+                    <th class="text-center tr_color">Plan</th>
+                    <th class="text-center tr_color">Usuarios permitidos</th>
+                    <th class="text-center tr_color">Usuarios en uso</th>
+                    <th class="text-center tr_color">Estado</th>
+                    <th class="text-center tr_color">Registro</th>
+                    <th class="text-right tr_color">Acciones</th>
+                </tr>
+            </ng-template>
+
+            <!-- Cuerpo -->
+            <ng-template pTemplate="body" let-company>
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="text-center">{{ company.id }}</td>
+                    <td class="text-center">
+                        <div class="flex flex-column align-items-center gap-1">
+                            <img *ngIf="company.profile_pic" [src]="company.profile_pic" alt="avatar"
+                                class="rounded-full shadow-1 border-1 border-300 img_avatar" width="40" height="40" />
+                            <div class="font-semibold text-gray-900 capitalize">{{ company.user_name }}</div>
+                            <div class="text-xs text-gray-500">{{ company.user_email }}</div>
+                        </div>
+                    </td>
+                    <td class="text-center">{{ company.nit }} </td>
+                    <td class="text-center">{{ company.name || 'B2C' }}</td>
+                    <td class="text-center">
+                        <span class="text-xs font-semibold px-2 py-1 rounded-full table_border" [ngClass]="{
+                            'bg-purple-100 text-purple-700': company.plan_name === 'Plan Elite',
+                            'bg-blue-100 text-blue-700': company.plan_name === 'Plan Pro',
+                            'bg-gray-200 text-gray-700': company.plan_name === 'Plan Demo'
+                            }">
+                            {{ company.plan_name }}
+                        </span>
+                    </td>
+                    <td class="text-center">{{ company.num_users }} </td>
+                    <td class="text-center">{{ company.total_users }} </td>
+                    <td class="text-center">
+                        <span class="text-xs font-semibold px-2 py-1 rounded-full table_border" [ngClass]="{
+                                'bg-green-100 text-green-700': company.status,
+                                'bg-red-100 text-red-700': !company.status
+                                }">
+                            {{ company.status ? 'Activo' : 'Inactivo' }}
+                        </span>
+                    </td>
+                    <td class="text-center">{{ company.created_at | date: 'yyyy-MM-dd' }}</td>
+                    <td class="text-right">
+                        <div class="relative" (clickOutside)="closeModal(company)">
+                            <!-- Botón de acciones -->
+                            <button (click)="toggleMenu(company)" pButton icon="pi pi-ellipsis-v"
+                                class="p-button-text p-button-sm text-500 hover:text-900"></button>
+
+                            <!-- Menú de acciones -->
+                            <div *ngIf="company.showMenu"
+                                class="absolute z-5 right-0 mt-2 w-44 bg-white border-1 border-300 border-round shadow-3 p-2">
+                                <p class="text-xs font-semibold text-900 px-2 mb-2">Acciones</p>
+
+                                <div class="p-2 cursor-pointer hover:bg-gray-100 border-round flex align-items-center gap-2 text-sm"
+                                    (click)="openUserDetail(company)">
+                                    <i class="pi pi-eye text-600"></i>
+                                    <span class="text-sm">Ver detalles</span>
+                                </div>
+
+                                <div class="p-2 cursor-pointer hover:bg-gray-100 border-round flex align-items-center gap-2 text-sm"
+                                    (click)="viewFiles(company)">
+                                    <i class="pi pi-clone text-600"></i>
+                                    <span class="text-sm">Expedientes</span>
+                                </div>
+
+                                <div class="border-top-1 my-2 border-gray-200"></div>
+
+                                <div class="p-2 cursor-pointer hover:bg-red-50 border-round flex align-items-center gap-2 text-sm"
+                                    (click)="enabledUser(company)">
+                                    <i class="pi pi-exclamation-triangle text-red-500"></i>
+                                    <span class="text-red-600 font-medium">Desactivar</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rowsPerPage"
+            [totalRecords]="totalUsuarios" [rowsPerPageOptions]="[5, 10, 20, 30]" />
+
+    </div>
+</div>
+
+
+<p-dialog [(visible)]="displayModal" [modal]="true" [closable]="true" [dismissableMask]="true"
+    [style]="{ width: '420px' }" header="Detalles de la compañía" 
+    [contentStyle]="{ 'padding-bottom': '1.5rem' }">
+
+    <!-- Subtítulo -->
+    <p class="text-sm text-color-secondary">Información completa de la empresa</p>
+
+    <!-- Avatar y nombre de la empresa -->
+    <div class="flex flex-column align-items-center mb-4">
+        <img *ngIf="company?.profile_pic" [src]="company?.profile_pic" alt="logo"
+            class="rounded shadow-2 border-1 border-300 mb-3" width="64" height="64" />
+
+        <h3 class="text-lg font-bold text-800 mb-2">
+            {{ company?.name }}
+        </h3>
+
+        <!-- Estado y plan -->
+        <div class="flex justify-content-center flex-wrap gap-2">
+            <span class="text-xs font-medium px-2 py-1 border-round" [ngClass]="{
+              'bg-green-100 text-green-800': company?.active === true,
+              'bg-red-100 text-red-800': company?.active === false
+            }">
+                {{ company?.active ? 'Activa' : 'Inactiva' }}
+            </span>
+
+            <span class="text-xs font-medium px-2 py-1 border-round" [ngClass]="{
+              'bg-purple-100 text-purple-700': company?.plan_name === 'Plan Elite',
+              'bg-blue-100 text-blue-700': company?.plan_name === 'Plan Pro',
+              'bg-gray-200 text-gray-700': company?.plan_name === 'Plan Demo'
+            }">
+                {{ company?.plan_name?.replace('Plan ', '') }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Información general -->
+    <div class="flex flex-column gap-3 text-sm text-800 px-1">
+
+        <div class="flex align-items-start gap-2">
+            <i class="pi pi-envelope mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">Email de contacto</p>
+                <p class="m-0 text-700">{{ company?.contact_email }}</p>
+            </div>
+        </div>
+
+        <div class="flex align-items-start gap-2">
+            <i class="pi pi-id-card mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">NIT</p>
+                <p class="m-0 text-700">{{ company?.nit }}</p>
+            </div>
+        </div>
+
+        <div class="flex align-items-start gap-2">
+            <i class="pi pi-calendar-plus mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">Fecha de inicio</p>
+                <p class="m-0 text-700">{{ company?.start_date | date: 'yyyy-MM-dd' }}</p>
+            </div>
+        </div>
+
+        <div class="flex align-items-start gap-2">
+            <i class="pi pi-calendar-minus mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">Fecha de finalización</p>
+                <p class="m-0 text-700">{{ company?.end_date | date: 'yyyy-MM-dd' }}</p>
+            </div>
+        </div>
+
+        <div class="flex align-items-start gap-2">
+            <i class="pi pi-users mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">Usuarios actuales</p>
+                <p class="m-0 text-700">{{ company?.total_users }}</p>
+            </div>
+        </div>
+
+        <div class="flex align-items-start gap-2">
+            <i class="pi pi-chart-line mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">Cupo contratado</p>
+                <p class="m-0 text-700">{{ company?.num_users }}</p>
+            </div>
+        </div>
+
+        <div *ngIf="company?.description" class="flex align-items-start gap-2">
+            <i class="pi pi-align-left mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">Descripción</p>
+                <p class="m-0 text-700">{{ company?.description }}</p>
+            </div>
+        </div>
+
+    </div>
+</p-dialog>

@@ -7,6 +7,6 @@ export const environment = {
         users: 'users',
         alerts: 'alerts',
         incomes: 'incomes',
-
+        companies: 'companies'
     }
 };
