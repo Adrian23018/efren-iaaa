@@ -1,1 +1,18 @@
-<p>metrics works!</p>
+<div class="flex justify-content-between align-items-center mb-3">
+    <h1 class="text-xl font-medium m-0">{{ title }}</h1>
+    <button 
+      pButton 
+      icon="pi pi-download" 
+      label="Exportar Datos" 
+      class="p-button-outlined"
+      (click)="onExport()">
+    </button>
+</div>
+
+<app-metrics-filter (periodChange)="onPeriodChange($event)"></app-metrics-filter>
+
+<app-metrics-tabs (tabChange)="onTabChange($event)"></app-metrics-tabs>
+
+<app-metrics-tab-general *ngIf="activeTab === 'general'"></app-metrics-tab-general>
+<app-metrics-tab-alerts *ngIf="activeTab === 'alerts'"></app-metrics-tab-alerts>
+<app-metrics-tab-users *ngIf="activeTab === 'users'"></app-metrics-tab-users>

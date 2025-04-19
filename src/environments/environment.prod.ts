@@ -7,6 +7,10 @@ export const environment = {
         users: 'users',
         alerts: 'alerts',
         incomes: 'incomes',
-        companies: 'companies'
+        companies: 'companies',
+        general: 'general',
+        purcharses: 'purcharses',
+        earlies: 'earlies',
+        metricsUsersDetail: 'metrics/users/detail',
     }
 };
