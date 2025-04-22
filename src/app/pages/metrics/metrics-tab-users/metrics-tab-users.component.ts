@@ -9,6 +9,7 @@ import { MetricsService } from '../metrics.service';
 import { ChartModule } from 'primeng/chart';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
+import { ColorUtil } from '@app/shared/utils/colorUtil';
 
 @Component({
   selector: 'app-metrics-tab-users',
@@ -36,50 +37,25 @@ export class MetricsTabUsersComponent {
 
   ngOnInit() {
     this.getMetricsUsers();
-
-    this.plans = [
-      {
-        name: 'Plan Pro',
-        activeUsers: 345,
-        percentage: 60,
-        color: '#2196F3',
-        stats: [
-          { label: 'Promedio de uso', value: '45 mensajes/semana' },
-          { label: 'Tasa de retención', value: '87%' },
-          { label: 'Tasa de renovación', value: '72%' }
-        ]
-      },
-      {
-        name: 'Plan Élite',
-        activeUsers: 178,
-        percentage: 31,
-        color: '#4CAF50',
-        stats: [
-          { label: 'Promedio de uso', value: '95 mensajes/semana' },
-          { label: 'Tasa de retención', value: '92%' },
-          { label: 'Tasa de renovación', value: '85%' }
-        ]
-      },
-      {
-        name: 'DEMO',
-        activeUsers: 52,
-        percentage: 9,
-        color: '#FF9800',
-        stats: [
-          { label: 'Tasa de conversión a pago', value: '42%' },
-          { label: 'Tiempo promedio en demo', value: '6 días' },
-          { label: 'Plan más seleccionado', value: 'Pro (68%)' }
-        ]
-      }
-    ];
-
-    this.initChart();
+    this.getMetricsPlans();
   }
 
   getMetricsUsers(): void {
     this.metricsService.getMetricsUsers().subscribe({
       next: (data: UserMetric[]) => {
         this.users = data;
+      },
+      error: (err) => {
+        console.log('Error', err);
+      },
+    });
+  }
+
+  getMetricsPlans(): void {
+    this.metricsService.getMetricsPlans().subscribe({
+      next: (data: PlanStats[]) => {
+        this.plans = data;
+        this.initChart();
       },
       error: (err) => {
         console.log('Error', err);
@@ -110,7 +86,7 @@ export class MetricsTabUsersComponent {
         {
           data: data,
           backgroundColor: backgroundColors,
-          hoverBackgroundColor: backgroundColors.map(color => this.adjustBrightness(color, -10))
+          hoverBackgroundColor: backgroundColors.map(color => ColorUtil.adjustBrightness(color, -10))
         }
       ]
     };
@@ -137,8 +113,5 @@ export class MetricsTabUsersComponent {
       maintainAspectRatio: false
     };
   }
-
-  adjustBrightness(color: string, amount: number): string {
-    return color;
-  }
+  
 }

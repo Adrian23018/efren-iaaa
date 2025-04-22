@@ -2,7 +2,12 @@
     <h1 class="text-xl font-medium mb-4 text-gray-800">Dashboard</h1>
 
     <div class="grid">
-        <div class="col-12 md:col-6 lg:col-3" *ngFor="let statistic of statistics">
+        <div class="col-12 md:col-6 lg:col-4" *ngFor="let statistic of statistics">
+            <atom-card-statistic [data]="statistic">
+            </atom-card-statistic>
+        </div>
+
+        <div class="mt-2 col-12 md:col-6 lg:col-3" *ngFor="let statistic of statisticsUsers">
             <atom-card-statistic [data]="statistic">
             </atom-card-statistic>
         </div>
@@ -54,7 +59,7 @@
                             <th scope="col">ID</th>
                             <th scope="col">Usuario</th>
                             <th scope="col">Plan</th>
-                            <th scope="col">Tipo</th>
+                            <th scope="col" [width]="250">Tipo</th>
                             <th scope="col">Acción</th>
                         </tr>
                     </ng-template>
@@ -69,7 +74,7 @@
                             </td>
                             <td>{{ alert.planName }}</td>
                             <td>
-                                <atom-truncate-text [text]="alert.alertType" [limit]="50"
+                                <atom-truncate-text [text]="alert.alertType" [limit]="30"
                                     [maxWidth]="250"></atom-truncate-text>
                             </td>
                             <td>

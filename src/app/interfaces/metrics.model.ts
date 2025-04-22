@@ -1,13 +1,11 @@
 export interface DashboardMetrics {
-    users: number;
     companies: number;
     interactions: number;
     monthlyIncome: number;
-    userElite:number;
-    userPro:number;
-    userDemo:number;
-    userPendingCanceled:number;
-    userCanceled:number;
+    users: number;
+    userElite: number;
+    userPro: number;
+    userDemo: number;
 }
 
 export type PeriodFilter = 'today' | 'last7days' | 'lastmonth' | 'lastquarter' | 'lastyear' | 'custom';
@@ -81,4 +79,24 @@ export interface PlanStats {
     percentage: number;
     color: string;
     stats: Stats[];
+}
+
+export interface MarketingCampaign {
+    name: string;
+    startDate: string;
+    endDate: string;
+    impactedUsers: number;
+    conversions: number;
+}
+ 
+export interface MessageUsage {
+    plan: string;
+    averageMessages: number;
+    averageUsageTime: string;
+    limitPercentage: number;
+}
+
+export interface PurcharseSource {
+    source: string;
+    percentage: number;
 }

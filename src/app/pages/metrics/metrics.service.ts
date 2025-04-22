@@ -8,6 +8,10 @@ import {
   ChartMetrics,
   EarlyAlerts,
   GeneralMetrics,
+  MarketingCampaign,
+  MessageUsage,
+  PlanStats,
+  PurcharseSource,
   PurchaseData,
   UserMetric,
 } from '@app/interfaces/metrics.model';
@@ -59,6 +63,30 @@ export class MetricsService {
   getMetricsUsers(): Observable<UserMetric[]> {
     return this.http.get<UserMetric[]>(
       `${this.apiDasboardUrl}/${environment.endpoints.metricsUsersDetail}`
+    );
+  }
+
+  getMetricsPlans(): Observable<PlanStats[]> {
+    return this.http.get<PlanStats[]>(
+      `${this.apiDasboardUrl}/${environment.endpoints.metricsUsersPlans}`
+    );
+  }
+
+  getMarketingCampaigns(): Observable<MarketingCampaign[]> {
+    return this.http.get<MarketingCampaign[]>(
+      `${this.apiDasboardUrl}/${environment.endpoints.metricsAdvancedMarketing}`
+    );
+  }
+
+  getMessageUsageByPlan(): Observable<MessageUsage[]> {
+    return this.http.get<MessageUsage[]>(
+      `${this.apiDasboardUrl}/${environment.endpoints.metricsAdvancedMessages}`
+    );
+  }
+  
+  getPurchaseSources(): Observable<PurcharseSource[]> {
+    return this.http.get<PurcharseSource[]>(
+      `${this.apiDasboardUrl}/${environment.endpoints.metricsAdvancedPurcharses}`
     );
   }
 }

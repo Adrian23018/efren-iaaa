@@ -11,11 +11,12 @@ import { MetricsTabsComponent } from './metrics-tabs/metrics-tabs.component';
 import { MetricsTabGeneralComponent } from './metrics-tab-general/metrics-tab-general.component';
 import { MetricsTabAlertsComponent } from './metrics-tab-alerts/metrics-tab-alerts.component';
 import { MetricsTabUsersComponent } from './metrics-tab-users/metrics-tab-users.component';
+import { MetricsTabAdvancedComponent } from "./metrics-tab-advanced/metrics-tab-advanced.component";
 
 @Component({
   selector: 'app-metrics',
   imports: [
-    CommonModule, 
+    CommonModule,
     ButtonModule,
     CalendarModule,
     TabViewModule,
@@ -25,7 +26,8 @@ import { MetricsTabUsersComponent } from './metrics-tab-users/metrics-tab-users.
     MetricsTabGeneralComponent,
     MetricsTabAlertsComponent,
     MetricsTabUsersComponent,
-  ],
+    MetricsTabAdvancedComponent,
+],
   templateUrl: './metrics.component.html',
   styleUrl: './metrics.component.scss'
 })
