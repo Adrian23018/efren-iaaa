@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, signal, Signal, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, inject, signal, Signal, ViewChild } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { debounceTime, Observable, Subject } from 'rxjs';
@@ -16,6 +16,8 @@ import { ChipModule } from 'primeng/chip'; // ✅ ESTE es el correcto
 import { FormsModule } from '@angular/forms';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 
 @Component({
@@ -32,7 +34,8 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     ChipModule,
     FormsModule,
     InputGroupModule,
-    InputGroupAddonModule
+    InputGroupAddonModule,
+    SplitButtonModule
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
@@ -47,9 +50,8 @@ export class UsersComponent {
   public user: any = '';
   public menuItems: MenuItem[] = [];
   public showMenu: boolean = false;
-  isLoading = signal(true); // o simplemente: isLoading = true;
+  // isLoading = signal(true); // o simplemente: isLoading = true;
   private searchInput$ = new Subject<string>();
-
 
   filters: any = {
     name: '',
@@ -64,6 +66,9 @@ export class UsersComponent {
     { label: 'Últimos 3 meses', value: '3m' },
     { label: 'Último año', value: '1y' }
   ];
+
+  files = signal<any[]>([]);
+  isLoading = signal(false);
 
   @ViewChild('dt') dt!: Table;
 
@@ -82,10 +87,10 @@ export class UsersComponent {
     }
 
   // Método de ejemplo para actualizar la lista de los usuarios
-  refreshUsers(): void {
-    this.myUsers = this.usersService.getUsers(1, 5, this.filters);
-    this.cdr.detectChanges();
-  }
+  // refreshUsers(): void {
+  //   this.myUsers = this.usersService.getUsers(1, 5, this.filters);
+  //   this.cdr.detectChanges();
+  // }
 
   // Cuando cambia de página
   onPageChange(event: any) {
@@ -98,13 +103,13 @@ export class UsersComponent {
   }
 
   loadUsers(page: number, limit: number) {
-    this.isLoading.set(true);
+    // this.isLoading.set(true);
     this.myUsers = this.usersService.getUsers(page, limit, this.filters);
-    this.myUsers.data$.subscribe(() => {
-      setTimeout(() => {
-        this.isLoading.set(false);
-      }, 100);
-    });
+    // this.myUsers.data$.subscribe(() => {
+    //   setTimeout(() => {
+    //     // this.isLoading.set(false);
+    //   }, 100);
+    // });
   }
 
   onGlobalFilter(event: Event) {
@@ -121,12 +126,18 @@ export class UsersComponent {
     userData.showMenu = !userData.showMenu;
   }
 
-  viewFiles(userData: any) {
+  viewFiles(user_id: any) {
+    const { data$, isLoading } = this.usersService.getUserIdFiles(user_id);
+    this.isLoading = isLoading;
 
+    effect(() => {
+      toSignal(data$)().subscribe((result:any) => {
+        this.files.set(result);
+      });
+    });
   }
 
   enabledUser(userData: any) {
-
   }
 
   closeModal(userData: any): void {
@@ -148,7 +159,7 @@ export class UsersComponent {
   }
 
   applyFilters() {
-    this.isLoading.set(true);
+    // this.isLoading.set(true);
     this.myUsers = this.usersService.getUsers(1, 5, this.filters);
     this.cdr.detectChanges();
     // Aquí disparas tu fetch con los filtros
@@ -159,5 +170,22 @@ export class UsersComponent {
     const input = event.target as HTMLInputElement;
     this.searchInput$.next(input.value);
   }
+
+  getMenuActions(user: any) {
+    return [
+      {
+        label: 'Expedientes',
+        icon: 'pi pi-clone',
+        command: () => this.viewFiles(user)
+      },
+      {
+        label: 'Desactivar',
+        icon: 'pi pi-times-circle',
+        styleClass: 'text-red-600 font-medium',
+        command: () => this.enabledUser(user)
+      }
+    ];
+  }
+  
 
 }

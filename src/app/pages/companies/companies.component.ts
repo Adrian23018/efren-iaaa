@@ -115,7 +115,7 @@ export class CompaniesComponent {
     this.dt?.filterGlobal(input.value, 'contains');
   }
 
-  openCompaniesDetail(companyData: Companies) {
+  openCompanyDetail(companyData: Companies) {
     this.company = companyData;
     this.displayModal = true;
   }

@@ -168,37 +168,34 @@
                     </td>
                     <td class="text-center">{{ user.registration_date | date: 'yyyy-MM-dd' }}</td>
                     <td class="text-right">
-                        <div class="relative" (clickOutside)="closeModal(user)">
-                            <!-- Botón de acciones -->
-                            <button (click)="toggleMenu(user)" pButton icon="pi pi-ellipsis-v"
-                                class="p-button-text p-button-sm text-500 hover:text-900"></button>
+                        <button pButton type="button" icon="pi pi-ellipsis-v"
+                            class="p-button-outlined p-button-sm flex-shrink-0 h-2rem"
+                            (click)="actionPanel.toggle($event)">
+                        </button>
 
-                            <!-- Menú desplegable refinado -->
-                            <div *ngIf="user.showMenu"
-                                class="absolute z-5 right-0 mt-2 w-44 bg-white border-1 border-300 border-round shadow-3 p-2">
-                                <p class="text-xs font-semibold text-900 px-2 mb-2">Acciones</p>
+                        <!-- Panel de Acciones -->
+                        <p-overlayPanel #actionPanel [style]="{ width: '10rem' }" [dismissable]="true">
 
-                                <div class="p-2 cursor-pointer hover:bg-gray-100 border-round flex align-items-center gap-2 text-sm"
-                                    (click)="openUserDetail(user)">
-                                    <i class="pi pi-eye text-600"></i>
-                                    <span class="text-sm">Ver detalles</span>
-                                </div>
-
-                                <div class="p-2 cursor-pointer hover:bg-gray-100 border-round flex align-items-center gap-2 text-sm"
-                                    (click)="viewFiles(user)">
-                                    <i class="pi pi-clone text-600"></i>
-                                    <span class="text-sm">expedientes</span>
-                                </div>
-
-                                <div class="border-top-1 my-2 border-gray-200"></div>
-
-                                <div class="p-2 cursor-pointer hover:bg-red-50 border-round flex align-items-center gap-2 text-sm"
-                                    (click)="enabledUser(user)">
-                                    <i class="pi pi-exclamation-triangle text-red-500"></i>
-                                    <span class="text-red-600 font-medium">Desactivar</span>
-                                </div>
+                            <p class="text-xs font-semibold text-900 px-2 mb-2">Acciones</p>
+                            <hr>
+                            <div class="p-2 cursor-pointer hover:bg-gray-100 border-round flex align-items-center gap-2 text-sm"
+                                (click)="openUserDetail(user)">
+                                <i class="pi pi-eye text-600"></i>
+                                <span class="text-sm">Ver detalles</span>
                             </div>
-                        </div>
+                            <div class="p-2 cursor-pointer hover:bg-gray-100 border-round flex align-items-center gap-2 text-sm"
+                                (click)="viewFiles(user)">
+                                <i class="pi pi-clone text-600"></i>
+                                <span class="text-sm">expedientes</span>
+                            </div>
+                            <div class="border-top-1 my-2 border-gray-200"></div>
+                            <div class="p-2 cursor-pointer hover:bg-red-50 border-round flex align-items-center gap-2 text-sm"
+                                (click)="enabledUser(user)">
+                                <i class="pi pi-exclamation-triangle text-red-500"></i>
+                                <span class="text-red-600 font-medium">Desactivar</span>
+                            </div>
+                        </p-overlayPanel>
+
                     </td>
                 </tr>
             </ng-template>
