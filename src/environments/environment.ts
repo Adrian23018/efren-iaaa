@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    // baseApiUrl: 'https://9c9a88ff-23e0-4a5c-bf01-735f592248fd.mock.pstmn.io',
+    // baseApiUrl: 'https://2b3a60de-2d73-4459-8185-50e9761844b9.mock.pstmn.io',
     baseApiUrl: 'https://api.efrenmartinezortiz-ia.com/webhook',
     endpoints: {
         statistics: 'statistics',
@@ -13,5 +13,9 @@ export const environment = {
         purcharses: 'purcharses',
         earlies: 'earlies',
         metricsUsersDetail: 'metrics/users/detail',
+        metricsUsersPlans: 'metrics/users/plans',
+        metricsAdvancedMarketing: 'metrics/advanced/marketing',
+        metricsAdvancedMessages: 'metrics/advanced/messages',
+        metricsAdvancedPurcharses: 'metrics/advanced/purcharses',
     }
 };

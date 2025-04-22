@@ -1,0 +1,77 @@
+<div class="grid">
+  <!-- Purchase Sources -->
+  <div class="col-12">
+    <p-card styleClass="h-full">
+      <ng-template pTemplate="title">
+        <h2>Origen de Ventas</h2>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <div class="flex justify-content-center align-items-center">
+          <div class="chart-container" style="position: relative; height: 300px; width: 100%;">
+            <p-chart type="pie" [data]="purchaseSourcesData" [options]="purchaseSourcesOptions"></p-chart>
+          </div>
+        </div>
+      </ng-template>
+    </p-card>
+  </div>
+
+  <!-- Marketing Campaigns -->
+  <div class="col-12 mt-4">
+    <p-card styleClass="h-full">
+      <ng-template pTemplate="title">
+        <h2>Campañas de Marketing</h2>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <p-table [value]="marketingCampaigns" [tableStyle]="{'min-width': '50rem'}" styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Campaña</th>
+              <th>Fecha Inicio</th>
+              <th>Fecha Fin</th>
+              <th>Usuarios Impactados</th>
+              <th>Conversiones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-campaign>
+            <tr>
+              <td>{{campaign.name}}</td>
+              <td>{{campaign.startDate | date:'yyyy-MM-dd'}}</td>
+              <td>{{campaign.endDate | date:'yyyy-MM-dd'}}</td>
+              <td>{{campaign.impactedUsers}}</td>
+              <td>{{campaign.conversions}}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </ng-template>
+    </p-card>
+  </div>
+
+  <!-- Message Usage by Plan -->
+  <div class="col-12 mt-4">
+    <p-card styleClass="h-full">
+      <ng-template pTemplate="title">
+        <h2>Uso de Mensajes por Plan</h2>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <p-table [value]="messageUsage" [tableStyle]="{'min-width': '50rem'}" styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Plan</th>
+              <th>Mensajes promedio por usuario</th>
+              <th>Tiempo promedio de uso</th>
+              <th>% de límite utilizado</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-usage>
+            <tr>
+              <td>{{usage.plan}}</td>
+              <td>{{usage.averageMessages}}</td>
+              <td>{{usage.averageUsageTime}}</td>
+              <td>{{usage.limitPercentage}}%</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </ng-template>
+    </p-card>
+  </div>
+</div>
