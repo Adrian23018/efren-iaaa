@@ -17,6 +17,7 @@ import { Alert } from '@app/interfaces/alert.model';
 import { MoleculeAlertDetailDialogComponent } from '@app/shared/molecules/alert-detail-dialog/alert-detail-dialog.component';
 import { MoleculeChartSkeletonComponent } from '@app/shared/molecules/chart-skeleton/chart-skeleton.component';
 import { DashboardMetrics } from '@app/interfaces/metrics.model';
+import { getStatistics, getStatisticsUsers } from './dashboard-statistics.data';
 
 @Component({
   selector: 'app-dashboard',
@@ -46,42 +47,8 @@ export class DashboardComponent {
   selectedAlert!: Alert;
 
   metrics!: DashboardMetrics;
-
-  statistics: CardStatistic[] = [
-    {
-      id: 'users',
-      title: 'Total Usuarios',
-      value: this.metrics?.users || '',
-      iconClass: 'pi pi-users',
-      iconBgClass: 'bg-primary',
-      loading: true,
-    },
-    {
-      id: 'companies',
-      title: 'Total Empresas',
-      value: this.metrics?.companies || '',
-      iconClass: 'pi pi-building',
-      iconBgClass: 'bg-green-500',
-      loading: true,
-    },
-    {
-      id: 'interactions',
-      title: 'Interacciones',
-      value: this.metrics?.interactions || '',
-      iconClass: 'pi pi-chart-line',
-      iconBgClass: 'bg-indigo-500',
-      loading: true,
-    },
-    {
-      id: 'monthlyIncome',
-      title: 'Ingresos Mensuales',
-      value: this.metrics?.monthlyIncome || '',
-      iconClass: 'pi pi-dollar',
-      iconBgClass: 'bg-orange-500',
-      loading: true,
-      prefixValue: '$',
-    },
-  ];
+  statistics: CardStatistic[] = getStatistics();
+  statisticsUsers: CardStatistic[] = getStatisticsUsers();
   loadingUsers: boolean = true;
   loadingIncomes: boolean = true;
 
@@ -101,17 +68,8 @@ export class DashboardComponent {
     this.dashboardService.getMetrics().subscribe({
       next: (data: DashboardMetrics) => {
         this.metrics = data;
-        this.statistics = this.statistics.map((stat) => {
-          const key = stat.id as keyof DashboardMetrics;
-          if (key in data) {
-            return {
-              ...stat,
-              value: data[key],
-              loading: false,
-            };
-          }
-          return stat;
-        });
+        this.statistics = getStatistics(data);
+        this.statisticsUsers = getStatisticsUsers(data);
       },
       error: (err) => {
         console.log('Error', err);
