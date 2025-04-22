@@ -1,8 +1,11 @@
 export interface DashboardMetrics {
-    users: number;
     companies: number;
     interactions: number;
     monthlyIncome: number;
+    users: number;
+    userElite: number;
+    userPro: number;
+    userDemo: number;
 }
 
 export type PeriodFilter = 'today' | 'last7days' | 'lastmonth' | 'lastquarter' | 'lastyear' | 'custom';
