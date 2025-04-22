@@ -5,12 +5,74 @@
         <div class="col-6">
             <h1 class="text-2xl font-bold text-gray-900 mb-1 mt-1
           ">Empresas
-          </h1>
+            </h1>
             <p class="text-sm text-gray-500 mb-1 mt-1">Gestiona las empresas registradas en la plataforma</p>
         </div>
-        <div class="col-6 filters">
+        <div class="col-6 grid place-items-center justify-content-end">
             <button pButton type="button" icon="pi pi-filter" label="Filtros"
-                class="p-button-outlined p-button-sm flex-shrink-0"></button>
+                class="p-button-outlined p-button-sm flex-shrink-0 h-2rem" (click)="filterPanel.toggle($event)">
+            </button>
+
+            <!-- Panel de filtros -->
+            <p-overlayPanel #filterPanel [style]="{ width: '20rem' }" [dismissable]="true">
+                <div class="flex flex-column gap-3 p-3 text-sm">
+
+                    <span class="font-medium text-base">Filtros</span>
+                    <small class="text-color-secondary">Aplica filtros para refinar los resultados</small>
+
+                    <!-- Buscador -->
+                    <div>
+                        <span class="text-sm text-color-secondary">Búsqueda</span>
+                        <input pInputText type="text" class="w-full mt-1" placeholder="Buscar por nombre..."
+                            [(ngModel)]="filters.name" />
+                    </div>
+
+                    <!-- Plan -->
+                    <div class="flex flex-column gap-1">
+                        <span class="text-sm text-color-secondary">Plan</span>
+                        <div class="flex gap-2 flex-wrap">
+                            <p-chip type="button" label="Elite" [removable]="false" (click)="toggleFilter('plan', 1)"
+                                [class.bg-primary]="filters.plan === 1"></p-chip>
+                            <p-chip type="button" label="Pro" [removable]="false" (click)="toggleFilter('plan', 2)"
+                                [class.bg-primary]="filters.plan === 2"></p-chip>
+                            <p-chip type="button" label="Demo" [removable]="false" (click)="toggleFilter('plan', 3)"
+                                [class.bg-primary]="filters.plan === 3"></p-chip>
+                        </div>
+                    </div>
+
+                    <!-- Estado -->
+                    <div class="flex flex-column gap-1">
+                        <span class="text-sm text-color-secondary">Estado</span>
+                        <div class="flex gap-2">
+                            <p-chip type="button" label="Activo" [removable]="false"
+                                (click)="toggleFilter('estado', 'Activo')"
+                                [class.bg-primary]="filters.estado === 'Activo'"></p-chip>
+                            <p-chip type="button" label="Inactivo" [removable]="false"
+                                (click)="toggleFilter('estado', 'Inactivo')"
+                                [class.bg-primary]="filters.estado === 'Inactivo'"></p-chip>
+                        </div>
+                    </div>
+
+                    <!-- Periodo -->
+                    <div class="flex flex-column gap-1">
+                        <span class="text-sm text-color-secondary">Periodo</span>
+                        <div class="flex flex-wrap gap-2">
+                            <p-chip type="button" *ngFor="let periodo of periodos" [label]="periodo.label"
+                                [removable]="false" (click)="toggleFilter('periodo', periodo.value)"
+                                [class.bg-blue-100]="filters.periodo === periodo.value">
+                            </p-chip>
+                        </div>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div class="flex justify-between mt-3">
+                        <button pButton label="Limpiar" class="p-button-text p-button-sm"
+                            (click)="clearFilters()"></button>
+                        <button pButton label="Aplicar filtros" class="p-button-sm" (click)="applyFilters()"></button>
+                    </div>
+
+                </div>
+            </p-overlayPanel>
         </div>
     </div>
 
@@ -24,12 +86,14 @@
             </div>
 
             <!-- Buscador -->
-            <div class="col-6 filters">
-                <span class="p-input-icon-left w-full md:w-80">
-                    <i class="pi pi-search text-gray-500 i_search"></i>
-                    <input pInputText type="text" placeholder=" Buscar por nombre de usuario..."
-                        (input)="onGlobalFilter($event)" class=" p-inputtext-sm search" />
-                </span>
+            <div class="flex align-items-center col-6 justify-content-end">
+                <p-inputgroup class="w-6">
+                    <p-inputgroup-addon>
+                        <i class="pi pi-search"></i>
+                    </p-inputgroup-addon>
+                    <input type="text" pInputText placeholder="Buscar por nombre..." class="w-18rem"
+                        (input)="onSearchChange($event)" />
+                </p-inputgroup>
             </div>
 
         </div>
@@ -121,7 +185,7 @@
                                 <p class="text-xs font-semibold text-900 px-2 mb-2">Acciones</p>
 
                                 <div class="p-2 cursor-pointer hover:bg-gray-100 border-round flex align-items-center gap-2 text-sm"
-                                    (click)="openUserDetail(company)">
+                                    (click)="openCompaniesDetail(company)">
                                     <i class="pi pi-eye text-600"></i>
                                     <span class="text-sm">Ver detalles</span>
                                 </div>
@@ -135,7 +199,7 @@
                                 <div class="border-top-1 my-2 border-gray-200"></div>
 
                                 <div class="p-2 cursor-pointer hover:bg-red-50 border-round flex align-items-center gap-2 text-sm"
-                                    (click)="enabledUser(company)">
+                                    (click)="enabledCompany(company)">
                                     <i class="pi pi-exclamation-triangle text-red-500"></i>
                                     <span class="text-red-600 font-medium">Desactivar</span>
                                 </div>
@@ -147,15 +211,14 @@
         </p-table>
 
         <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rowsPerPage"
-            [totalRecords]="totalUsuarios" [rowsPerPageOptions]="[5, 10, 20, 30]" />
+            [totalRecords]="myCompanies.totalCompanies$ | async" [rowsPerPageOptions]="[5, 10, 20, 30]" />
 
     </div>
 </div>
 
 
 <p-dialog [(visible)]="displayModal" [modal]="true" [closable]="true" [dismissableMask]="true"
-    [style]="{ width: '420px' }" header="Detalles de la compañía" 
-    [contentStyle]="{ 'padding-bottom': '1.5rem' }">
+    [style]="{ width: '420px' }" header="Detalles de la compañía" [contentStyle]="{ 'padding-bottom': '1.5rem' }">
 
     <!-- Subtítulo -->
     <p class="text-sm text-color-secondary">Información completa de la empresa</p>

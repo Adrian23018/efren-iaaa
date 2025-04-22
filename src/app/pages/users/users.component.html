@@ -8,75 +8,77 @@
             <p class="text-sm text-gray-500 mb-1 mt-1">Gestiona los usuarios de la plataforma</p>
         </div>
         <!-- Botón de filtros -->
-<div class="col-6 filters">
-    <button 
-      pButton 
-      type="button" 
-      icon="pi pi-filter" 
-      label="Filtros"
-      class="p-button-outlined p-button-sm flex-shrink-0" 
-      (click)="filterPanel.toggle($event)">
-    </button>
-  
-    <!-- Panel de filtros -->
-    <p-overlayPanel #filterPanel [style]="{ width: '20rem' }" [dismissable]="true">
-      <div class="flex flex-column gap-3 p-3 text-sm">
-  
-        <span class="font-medium text-base">Filtros</span>
-        <small class="text-color-secondary">Aplica filtros para refinar los resultados</small>
-  
-        <!-- Buscador -->
-        <div>
-          <span class="text-sm text-color-secondary">Búsqueda</span>
-          <input pInputText type="text" class="w-full mt-1" placeholder="Buscar por nombre..." [(ngModel)]="filters.name" />
+        <div class="col-6 grid place-items-center justify-content-end">
+            <button pButton type="button" icon="pi pi-filter" label="Filtros"
+                class="p-button-outlined p-button-sm flex-shrink-0 h-2rem" (click)="filterPanel.toggle($event)">
+            </button>
+
+            <!-- Panel de filtros -->
+            <p-overlayPanel #filterPanel [style]="{ width: '20rem' }" [dismissable]="true">
+                <div class="flex flex-column gap-3 p-3 text-sm">
+
+                    <span class="font-medium text-base">Filtros</span>
+                    <small class="text-color-secondary">Aplica filtros para refinar los resultados</small>
+
+                    <!-- Buscador -->
+                    <div>
+                        <span class="text-sm text-color-secondary">Búsqueda</span>
+                        <input pInputText type="text" class="w-full mt-1" placeholder="Buscar por nombre..."
+                            [(ngModel)]="filters.name" />
+                    </div>
+
+                    <!-- Plan -->
+                    <div class="flex flex-column gap-1">
+                        <span class="text-sm text-color-secondary">Plan</span>
+                        <div class="flex gap-2 flex-wrap">
+                            <p-chip type="button" label="Elite" [removable]="false" (click)="toggleFilter('plan', 1)"
+                                [class.bg-primary]="filters.plan === 1"></p-chip>
+                            <p-chip type="button" label="Pro" [removable]="false" (click)="toggleFilter('plan', 2)"
+                                [class.bg-primary]="filters.plan === 2"></p-chip>
+                            <p-chip type="button" label="Demo" [removable]="false" (click)="toggleFilter('plan', 3)"
+                                [class.bg-primary]="filters.plan === 3"></p-chip>
+                        </div>
+                    </div>
+
+                    <!-- Estado -->
+                    <div class="flex flex-column gap-1">
+                        <span class="text-sm text-color-secondary">Estado</span>
+                        <div class="flex gap-2">
+                            <p-chip type="button" label="Activo" [removable]="false"
+                                (click)="toggleFilter('estado', 'Activo')"
+                                [class.bg-primary]="filters.estado === 'Activo'"></p-chip>
+                            <p-chip type="button" label="Inactivo" [removable]="false"
+                                (click)="toggleFilter('estado', 'Inactivo')"
+                                [class.bg-primary]="filters.estado === 'Inactivo'"></p-chip>
+                        </div>
+                    </div>
+
+                    <!-- Periodo -->
+                    <div class="flex flex-column gap-1">
+                        <span class="text-sm text-color-secondary">Periodo</span>
+                        <div class="flex flex-wrap gap-2">
+                            <p-chip type="button" *ngFor="let periodo of periodos" [label]="periodo.label"
+                                [removable]="false" (click)="toggleFilter('periodo', periodo.value)"
+                                [class.bg-blue-100]="filters.periodo === periodo.value">
+                            </p-chip>
+                        </div>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div class="flex justify-between mt-3">
+                        <button pButton label="Limpiar" class="p-button-text p-button-sm"
+                            (click)="clearFilters()"></button>
+                        <button pButton label="Aplicar filtros" class="p-button-sm" (click)="applyFilters()"></button>
+                    </div>
+
+                </div>
+            </p-overlayPanel>
         </div>
-  
-        <!-- Plan -->
-        <div class="flex flex-column gap-1">
-          <span class="text-sm text-color-secondary">Plan</span>
-          <div class="flex gap-2 flex-wrap">
-            <p-chip label="Elite" [removable]="false" (click)="toggleFilter('plan', 1)" [class.bg-primary]="filters.plan === 1"></p-chip>
-            <p-chip label="Pro" [removable]="false" (click)="toggleFilter('plan', 2)" [class.bg-primary]="filters.plan === 2"></p-chip>
-            <p-chip label="Demo" [removable]="false" (click)="toggleFilter('plan', 3)" [class.bg-primary]="filters.plan === 3"></p-chip>
-          </div>
-        </div>
-  
-        <!-- Estado -->
-        <div class="flex flex-column gap-1">
-          <span class="text-sm text-color-secondary">Estado</span>
-          <div class="flex gap-2">
-            <p-chip label="Activo" [removable]="false" (click)="toggleFilter('estado', 'Activo')" [class.bg-primary]="filters.estado === 'Activo'"></p-chip>
-            <p-chip label="Inactivo" [removable]="false" (click)="toggleFilter('estado', 'Inactivo')" [class.bg-primary]="filters.estado === 'Inactivo'"></p-chip>
-          </div>
-        </div>
-  
-        <!-- Periodo -->
-        <div class="flex flex-column gap-1">
-          <span class="text-sm text-color-secondary">Periodo</span>
-          <div class="flex flex-wrap gap-2">
-            <p-chip *ngFor="let periodo of periodos" 
-                    [label]="periodo.label"
-                    [removable]="false"
-                    (click)="toggleFilter('periodo', periodo.value)"
-                    [class.bg-blue-100]="filters.periodo === periodo.value">
-            </p-chip>
-          </div>
-        </div>
-  
-        <!-- Acciones -->
-        <div class="flex justify-between mt-3">
-          <button pButton label="Limpiar" class="p-button-text p-button-sm" (click)="clearFilters()"></button>
-          <button pButton label="Aplicar filtros" class="p-button-sm" (click)="applyFilters()"></button>
-        </div>
-  
-      </div>
-    </p-overlayPanel>
-  </div>
-  
+
     </div>
 
     <!-- Card contenedor -->
-    <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-5 table_border">
+    <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-5 border-1 border-round-xl border-gray-200">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-3">
             <!-- Título y subtítulo -->
             <div class="col-6">
@@ -85,17 +87,18 @@
             </div>
 
             <!-- Buscador -->
-            <div class="col-6 filters">
-                <span class="p-input-icon-left w-full md:w-80">
-                    <i class="pi pi-search text-gray-500 i_search"></i>
-                    <input pInputText type="text" placeholder=" Buscar por nombre de usuario..."
-                        (input)="onGlobalFilter($event)" class=" p-inputtext-sm search" />
-                </span>
+
+            <div class="flex align-items-center col-6 justify-content-end">
+                <p-inputgroup class="w-6">
+                    <p-inputgroup-addon>
+                        <i class="pi pi-search"></i>
+                    </p-inputgroup-addon>
+                    <input type="text" pInputText placeholder="Buscar por nombre..." class="w-18rem"
+                        (input)="onSearchChange($event)" />
+                </p-inputgroup>
             </div>
 
         </div>
-
-        <!-- {{myUsers.isLoading()}} -->
 
         <p-skeleton *ngIf="myUsers.isLoading()" height="3rem" class="mb-3"></p-skeleton>
 
@@ -115,7 +118,7 @@
         </div>
 
         <!-- Tabla estilizada -->
-        <p-table *ngIf="!myUsers.isLoading()" #dt [value]="(myUsers.data$ | async) || []"  [paginator]="false" [rows]="5"
+        <p-table *ngIf="!myUsers.isLoading()" #dt [value]="(myUsers.data$ | async) || []" [paginator]="false" [rows]="5"
             responsiveLayout="scroll"
             [globalFilterFields]="['user_name', 'user_email', 'company_name', 'plan_name', 'status']" class="text-sm">
             <!-- Encabezado -->
@@ -142,7 +145,9 @@
                     </td>
                     <td class="text-center">{{ user.company_name || 'B2C' }}</td>
                     <td class="text-center">
-                        <span class="text-xs font-semibold px-2 py-1 rounded-full table_border" [ngClass]="{
+                        <span
+                            class="text-xs font-semibold px-2 py-1 rounded-full border-1 border-round-xl border-white-200"
+                            [ngClass]="{
                   'bg-purple-100 text-purple-700': user.plan_name === 'Plan Elite',
                   'bg-blue-100 text-blue-700': user.plan_name === 'Plan Pro',
                   'bg-gray-200 text-gray-700': user.plan_name === 'Plan Demo'
@@ -152,7 +157,9 @@
                     </td>
                     <td class="text-center">{{ user.messages_used }} msgs</td>
                     <td class="text-center">
-                        <span class="text-xs font-semibold px-2 py-1 rounded-full table_border" [ngClass]="{
+                        <span
+                            class="text-xs font-semibold px-2 py-1 rounded-full border-1 border-round-xl border-white-200"
+                            [ngClass]="{
                   'bg-green-100 text-green-700': user.status,
                   'bg-red-100 text-red-700': !user.status
                 }">
@@ -210,7 +217,7 @@
     <p class="text-sm text-color-secondary ">Información completa del usuario</p>
 
     <!-- Avatar y nombre -->
-    <div class="flex flex-column align-items-center mb-4">
+    <div class="flex flex-column align-items-center mb-4 align-items-center col-12 justify-content-center">
         <i class="pi pi-user text-6xl text-500 mb-3 img"></i>
         <h3 class="text-lg font-bold text-800 mb-2">
             {{ user?.user_name }}

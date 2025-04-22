@@ -15,10 +15,36 @@ export class CompaniesService {
     localStorage.setItem(this.companyId, id);
   }
 
-  getCompanies(page: number, limit: number) {
+  // getCompanies(page: number, limit: number) {
+  //   const isLoading = signal(true);
+  
+  //   const response$ = this.http.get<any>(`${this.apiConmpaniesUrl}?page=${page}&limit=${limit}`).pipe(
+  //     tap(() => isLoading.set(true)),
+  //     finalize(() => isLoading.set(false)),
+  //     share()
+  //   );
+  
+  //   const data$ = response$.pipe(map(res => res.data || []));
+  //   const totalCompanies$ = response$.pipe(map(res => res.meta?.totalCompanies || 0));
+  
+  //   return {
+  //     data$: data$,
+  //     totalCompanies$: totalCompanies$,
+  //     isLoading: isLoading
+  //   };
+  // }
+
+  getCompanies(page: number, limit: number, filters: any) {
     const isLoading = signal(true);
   
-    const response$ = this.http.get<any>(`${this.apiConmpaniesUrl}?page=${page}&limit=${limit}`).pipe(
+    // Cuerpo que enviarás por POST
+    const body = {
+      page,
+      limit,
+      filters
+    };
+  
+    const response$ = this.http.post<any>(`${this.apiConmpaniesUrl}`, body).pipe(
       tap(() => isLoading.set(true)),
       finalize(() => isLoading.set(false)),
       share()
