@@ -80,3 +80,23 @@ export interface PlanStats {
     color: string;
     stats: Stats[];
 }
+
+export interface MarketingCampaign {
+    name: string;
+    startDate: string;
+    endDate: string;
+    impactedUsers: number;
+    conversions: number;
+}
+ 
+export interface MessageUsage {
+    plan: string;
+    averageMessages: number;
+    averageUsageTime: string;
+    limitPercentage: number;
+}
+
+export interface PurcharseSource {
+    source: string;
+    percentage: number;
+}
