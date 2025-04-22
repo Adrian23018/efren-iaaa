@@ -10,6 +10,7 @@ import { ChartModule } from 'primeng/chart';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { ColorUtil } from '@app/shared/utils/colorUtil';
+import { Severity, TagUtil } from '@app/shared/utils/tagUtil';
 
 @Component({
   selector: 'app-metrics-tab-users',
@@ -63,16 +64,8 @@ export class MetricsTabUsersComponent {
     });
   }
 
-  getStatusSeverity(status: string): "success" | "secondary" | "info" | "warn" | "danger" | "contrast" | undefined {
-    const statusSeverityMap: Record<string, "success" | "secondary" | "info" | "warn" | "danger" | "contrast" | undefined> = {
-      'Activo': 'success',
-      'Inactivo': 'secondary',
-      'Demo activo': 'info',
-      'Bajo uso': 'warn',
-      'Error': 'danger',
-    };
-
-    return statusSeverityMap[status] ?? undefined;
+  getStatusSeverity(status: string): Severity{
+    return TagUtil.getStatusSeverity(status);
   }
 
   initChart() {

@@ -1,0 +1,25 @@
+<p-virtualScroller 
+    #scroller
+    [items]="files" 
+    [itemSize]="159" 
+    [style]="{ height: '480px' }"
+    [lazy]="true"
+    [loading]="lazyLoading"
+    [delay]="250"
+    (onLazyLoad)="loadData($event)">
+    <ng-template pTemplate="item" let-item>
+        <molecule-user-file-card 
+            [file]="item"
+            [selected]="selectedFile?.id === item.id"
+            (fileSelected)="fileSelected.emit($event)"
+            class="mb-3">
+        </molecule-user-file-card>
+    </ng-template>
+    <ng-template pTemplate="loader" let-options="options">
+        <div class="flex flex-column" [ngClass]="{ 'surface-ground': options.odd }">
+            <div class="flex items-center px-2" style="height: 25px"><p-skeleton width="60%" height="1.2rem"></p-skeleton></div>
+            <div class="flex items-center px-2" style="height: 25px"><p-skeleton width="50%" height="1.2rem"></p-skeleton></div>
+            <div class="flex items-center px-2" style="height: 25px"><p-skeleton width="60%" height="1.2rem"></p-skeleton></div>
+        </div>
+    </ng-template>
+</p-virtualScroller>
