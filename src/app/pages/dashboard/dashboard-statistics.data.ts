@@ -35,7 +35,7 @@ export const getStatisticsUsers = (metrics?: any): CardStatistic[] => [
     title: 'Usuarios Élite',
     value: metrics?.userElite ?? '',
     iconClass: 'pi pi-users',
-    iconBgClass: 'bg-green-500',
+    iconBgClass: 'bg-primary',
     loading: !metrics,
   },
   {
@@ -43,7 +43,7 @@ export const getStatisticsUsers = (metrics?: any): CardStatistic[] => [
     title: 'Usuarios Pro',
     value: metrics?.userPro ?? '',
     iconClass: 'pi pi-users',
-    iconBgClass: 'bg-indigo-500',
+    iconBgClass: 'bg-orange-500',
     loading: !metrics,
   },
   {
@@ -51,15 +51,26 @@ export const getStatisticsUsers = (metrics?: any): CardStatistic[] => [
     title: 'Usuarios Demo',
     value: metrics?.userDemo ?? '',
     iconClass: 'pi pi-users',
+    iconBgClass: 'bg-green-500',
+    loading: !metrics,
+  },
+];
+
+export const getStatisticsStatus = (metrics?: any): CardStatistic[] => [
+  {
+    id: 'userCanceled',
+    title: 'Usuarios Cancelados',
+    value: metrics?.userCanceled ?? '',
+    iconClass: 'pi pi-users',
     iconBgClass: 'bg-orange-500',
     loading: !metrics,
   },
   {
-    id: 'users',
-    title: 'Total Usuarios',
-    value: metrics?.users ?? '',
+    id: 'userPendingCanceled',
+    title: 'Usuarios Pendientes de Cancelación',
+    value: metrics?.userPendingCanceled ?? '',
     iconClass: 'pi pi-users',
-    iconBgClass: 'bg-primary',
+    iconBgClass: 'bg-red-500',
     loading: !metrics,
   },
 ];

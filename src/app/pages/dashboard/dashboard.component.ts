@@ -17,7 +17,7 @@ import { Alert } from '@app/interfaces/alert.model';
 import { MoleculeAlertDetailDialogComponent } from '@app/shared/molecules/alert-detail-dialog/alert-detail-dialog.component';
 import { MoleculeChartSkeletonComponent } from '@app/shared/molecules/chart-skeleton/chart-skeleton.component';
 import { DashboardMetrics } from '@app/interfaces/metrics.model';
-import { getStatistics, getStatisticsUsers } from './dashboard-statistics.data';
+import { getStatistics, getStatisticsUsers, getStatisticsStatus } from './dashboard-statistics.data';
 
 @Component({
   selector: 'app-dashboard',
@@ -49,6 +49,7 @@ export class DashboardComponent {
   metrics!: DashboardMetrics;
   statistics: CardStatistic[] = getStatistics();
   statisticsUsers: CardStatistic[] = getStatisticsUsers();
+  statisticsStatus: CardStatistic[] = getStatisticsStatus();
   loadingUsers: boolean = true;
   loadingIncomes: boolean = true;
 
@@ -70,6 +71,7 @@ export class DashboardComponent {
         this.metrics = data;
         this.statistics = getStatistics(data);
         this.statisticsUsers = getStatisticsUsers(data);
+        this.statisticsStatus = getStatisticsStatus(data);
       },
       error: (err) => {
         console.log('Error', err);
