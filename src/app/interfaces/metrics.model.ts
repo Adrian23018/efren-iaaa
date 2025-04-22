@@ -3,6 +3,11 @@ export interface DashboardMetrics {
     companies: number;
     interactions: number;
     monthlyIncome: number;
+    userElite:number;
+    userPro:number;
+    userDemo:number;
+    userPendingCanceled:number;
+    userCanceled:number;
 }
 
 export type PeriodFilter = 'today' | 'last7days' | 'lastmonth' | 'lastquarter' | 'lastyear' | 'custom';

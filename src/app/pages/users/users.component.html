@@ -7,10 +7,72 @@
           ">Usuarios</h1>
             <p class="text-sm text-gray-500 mb-1 mt-1">Gestiona los usuarios de la plataforma</p>
         </div>
-        <div class="col-6 filters">
-            <button pButton type="button" icon="pi pi-filter" label="Filtros"
-                class="p-button-outlined p-button-sm flex-shrink-0"></button>
+        <!-- Botón de filtros -->
+<div class="col-6 filters">
+    <button 
+      pButton 
+      type="button" 
+      icon="pi pi-filter" 
+      label="Filtros"
+      class="p-button-outlined p-button-sm flex-shrink-0" 
+      (click)="filterPanel.toggle($event)">
+    </button>
+  
+    <!-- Panel de filtros -->
+    <p-overlayPanel #filterPanel [style]="{ width: '20rem' }" [dismissable]="true">
+      <div class="flex flex-column gap-3 p-3 text-sm">
+  
+        <span class="font-medium text-base">Filtros</span>
+        <small class="text-color-secondary">Aplica filtros para refinar los resultados</small>
+  
+        <!-- Buscador -->
+        <div>
+          <span class="text-sm text-color-secondary">Búsqueda</span>
+          <input pInputText type="text" class="w-full mt-1" placeholder="Buscar por nombre..." [(ngModel)]="filters.name" />
         </div>
+  
+        <!-- Plan -->
+        <div class="flex flex-column gap-1">
+          <span class="text-sm text-color-secondary">Plan</span>
+          <div class="flex gap-2 flex-wrap">
+            <p-chip label="Elite" [removable]="false" (click)="toggleFilter('plan', 1)" [class.bg-primary]="filters.plan === 1"></p-chip>
+            <p-chip label="Pro" [removable]="false" (click)="toggleFilter('plan', 2)" [class.bg-primary]="filters.plan === 2"></p-chip>
+            <p-chip label="Demo" [removable]="false" (click)="toggleFilter('plan', 3)" [class.bg-primary]="filters.plan === 3"></p-chip>
+          </div>
+        </div>
+  
+        <!-- Estado -->
+        <div class="flex flex-column gap-1">
+          <span class="text-sm text-color-secondary">Estado</span>
+          <div class="flex gap-2">
+            <p-chip label="Activo" [removable]="false" (click)="toggleFilter('estado', 'Activo')" [class.bg-primary]="filters.estado === 'Activo'"></p-chip>
+            <p-chip label="Inactivo" [removable]="false" (click)="toggleFilter('estado', 'Inactivo')" [class.bg-primary]="filters.estado === 'Inactivo'"></p-chip>
+          </div>
+        </div>
+  
+        <!-- Periodo -->
+        <div class="flex flex-column gap-1">
+          <span class="text-sm text-color-secondary">Periodo</span>
+          <div class="flex flex-wrap gap-2">
+            <p-chip *ngFor="let periodo of periodos" 
+                    [label]="periodo.label"
+                    [removable]="false"
+                    (click)="toggleFilter('periodo', periodo.value)"
+                    [class.bg-blue-100]="filters.periodo === periodo.value">
+            </p-chip>
+          </div>
+        </div>
+  
+        <!-- Acciones -->
+        <div class="flex justify-between mt-3">
+          <button pButton label="Limpiar" class="p-button-text p-button-sm" (click)="clearFilters()"></button>
+          <button pButton label="Aplicar filtros" class="p-button-sm" (click)="applyFilters()"></button>
+        </div>
+  
+      </div>
+    </p-overlayPanel>
+  </div>
+  
     </div>
 
     <!-- Card contenedor -->
@@ -135,7 +197,7 @@
             </ng-template>
         </p-table>
         <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rowsPerPage"
-            [totalRecords]="totalUsuarios" [rowsPerPageOptions]="[5, 10, 20, 30]" />
+            [totalRecords]="myUsers.totalUsers$ | async " [rowsPerPageOptions]="[5, 10, 20, 30]" />
 
     </div>
 </div>
