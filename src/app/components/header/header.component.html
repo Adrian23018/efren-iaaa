@@ -1,10 +1,13 @@
 <header
     class="flex align-items-center justify-content-between px-4 py-2 bg-white border-bottom-1 border-gray-200 h-4rem">
     <div class="flex align-items-center">
-        <!-- <span class="p-input-icon-left">
-            <i class="pi pi-search"></i>
+        <p-inputgroup>
+            <p-inputgroup-addon>
+                <i class="pi pi-search"></i>
+            </p-inputgroup-addon>
+            <!-- [(ngModel)]="text1" -->
             <input type="text" pInputText placeholder="Buscar..." class="w-18rem" />
-        </span> -->
+        </p-inputgroup>
     </div>
     <div class="flex align-items-center">
         <div>
@@ -17,40 +20,21 @@
                 </div>
                 <i class="pi pi-angle-down"></i>
             </button>
+
             <p-overlayPanel #userMenu>
-                <div class="w-15rem">
-                    <div class="flex align-items-center p-3 border-bottom-1 border-gray-200">
-                        <p-avatar label="A" styleClass="mr-2"></p-avatar>
-                        <div class="flex flex-column">
-                            <span class="font-medium">Admin</span>
-                            <span class="text-xs text-gray-500">adminexample.com</span>
-                        </div>
+                <div style="min-width: 240px">
+                  <div class="flex align-items-center p-3 border-bottom-1 border-gray-200">
+                    <p-avatar label="A" styleClass="mr-2"></p-avatar>
+                    <div class="flex flex-column">
+                      <span class="font-medium">Admin</span>
+                      <span class="text-xs text-gray-500">admin&#64;example.com</span>
                     </div>
-                    <div>
-                        <a
-                            class="flex align-items-center p-3 text-gray-700 no-underline cursor-pointer hover:bg-gray-100">
-                            <i class="pi pi-user mr-2"></i>
-                            <span>Mi cuenta</span>
-                        </a>
-                        <a
-                            class="flex align-items-center p-3 text-gray-700 no-underline cursor-pointer hover:bg-gray-100">
-                            <i class="pi pi-id-card mr-2"></i>
-                            <span>Perfil</span>
-                        </a>
-                        <a
-                            class="flex align-items-center p-3 text-gray-700 no-underline cursor-pointer hover:bg-gray-100">
-                            <i class="pi pi-cog mr-2"></i>
-                            <span>Ajustes</span>
-                        </a>
-                        <div class="border-top-1 border-gray-200 mt-1"></div>
-                        <a
-                            class="flex align-items-center p-3 text-gray-700 no-underline cursor-pointer hover:bg-gray-100">
-                            <i class="pi pi-sign-out mr-2"></i>
-                            <span>Cerrar sesión</span>
-                        </a>
-                    </div>
+                  </div>
+                  
+                  <p-menu [model]="items" styleClass="border-none w-full"></p-menu>
                 </div>
             </p-overlayPanel>
+
         </div>
     </div>
 </header>
