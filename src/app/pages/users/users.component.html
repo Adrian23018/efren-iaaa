@@ -275,3 +275,11 @@
     </div>
 
 </p-dialog>
+
+<app-file-user
+  *ngIf="selectedSession"
+  [sessionData]="selectedSession"
+  [display]="display">
+</app-file-user>
+
+

@@ -44,7 +44,7 @@ export class UsersService {
 
   getUserIdFiles(user_id: number) {
     const isLoading = signal(true);
-    const data$ = this.http.get<any>(`${this.apiUsersUrl}/file?userId=${user_id}`).pipe(
+    const data$ = this.http.get<any>(`${this.apiUsersUrl}/file/?userId=${user_id}`).pipe(
       map((response) => response.data || []),
       tap((data) => {
         if (data.length > 0) {

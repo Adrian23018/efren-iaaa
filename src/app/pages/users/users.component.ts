@@ -18,6 +18,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { FileUserComponent } from '@app/shared/components/file-user/file-user.component';
 
 
 @Component({
@@ -35,7 +36,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
     FormsModule,
     InputGroupModule,
     InputGroupAddonModule,
-    SplitButtonModule
+    SplitButtonModule,
+    FileUserComponent
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
@@ -52,6 +54,8 @@ export class UsersComponent {
   public showMenu: boolean = false;
   // isLoading = signal(true); // o simplemente: isLoading = true;
   private searchInput$ = new Subject<string>();
+  public selectedSession: boolean = false;
+  public display: boolean = false;
 
   filters: any = {
     name: '',
@@ -75,16 +79,16 @@ export class UsersComponent {
   public myUsers: { data$: Observable<Users[]>; totalUsers$: Observable<number>; isLoading: Signal<boolean> } =
     this.usersService.getUsers(1, 5, this.filters);
 
-    constructor(){
-      this.searchInput$
-    .pipe(
-      debounceTime(1300) // Espera 3 segundos desde el último evento
-    )
-    .subscribe(value => {
-      this.filters.name = value;
-      this.applyFilters(); // Ejecuta el filtro solo después del debounce
-    });
-    }
+  constructor() {
+    this.searchInput$
+      .pipe(
+        debounceTime(1300) // Espera 3 segundos desde el último evento
+      )
+      .subscribe(value => {
+        this.filters.name = value;
+        this.applyFilters(); // Ejecuta el filtro solo después del debounce
+      });
+  }
 
   // Método de ejemplo para actualizar la lista de los usuarios
   // refreshUsers(): void {
@@ -103,13 +107,7 @@ export class UsersComponent {
   }
 
   loadUsers(page: number, limit: number) {
-    // this.isLoading.set(true);
     this.myUsers = this.usersService.getUsers(page, limit, this.filters);
-    // this.myUsers.data$.subscribe(() => {
-    //   setTimeout(() => {
-    //     // this.isLoading.set(false);
-    //   }, 100);
-    // });
   }
 
   onGlobalFilter(event: Event) {
@@ -126,15 +124,17 @@ export class UsersComponent {
     userData.showMenu = !userData.showMenu;
   }
 
-  viewFiles(user_id: any) {
-    const { data$, isLoading } = this.usersService.getUserIdFiles(user_id);
-    this.isLoading = isLoading;
+  viewFiles(user: any) {
+    console.log("users_seleted", user);
+    this.selectedSession = true;
+    this.display = true;
+    // this.usersService.getUserIdFiles(user.user_id).data$.subscribe((result: any) => {
+    //   this.files.set(result);
+    //   console.log("seult:", result);
 
-    effect(() => {
-      toSignal(data$)().subscribe((result:any) => {
-        this.files.set(result);
-      });
-    });
+    //   this.selectedSession = true;
+    // });
+
   }
 
   enabledUser(userData: any) {
@@ -186,6 +186,6 @@ export class UsersComponent {
       }
     ];
   }
-  
+
 
 }
