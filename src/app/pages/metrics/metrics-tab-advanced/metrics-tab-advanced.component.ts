@@ -5,7 +5,7 @@ import { TableModule } from 'primeng/table';
 import { ChartModule } from 'primeng/chart';
 import { DividerModule } from 'primeng/divider';
 import { MetricsService } from '../metrics.service';
-import { MarketingCampaign, MessageUsage, PurcharseSource } from '@app/interfaces/metrics.model';
+import { MessageUsage, PurcharseSource } from '@app/interfaces/metrics.model';
 import { ColorUtil } from '@app/shared/utils/colorUtil';
 
 @Component({
@@ -26,9 +26,6 @@ export class MetricsTabAdvancedComponent implements OnInit {
   purchaseSourcesData: any;
   purchaseSourcesOptions: any;
   
-  // Marketing campaigns data
-  marketingCampaigns: MarketingCampaign[] = [];
-  
   // Message usage by plan
   messageUsage: MessageUsage[] = [];
   
@@ -36,21 +33,7 @@ export class MetricsTabAdvancedComponent implements OnInit {
   
   ngOnInit() {
     this.initPurchaseSourcesChart();
-
-    this.getMarketingCampaigns();
     this.getMessageUsageByPlan();
-  }
-
-  getMarketingCampaigns() {
-    // Fetch marketing campaigns data from the service
-    this.metricsService.getMarketingCampaigns().subscribe({
-      next: (campaigns: MarketingCampaign[]) => {
-        this.marketingCampaigns = campaigns;
-      },
-      error: (error: any) => {
-        console.error('Error fetching marketing campaigns:', error);
-      }
-    });
   }
 
   getMessageUsageByPlan() {
