@@ -1,6 +1,12 @@
 <h3 class="text-base font-semibold mb-3">Resumen de la sesión</h3>
 <ng-container *ngIf="selectedFile">
-    <p>{{ selectedFile.summary }}</p>
+    <div class="p-1 bg-primary-50 border-round">
+        <p-scrollpanel [style]="{ width: '100%', height: '190px' }">
+            <div class="p-1 pr-2">
+                {{ selectedFile.summary }}
+            </div>
+        </p-scrollpanel>
+    </div>
 
     <div class="grid mt-4">
     <div class="col-12 md:col-6">
