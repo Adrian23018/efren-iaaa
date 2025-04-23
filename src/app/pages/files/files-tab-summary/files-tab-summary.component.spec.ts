@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MetricsTabsComponent } from './metrics-tabs.component';
+import { FilesTabSummaryComponent } from './files-tab-summary.component';
 
-describe('MetricsTabsComponent', () => {
-  let component: MetricsTabsComponent;
-  let fixture: ComponentFixture<MetricsTabsComponent>;
+describe('FilesTabSummaryComponent', () => {
+  let component: FilesTabSummaryComponent;
+  let fixture: ComponentFixture<FilesTabSummaryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MetricsTabsComponent]
+      imports: [FilesTabSummaryComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MetricsTabsComponent);
+    fixture = TestBed.createComponent(FilesTabSummaryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

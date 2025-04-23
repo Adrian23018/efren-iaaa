@@ -1,0 +1,42 @@
+<h3 class="text-base font-semibold mb-3">Resumen de la sesión</h3>
+<ng-container *ngIf="selectedFile">
+    <p>{{ selectedFile.summary }}</p>
+
+    <div class="grid mt-4">
+    <div class="col-12 md:col-6">
+        <div class="flex gap-2">
+        <i class="pi pi-calendar text-primary text-xl"></i>
+        <div>
+            <h4 class="text-base font-semibold m-0 mb-2">Periodo de sesión</h4>
+            <p class="m-0">{{ selectedFile.weekStart | date: 'dd/MM/yyyy' }} - {{ selectedFile.weekEnd | date: 'dd/MM/yyyy' }}</p>
+        </div>
+        </div>
+    </div>
+
+    <div class="col-12 md:col-6">
+        <div class="flex gap-2">
+        <i class="pi pi-comment text-primary text-xl"></i>
+        <div>
+            <h4 class="text-base font-semibold m-0 mb-2">Engagement</h4>
+            <p class="m-0">/10</p>
+            <p class="m-0">1 caracteres</p>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="mt-4">
+        <h4 class="text-base font-semibold m-0 mb-2">Tags de estado mental</h4>
+        <div class="flex flex-wrap gap-2">
+            <p-tag *ngFor="let tag of selectedFile.mentalStateTags" 
+                [value]="tag" 
+                [severity]="getTagSeverity(tag)">
+            </p-tag>
+        </div>
+    </div>
+        
+    <div class="mt-4">
+        <h4 class="text-base font-semibold m-0 mb-2">Campaña activada</h4>
+        <p class="m-0">campaign</p>
+    </div>
+</ng-container>
