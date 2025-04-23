@@ -11,7 +11,7 @@
 
 <app-metrics-filter (periodChange)="onPeriodChange($event)"></app-metrics-filter>
 
-<app-metrics-tabs (tabChange)="onTabChange($event)"></app-metrics-tabs>
+<molecule-tabs [tabs]="tabs" [(activeTab)]="activeTab"></molecule-tabs>
 
 <app-metrics-tab-general *ngIf="activeTab === 'general'"></app-metrics-tab-general>
 <app-metrics-tab-alerts *ngIf="activeTab === 'alerts'"></app-metrics-tab-alerts>

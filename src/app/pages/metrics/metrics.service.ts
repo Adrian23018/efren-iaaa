@@ -8,7 +8,6 @@ import {
   ChartMetrics,
   EarlyAlerts,
   GeneralMetrics,
-  MarketingCampaign,
   MessageUsage,
   PlanStats,
   PurcharseSource,
@@ -69,12 +68,6 @@ export class MetricsService {
   getMetricsPlans(): Observable<PlanStats[]> {
     return this.http.get<PlanStats[]>(
       `${this.apiDasboardUrl}/${environment.endpoints.metricsUsersPlans}`
-    );
-  }
-
-  getMarketingCampaigns(): Observable<MarketingCampaign[]> {
-    return this.http.get<MarketingCampaign[]>(
-      `${this.apiDasboardUrl}/${environment.endpoints.metricsAdvancedMarketing}`
     );
   }
 

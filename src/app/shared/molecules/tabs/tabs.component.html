@@ -1,8 +1,8 @@
-<div class="metrics-tabs bg-white border-round mb-3">
+<div class="molecule-tabs bg-white border-round mb-3">
     <div class="flex">
       <div 
         *ngFor="let tab of tabs" 
-        class="tab-item flex-1 text-center p-3 cursor-pointer transition-colors transition-duration-150"
+        class="tab-item flex-1 text-center p-3 cursor-pointer transition-colors transition-duration-150" 
         [class.active-tab]="activeTab === tab.id"
         (click)="setActiveTab(tab.id)">
         {{ tab.label }}

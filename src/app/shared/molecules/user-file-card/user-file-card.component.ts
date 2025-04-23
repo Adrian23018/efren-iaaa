@@ -11,7 +11,7 @@ import { TagModule } from 'primeng/tag';
   templateUrl: './user-file-card.component.html',
   styleUrl: './user-file-card.component.scss'
 })
-export class UserFileCardComponent {
+export class MoleculeUserFileCardComponent {
   @Input() file!: UserFile;
   @Input() selected: boolean = false;
   @Output() fileSelected = new EventEmitter<UserFile>();

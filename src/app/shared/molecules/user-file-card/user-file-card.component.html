@@ -5,29 +5,34 @@
     '': !selected,
     'bg-primary-50 border-primary': selected
   }"
+  [ngStyle]="{'min-height': '160px' }"
   (click)="selectFile()">
   <div class="flex justify-content-between align-items-center mb-2">
-    <h3 class="text-base font-semibold m-0">{{ file.name }}</h3>
+    <h3 class="text-base font-semibold m-0">{{ file.userId }} {{ file.name }}</h3>
     <span class="text-xs px-2 py-1 border-round"
           [ngClass]="{
-            'bg-green-50 text-green-600': file.status === 'Revisado',
-            'bg-yellow-50 text-yellow-600': file.status === 'Pendiente'
+            'bg-green-50 text-green-600': file.stripeStatus === 'active',
+            'bg-yellow-50 text-yellow-600': file.stripeStatus === 'pending'
           }">
-      {{ file.status }}
+      {{ file.stripeStatus }}
     </span>
   </div>
   <div class="text-sm text-color-secondary mb-2 flex align-items-center gap-1">
-    <i class="pi pi-calendar"></i> {{ file.period }}
+    <i class="pi pi-calendar"></i> {{ file.weekStart | date: 'dd/MM/yyyy' }} - {{ file.weekEnd | date: 'dd/MM/yyyy' }}
   </div>
   <div class="text-sm mb-2 line-height-3 overflow-hidden text-overflow-ellipsis" 
        style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
     {{ file.summary }}
   </div>
   <div class="flex flex-wrap gap-2">
-    <p-tag *ngFor="let tag of file.tags" 
+    <p-tag *ngFor="let tag of file.mentalStateTags.slice(0,2)" 
             [value]="tag" 
             [severity]="getTagSeverity(tag)"
             [style]="{'height': '20px', 'font-size': '0.75rem'}">
     </p-tag>
+    <span *ngIf="file.mentalStateTags.length > 2" 
+          class="text-sm text-color-secondary">
+      ...
+    </span>
   </div>
 </div>

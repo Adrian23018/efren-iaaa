@@ -1,0 +1,16 @@
+<h4 class="text-base font-semibold mb-3">Insights y observaciones</h4>
+<div *ngIf="selectedFile?.insights?.length; else noInsights">
+    <div *ngFor="let insight of selectedFile?.insights; let i = index"
+        class="flex align-items-center gap-2 p-2 mb-2 border-round bg-gray-50">
+        <div class="flex align-items-center justify-content-center bg-primary-50 text-primary border-circle"
+            style="min-width: 36px; min-height: 36px; width: 36px; height: 36px; font-weight: 700; font-size: 1rem; box-shadow: 0 2px 8px 0 rgba(33,100,243,0.08);">
+            {{ i + 1 }}
+        </div>
+        <div class="text-base text-color flex-grow-1">
+            {{ insight }}
+        </div>
+    </div>
+</div>
+<ng-template #noInsights>
+    <div class="text-secondary">No hay insights disponibles.</div>
+</ng-template>

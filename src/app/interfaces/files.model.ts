@@ -1,11 +1,97 @@
 export type FileStatus = 'Revisado' | 'Pendiente';
 
+// export interface UserFile {
+//     id: number;
+//     name: string;
+//     userId: string;
+//     period: string;
+//     status: FileStatus;
+//     summary: string;
+//     tags: string[];
+// }
+
+export interface MetaFile {
+    page: number;
+    limit: number;
+    totalItems: number;
+    totalPages: number;
+    totalFiles: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+}
+export interface UserFileBackend {
+    id: number;
+    user_id: number;
+    week_start: string;
+    week_end: string;
+    full_conversation: string;
+    summary: string;
+    topics: string[];
+    emotions_detected: string[];
+    mental_state_tags: string[];
+    important_events: string[];
+    conversation_length: number;
+    engagement_level: string;
+    insights: string[];
+    reviewed_by_psychologist: boolean;
+    notes: null;
+    created_at: string;
+    updated_at: string;
+    campaigns_sent?: string | number;
+    name: string;
+    email: string;
+    company_id?: string | number;
+    plan_id: number;
+    stripe_customer_id: string;
+    active: boolean;
+    phone: string;
+    stripe_suscription_id: string;
+    payment?: string | number;
+    tags: string[] | null;
+    utm_source?: string | number;
+    stripe_status: string;
+    global_member: boolean;
+    description: string;
+    max_messages: number;
+    price: string;
+    product_id: string;
+}
+
 export interface UserFile {
     id: number;
-    name: string;
-    userId: string;
-    period: string;
-    status: FileStatus;
+    userId: number;
+    weekStart: string;
+    weekEnd: string;
+    fullConversation: string;
     summary: string;
-    tags: string[];
+    topics: string[];
+    emotionsDetected: string[];
+    mentalStateTags: string[];
+    importantEvents: string[];
+    conversationLength: number;
+    engagementLevel: string;
+    insights: string[];
+    reviewedByPsychologist: boolean;
+    notes: null;
+    createdAt: string;
+    updatedAt: string;
+    campaignsSent?: string | number;
+    name: string;
+    email: string;
+    companyId?: string | number;
+    planId: number;
+    stripeCustomerId: string;
+    active: boolean;
+    phone: string;
+    stripeSubscriptionId: string;
+    payment?: string | number;
+    tags: string[] | null;
+    utmSource?: string | number;
+    stripeStatus: string;
+    globalMember: boolean;
+    description: string;
+    maxMessages: number;
+    price: string;
+    productId: string;
 }
+  

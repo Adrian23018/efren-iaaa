@@ -1,13 +1,13 @@
-<div class="p-3">
-    <h1 class="text-xl font-medium mb-4 text-gray-800">Dashboard</h1>
+<div class="">
+    <h1 class="text-xl font-medium mb-3 text-gray-800">Dashboard</h1>
 
     <div class="grid">
-        <div class="col-12 md:col-6 lg:col-4" *ngFor="let statistic of statistics">
+        <div class="col-12 py-0 md:col-6 lg:col-4" *ngFor="let statistic of statistics">
             <atom-card-statistic [data]="statistic">
             </atom-card-statistic>
         </div>
 
-        <div class="mt-0 col-12 md:col-12 lg:col-12 flex align-items-center">
+        <div class="mt-0 py-0 col-12 md:col-12 lg:col-12 flex align-items-center">
             <h2 class="text-sm font-medium text-gray-700 mb-0">
                 <i class="pi pi-users"></i> 
                 Total Usuarios: 
@@ -19,7 +19,7 @@
             </atom-card-statistic>
         </div>
 
-        <div class="mt-0 col-12 md:col-12 lg:col-12 flex align-items-center">
+        <div class="mt-0 py-0 col-12 md:col-12 lg:col-12 flex align-items-center">
             <h2 class="text-sm font-medium text-gray-700 mb-0">
                 <i class="pi pi-users"></i> 
                 Estado de Usuarios:

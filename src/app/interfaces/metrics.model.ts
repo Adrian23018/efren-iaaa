@@ -9,7 +9,7 @@ export interface DashboardMetrics {
 }
 
 export type PeriodFilter = 'today' | 'last7days' | 'lastmonth' | 'lastquarter' | 'lastyear' | 'custom';
-export type MetricsTab = 'general' | 'alerts' | 'users' | 'advanced';
+// export type MetricsTab = 'general' | 'alerts' | 'users' | 'advanced';
 
 export interface PeriodChangeEvent {
     period: PeriodFilter;
@@ -79,14 +79,6 @@ export interface PlanStats {
     percentage: number;
     color: string;
     stats: Stats[];
-}
-
-export interface MarketingCampaign {
-    name: string;
-    startDate: string;
-    endDate: string;
-    impactedUsers: number;
-    conversions: number;
 }
  
 export interface MessageUsage {
