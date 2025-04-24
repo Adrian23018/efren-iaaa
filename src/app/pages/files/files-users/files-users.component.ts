@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Scroller, ScrollerModule } from 'primeng/scroller';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -32,7 +32,7 @@ export class FilesUsersComponent {
   pageDefault: number = 1;
   page: number = 1;
 
-  filters: Filters = {
+  @Input() filters: Filters = {
     name: '',
     plan: null,
     status: null,
@@ -45,7 +45,15 @@ export class FilesUsersComponent {
     this.loadInitialData();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['filters'] && !changes['filters'].firstChange) {
+      this.loadInitialData();
+    }
+  }
+
   loadInitialData() {
+    console.log("this.filters: ", this.filters);
+    
     this.filesService.getFiles(this.pageDefault, this.pageSize, this.filters).subscribe({
       next: (response: PaginatorModel<UserFile[], MetaFile>) => {
         this.files = response.data;
@@ -76,7 +84,6 @@ export class FilesUsersComponent {
     this.filesService.getFiles(this.page, this.pageSize, this.filters).subscribe({
       next: (response: PaginatorModel<UserFile[], MetaFile>) => {
         this.files = [...this.files, ...response.data];
-        // this.highestLastSeen = this.pageSize - 1;
         this.totalRecords = response.meta.totalFiles;
         this.page++;
         this.lazyLoading = false;
@@ -86,23 +93,5 @@ export class FilesUsersComponent {
         this.lazyLoading = false;
       },
     });
-    
-    // setTimeout(() => {
-    //   const startIndex = this.files.length;
-    //   const endIndex = Math.min(startIndex + this.pageSize, this.totalRecords);
-      
-    //   const newItems = Array.from({ length: endIndex - startIndex }).map((_, i) => (<UserFile>{
-    //     id: startIndex + i + 1,
-    //     name: `María González #${startIndex + i + 1}`,
-    //     userId: '101',
-    //     period: '2023-09-01 - 2023-09-07',
-    //     status: 'Revisado',
-    //     summary: 'La usuaria muestra signos de ansiedad moderada relacionados con su trabajo. Ha expresado preocupaciones por plazos ajustados y conflictos con colegas.',
-    //     tags: ['ansiedad', 'estrés laboral', 'insomnio']
-    //   }));
-      
-    //   this.files = [...this.files, ...newItems];
-    //   this.lazyLoading = false;
-    // }, 500);
   }
 }

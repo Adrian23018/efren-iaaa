@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AtomCardStatisticComponent } from '@app/shared/atoms/card-statistic/card-statistic.component';
 import { CardStatistic } from '@app/shared/atoms/card-statistic/card-statistic.model';
-import { MetricsService } from '../metrics.service';
-import { ChartMetrics, GeneralMetrics, PurchaseData } from '@app/interfaces/metrics.model';
+import { PurchaseData } from '@app/interfaces/metrics.model';
 import { ChartOptionsService } from '@app/shared/service/chart-options/chart-options.service';
 import { MONTHS } from '@app/shared/constants';
 import { ChartModule } from 'primeng/chart';
@@ -76,9 +75,6 @@ export class MetricsTabGeneralComponent implements OnChanges {
   constructor(
     private readonly chartOptionsService: ChartOptionsService,
   ) {}
-
-  ngOnInit() {
-  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['metrics'] && !changes['metrics'].firstChange) {
