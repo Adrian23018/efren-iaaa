@@ -1,0 +1,13 @@
+<div class="flex flex-column h-screen">
+    <div class="flex flex-1 overflow-hidden">
+      <app-sidebar></app-sidebar>
+  
+      <main class="flex-1 flex flex-column bg-white-100 overflow-hidden">
+        <app-header class="sticky top-0 z-50 bg-white shadow-sm"></app-header>
+  
+        <div class="flex-1 overflow-auto bg-gray-100 p-4">
+          <router-outlet></router-outlet>
+        </div>
+      </main>
+    </div>
+  </div>

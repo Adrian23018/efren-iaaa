@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -8,6 +8,7 @@ import { MenuItem } from 'primeng/api';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -26,7 +27,8 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 })
 export class HeaderComponent implements OnInit {
   items: MenuItem[] = [];
-
+  private router = inject(Router);
+  
   ngOnInit() {
     this.items = [
       {
@@ -49,8 +51,15 @@ export class HeaderComponent implements OnInit {
         icon: 'pi pi-sign-out',
         command: () => {
           console.log('Cerrar sesión');
+          this.logout();
         }
       }
     ];
+  }
+
+  logout(){
+    sessionStorage.removeItem('access_token');
+    // Redirigir al login
+    this.router.navigate(['/login']);
   }
 }

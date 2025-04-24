@@ -20,5 +20,6 @@ export const environment = {
         metricsAdvancedMessages: 'metrics/advanced/messages',
         metricsAdvancedPurcharses: 'metrics/advanced/purcharses',
         files: 'files',
+        login: 'login',
     }
 };

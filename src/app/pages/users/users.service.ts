@@ -2,7 +2,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, Signal, signal } from '@angular/core';
 import { finalize, map, Observable, share, tap } from 'rxjs';
 import { environment } from '@environment';
-import { Users } from './users.model';
 import { MapperTransformData } from '@app/shared/utils/transformData';
 
 @Injectable({
@@ -41,25 +40,9 @@ export class UsersService {
     };
   }
 
-  // getUserIdFiles(user_id: number) {
-  //   const isLoading = signal(true);
-  //   const data$ = this.http.get<any>(`${this.apiUsersUrl}/file?userId=${user_id}`).pipe(
-  //     map((response) => response || []),
-  //     tap((data) => {
-  //       if (data.length > 0) {
-  //         this.setUsersId(data[0].id);
-  //       }
-  //     }),
-  //     finalize(() => isLoading.set(false)),
-  //     share()
-  //   );
-  
-  //   return { data$: response.map(MapperTransformData.transformUserFile), isLoading };
-  // }
-
   getUserIdFiles(user_id: number) {
     const isLoading = signal(true);
-  
+
     // Realiza la llamada HTTP para obtener los datos
     const data$ = this.http.get<any>(`${this.apiUsersUrl}/file?userId=${user_id}`).pipe(
       map((response) => {
@@ -67,18 +50,16 @@ export class UsersService {
         return MapperTransformData.transformUserFile(response) || [];  // Si la respuesta está vacía, devuelve un arreglo vacío
       }),
       tap((data) => {
-       
+
       }),
       finalize(() => {
         isLoading.set(false);  // Finaliza el estado de carga
       }),
       share()  // Comparte la respuesta entre varios suscriptores si es necesario
     );
-  
+
     // Devuelve el observable con el estado de carga
     return { data$: data$, isLoading };
   }
-  
-  
 
 }
