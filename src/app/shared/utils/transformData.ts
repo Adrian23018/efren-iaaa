@@ -37,7 +37,8 @@ export class MapperTransformData {
             description: backend.description,
             maxMessages: backend.max_messages,
             price: backend.price,
-            productId: backend.product_id
+            productId: backend.product_id,
+            user_name: backend.user_name,
         }
     }
 }

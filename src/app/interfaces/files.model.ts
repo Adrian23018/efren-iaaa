@@ -55,6 +55,7 @@ export interface UserFileBackend {
     max_messages: number;
     price: string;
     product_id: string;
+    user_name:string;
 }
 
 export interface UserFile {
@@ -93,5 +94,6 @@ export interface UserFile {
     maxMessages: number;
     price: string;
     productId: string;
+    user_name: string;
 }
   

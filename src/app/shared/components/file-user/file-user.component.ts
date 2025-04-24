@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -11,6 +11,14 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { UserFile } from '@app/interfaces/files.model';
 import { Severity, TagUtil } from '@app/shared/utils/tagUtil';
 import { DialogModule } from 'primeng/dialog';
+import { FilesTabConversationsComponent } from '@app/pages/files/files-tab-conversations/files-tab-conversations.component';
+import { FilesTabNotesComponent } from '@app/pages/files/files-tab-notes/files-tab-notes.component';
+import { FilesTabInsightsComponent } from '@app/pages/files/files-tab-insights/files-tab-insights.component';
+import { FilesTabEmotionsComponent } from '@app/pages/files/files-tab-emotions/files-tab-emotions.component';
+import { FilesTabEventsComponent } from '@app/pages/files/files-tab-events/files-tab-events.component';
+import { FilesTabSummaryComponent } from '@app/pages/files/files-tab-summary/files-tab-summary.component';
+import { MoleculeTabsComponent } from '@app/shared/molecules/tabs/tabs.component';
+import { Tab } from '@app/interfaces/tabs.model';
 
 @Component({
   selector: 'app-file-user',
@@ -25,7 +33,14 @@ import { DialogModule } from 'primeng/dialog';
     ChipModule,
     InputGroupModule,
     InputGroupAddonModule,
-    DialogModule
+    DialogModule,
+    FilesTabSummaryComponent,
+    FilesTabEmotionsComponent,
+    FilesTabEventsComponent,
+    FilesTabInsightsComponent,
+    FilesTabNotesComponent,
+    FilesTabConversationsComponent,
+    MoleculeTabsComponent,
   ],
   templateUrl: './file-user.component.html',
   styleUrl: './file-user.component.scss'
@@ -33,12 +48,29 @@ import { DialogModule } from 'primeng/dialog';
 export class FileUserComponent implements OnInit {
   @Input() display: boolean = false;
   @Input() sessionData: any;
+  @Output() closeModal = new EventEmitter<void>();
 
-  selectedFile: UserFile | null = null;
+  selectedFile: any | null = null;
   showFileDialog = false;
 
+   activeTab: string = 'summary';
+  
+    tabs: Tab[] = [
+      { id: 'summary', label: 'Resumen' },
+      { id: 'emotions', label: 'Emociones' },
+      { id: 'events', label: 'Eventos' },
+      { id: 'insights', label: 'Insights' },
+      { id: 'notes', label: 'Notas' },
+      { id: 'conversations', label: 'Conversación' },
+    ];
+
   ngOnInit() {
+    this.selectedFile = this.sessionData;
+    console.log("this.selectedFile : ", this.selectedFile);
+
     this.showFileDialog = this.display;
+    console.log("this.showFileDialog : ", this.showFileDialog);
+
   }
 
   selectFile(file: UserFile) {
@@ -50,7 +82,10 @@ export class FileUserComponent implements OnInit {
     return TagUtil.getTagSeverity(tag);
   }
 
- 
+  closeFileDialog() {
+    console.log("llega a cerrar modal hijo");
+    this.closeModal.emit(); // Emite el evento
+  }
 
   openFileDialog(file: any) {
     this.selectedFile = file;

@@ -277,9 +277,10 @@
 </p-dialog>
 
 <app-file-user
-  *ngIf="selectedSession"
+  *ngIf="display"
   [sessionData]="selectedSession"
-  [display]="display">
+  [display]="display"
+  (closeModal)="onCloseModal()">
 </app-file-user>
 
 

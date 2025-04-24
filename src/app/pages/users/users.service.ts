@@ -3,6 +3,7 @@ import { inject, Injectable, Signal, signal } from '@angular/core';
 import { finalize, map, Observable, share, tap } from 'rxjs';
 import { environment } from '@environment';
 import { Users } from './users.model';
+import { MapperTransformData } from '@app/shared/utils/transformData';
 
 @Injectable({
   providedIn: 'root'
@@ -40,23 +41,44 @@ export class UsersService {
     };
   }
 
-  // https://api.efrenmartinezortiz-ia.com/webhook/files/getId
+  // getUserIdFiles(user_id: number) {
+  //   const isLoading = signal(true);
+  //   const data$ = this.http.get<any>(`${this.apiUsersUrl}/file?userId=${user_id}`).pipe(
+  //     map((response) => response || []),
+  //     tap((data) => {
+  //       if (data.length > 0) {
+  //         this.setUsersId(data[0].id);
+  //       }
+  //     }),
+  //     finalize(() => isLoading.set(false)),
+  //     share()
+  //   );
+  
+  //   return { data$: response.map(MapperTransformData.transformUserFile), isLoading };
+  // }
 
   getUserIdFiles(user_id: number) {
     const isLoading = signal(true);
-    const data$ = this.http.get<any>(`${this.apiUsersUrl}/file/?userId=${user_id}`).pipe(
-      map((response) => response.data || []),
-      tap((data) => {
-        if (data.length > 0) {
-          // Guardar la información del primer elemento en el localStorage
-          this.setUsersId(data[0].id);
-        }
+  
+    // Realiza la llamada HTTP para obtener los datos
+    const data$ = this.http.get<any>(`${this.apiUsersUrl}/file?userId=${user_id}`).pipe(
+      map((response) => {
+        // Asegúrate de que la respuesta es la correcta
+        return MapperTransformData.transformUserFile(response) || [];  // Si la respuesta está vacía, devuelve un arreglo vacío
       }),
-      finalize(() => isLoading.set(false)),
-      share(),
+      tap((data) => {
+       
+      }),
+      finalize(() => {
+        isLoading.set(false);  // Finaliza el estado de carga
+      }),
+      share()  // Comparte la respuesta entre varios suscriptores si es necesario
     );
-
-    return { data$: data$, isLoading: isLoading };
+  
+    // Devuelve el observable con el estado de carga
+    return { data$: data$, isLoading };
   }
+  
+  
 
 }

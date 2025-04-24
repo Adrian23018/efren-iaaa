@@ -54,7 +54,7 @@ export class UsersComponent {
   public showMenu: boolean = false;
   // isLoading = signal(true); // o simplemente: isLoading = true;
   private searchInput$ = new Subject<string>();
-  public selectedSession: boolean = false;
+  public selectedSession: any = '';
   public display: boolean = false;
 
   filters: any = {
@@ -126,14 +126,12 @@ export class UsersComponent {
 
   viewFiles(user: any) {
     console.log("users_seleted", user);
-    this.selectedSession = true;
-    this.display = true;
-    // this.usersService.getUserIdFiles(user.user_id).data$.subscribe((result: any) => {
-    //   this.files.set(result);
-    //   console.log("seult:", result);
+    this.usersService.getUserIdFiles(user.user_id).data$.subscribe((result: any) => {
+      console.log("seult:", result);
+      this.selectedSession = result;
+      this.display = true;
 
-    //   this.selectedSession = true;
-    // });
+    });
 
   }
 
@@ -171,20 +169,10 @@ export class UsersComponent {
     this.searchInput$.next(input.value);
   }
 
-  getMenuActions(user: any) {
-    return [
-      {
-        label: 'Expedientes',
-        icon: 'pi pi-clone',
-        command: () => this.viewFiles(user)
-      },
-      {
-        label: 'Desactivar',
-        icon: 'pi pi-times-circle',
-        styleClass: 'text-red-600 font-medium',
-        command: () => this.enabledUser(user)
-      }
-    ];
+   // Método para cerrar el modal
+   onCloseModal() {
+    console.log("llega al padre");
+    this.display = false;
   }
 
 
