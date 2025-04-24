@@ -6,9 +6,11 @@ export interface DashboardMetrics {
     userElite: number;
     userPro: number;
     userDemo: number;
+    userCanceled: number;
+    userPendingCanceled: number;
 }
 
-export type PeriodFilter = 'today' | 'last7days' | 'lastmonth' | 'lastquarter' | 'lastyear' | 'custom';
+export type PeriodFilter = 'TODAY' | '7D' | '30D' | '90D' | '365D' | 'custom';
 // export type MetricsTab = 'general' | 'alerts' | 'users' | 'advanced';
 
 export interface PeriodChangeEvent {

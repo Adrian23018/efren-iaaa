@@ -47,7 +47,7 @@ export class FilesComponent implements OnInit {
     { id: 'summary', label: 'Resumen' },
     { id: 'emotions', label: 'Emociones' },
     { id: 'events', label: 'Eventos' },
-    { id: 'insights', label: 'Insights' },
+    { id: 'insights', label: 'Perspectivas' },
     { id: 'notes', label: 'Notas' },
     { id: 'conversations', label: 'Conversación' },
   ];

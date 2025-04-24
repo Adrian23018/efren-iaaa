@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MetricsService } from '../metrics.service';
+// import { MetricsService } from '../metrics.service';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -61,44 +61,44 @@ export class MetricsTabAlertsComponent {
   ];
 
   constructor(
-    private readonly metricsService: MetricsService,
+    // private readonly metricsService: MetricsService,
   ) {}
 
   ngOnInit() {
-    this.loadAlerts();
-    this.getEarliesAlerts();
+    // this.loadAlerts();
+    // this.getEarliesAlerts();
   }
 
   loadAlerts(): void {
-    this.metricsService.getAlertsMetrics().subscribe({
-      next: (data: AlertsMetrics) => {
-        this.statistics = this.statistics.map((stat) => {
-          const key = stat.id as keyof AlertsMetrics;
-          if (key in data) {
-            return {
-              ...stat,
-              value: data[key],
-              loading: false,
-            };
-          }
-          return stat;
-        });
-      },
-      error: (err) => {
-        console.log('Error', err);
-      },
-    });
+    // this.metricsService.getAlertsMetrics().subscribe({
+    //   next: (data: AlertsMetrics) => {
+    //     this.statistics = this.statistics.map((stat) => {
+    //       const key = stat.id as keyof AlertsMetrics;
+    //       if (key in data) {
+    //         return {
+    //           ...stat,
+    //           value: data[key],
+    //           loading: false,
+    //         };
+    //       }
+    //       return stat;
+    //     });
+    //   },
+    //   error: (err) => {
+    //     console.log('Error', err);
+    //   },
+    // });
   }
 
   getEarliesAlerts(): void {
-    this.metricsService.getEarliesAlerts().subscribe({
-      next: (data: EarlyAlerts[]) => {
-        this.earlyAlerts = data;
-      },
-      error: (err) => {
-        console.log('Error', err);
-      },
-    });
+    // this.metricsService.getEarliesAlerts().subscribe({
+    //   next: (data: EarlyAlerts[]) => {
+    //     this.earlyAlerts = data;
+    //   },
+    //   error: (err) => {
+    //     console.log('Error', err);
+    //   },
+    // });
   }
 
   translateAction(action: string): string {

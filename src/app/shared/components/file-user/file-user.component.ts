@@ -53,16 +53,16 @@ export class FileUserComponent implements OnInit {
   selectedFile: any | null = null;
   showFileDialog = false;
 
-   activeTab: string = 'summary';
-  
-    tabs: Tab[] = [
-      { id: 'summary', label: 'Resumen' },
-      { id: 'emotions', label: 'Emociones' },
-      { id: 'events', label: 'Eventos' },
-      { id: 'insights', label: 'Insights' },
-      { id: 'notes', label: 'Notas' },
-      { id: 'conversations', label: 'Conversación' },
-    ];
+  activeTab: string = 'summary';
+
+  tabs: Tab[] = [
+    { id: 'summary', label: 'Resumen' },
+    { id: 'emotions', label: 'Emociones' },
+    { id: 'events', label: 'Eventos' },
+    { id: 'insights', label: 'Insights' },
+    { id: 'notes', label: 'Notas' },
+    { id: 'conversations', label: 'Conversación' },
+  ];
 
   ngOnInit() {
     this.selectedFile = this.sessionData;

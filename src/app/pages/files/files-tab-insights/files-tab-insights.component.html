@@ -1,4 +1,4 @@
-<h4 class="text-base font-semibold mb-3">Insights y observaciones</h4>
+<h4 class="text-base font-semibold mb-3">Perspectivas y observaciones</h4>
 <div *ngIf="selectedFile?.insights?.length; else noInsights">
     <div *ngFor="let insight of selectedFile?.insights; let i = index"
         class="flex align-items-center gap-2 p-2 mb-2 border-round bg-gray-50">
@@ -12,5 +12,5 @@
     </div>
 </div>
 <ng-template #noInsights>
-    <div class="text-secondary">No hay insights disponibles.</div>
+    <div class="text-secondary">No hay perspectivas disponibles.</div>
 </ng-template>

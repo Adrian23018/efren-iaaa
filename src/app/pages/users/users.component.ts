@@ -13,13 +13,13 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ChipModule } from 'primeng/chip'; // ✅ ESTE es el correcto
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { SplitButtonModule } from 'primeng/splitbutton';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FileUserComponent } from '@app/shared/components/file-user/file-user.component';
-
+import { MoleculeUserFilterPanelComponent } from '@app/shared/molecules/user-filter-panel/user-filter-panel.component';
+import { UserFilterPanel } from '@app/shared/molecules/user-filter-panel/user-filter-panel.model';
 
 @Component({
   selector: 'app-users',
@@ -34,10 +34,12 @@ import { FileUserComponent } from '@app/shared/components/file-user/file-user.co
     InputTextModule,
     ChipModule,
     FormsModule,
+    ReactiveFormsModule,
     InputGroupModule,
     InputGroupAddonModule,
     SplitButtonModule,
-    FileUserComponent
+    FileUserComponent,
+    MoleculeUserFilterPanelComponent,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
@@ -53,7 +55,6 @@ export class UsersComponent {
   public menuItems: MenuItem[] = [];
   public showMenu: boolean = false;
   // isLoading = signal(true); // o simplemente: isLoading = true;
-  private searchInput$ = new Subject<string>();
   public selectedSession: any = '';
   public display: boolean = false;
 
@@ -64,12 +65,6 @@ export class UsersComponent {
     periodo: null
   };
 
-  periodos = [
-    { label: 'Últimos 7 días', value: '7d' },
-    { label: 'Últimos 30 días', value: '30d' },
-    { label: 'Últimos 3 meses', value: '3m' },
-    { label: 'Último año', value: '1y' }
-  ];
 
   files = signal<any[]>([]);
   isLoading = signal(false);
@@ -79,14 +74,68 @@ export class UsersComponent {
   public myUsers: { data$: Observable<Users[]>; totalUsers$: Observable<number>; isLoading: Signal<boolean> } =
     this.usersService.getUsers(1, 5, this.filters);
 
-  constructor() {
-    this.searchInput$
+  formUsers!: FormGroup;
+  filterParams: UserFilterPanel = {
+    showSearch: true,
+    searchConfig: {
+      label: 'Buscar',
+      placeholder: 'Buscar por nombre',
+      formControlName: 'name'
+    },
+    showPlan: true,
+    planConfig: {
+      label: 'Plan',
+      plans: [
+        { label: 'Elite', value: 1 },
+        { label: 'Pro', value: 2 },
+        { label: 'Demo', value: 3 },
+      ],
+      formControlName: 'plan'
+    },
+    showStatus: true,
+    statusConfig: {
+      label: 'Estado',
+      states: [
+        { label: 'Activo', value: 'Activo' },
+        { label: 'Inactivo', value: 'Inactivo' },
+      ],
+      formControlName: 'status'
+    },
+    showPeriod: true,
+    periodConfig: {
+      label: 'Periodo',
+      periods: [
+        { label: 'Últimos 7 días', value: '7d' },
+        { label: 'Últimos 30 días', value: '30d' },
+        { label: 'Últimos 3 meses', value: '3m' },
+        { label: 'Último año', value: '1y' }  
+      ],
+      formControlName: 'period'
+    }
+  }
+
+  constructor(private readonly formBuilder: FormBuilder) {
+    this.formUsers = this.formBuilder.group({
+      name: [''],
+      plan: [''],
+      status: [''],
+      period: [''],
+      searchDirect: [''],
+    });
+    this.filterParams.formGroupName = this.formUsers;
+
+    this.formUsers.get('searchDirect')?.valueChanges
       .pipe(
-        debounceTime(1300) // Espera 3 segundos desde el último evento
+        debounceTime(1300)
       )
       .subscribe(value => {
-        this.filters.name = value;
-        this.applyFilters(); // Ejecuta el filtro solo después del debounce
+        this.formUsers.patchValue({
+          name: value,
+          plan: null,
+          status: null,
+          period: null,
+        }, { emitEvent: false });
+        this.applyFilters();
       });
   }
 
@@ -125,14 +174,10 @@ export class UsersComponent {
   }
 
   viewFiles(user: any) {
-    console.log("users_seleted", user);
     this.usersService.getUserIdFiles(user.user_id).data$.subscribe((result: any) => {
-      console.log("seult:", result);
       this.selectedSession = result;
       this.display = true;
-
     });
-
   }
 
   enabledUser(userData: any) {
@@ -142,31 +187,24 @@ export class UsersComponent {
     userData.showMenu = false;
   }
 
-  toggleFilter(key: string, value: any) {
-    this.filters[key] = this.filters[key] === value ? null : value;
-  }
-
   clearFilters() {
-    this.filters = {
+    this.formUsers.patchValue({
       name: '',
       plan: null,
-      estado: null,
-      periodo: null
-    };
-    this.myUsers = this.usersService.getUsers(1, 5, this.filters);
+      status: null,
+      period: null,
+      searchDirect: '',
+    }, { emitEvent: false });
+
+    const filters = { ... this.formUsers.getRawValue() };
+    delete filters.searchDirect;
+    this.myUsers = this.usersService.getUsers(1, 5, filters);
   }
 
   applyFilters() {
-    // this.isLoading.set(true);
-    this.myUsers = this.usersService.getUsers(1, 5, this.filters);
-    this.cdr.detectChanges();
-    // Aquí disparas tu fetch con los filtros
-  }
-
-  // Captura el input
-  onSearchChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.searchInput$.next(input.value);
+    const filters = { ... this.formUsers.getRawValue() };
+    delete filters.searchDirect;
+    this.myUsers = this.usersService.getUsers(1, 5, filters);    
   }
 
    // Método para cerrar el modal
@@ -174,6 +212,4 @@ export class UsersComponent {
     console.log("llega al padre");
     this.display = false;
   }
-
-
 }

@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 
 import { PlanStats, UserMetric } from '@app/interfaces/metrics.model';
-import { MetricsService } from '../metrics.service';
+// import { MetricsService } from '../metrics.service';
 import { ChartModule } from 'primeng/chart';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
@@ -33,36 +33,36 @@ export class MetricsTabUsersComponent {
   chartOptions: any;
   
   constructor(
-    private readonly metricsService: MetricsService,
+    // private readonly metricsService: MetricsService,
   ) {}
 
   ngOnInit() {
-    this.getMetricsUsers();
-    this.getMetricsPlans();
+    // this.getMetricsUsers();
+    // this.getMetricsPlans();
   }
 
-  getMetricsUsers(): void {
-    this.metricsService.getMetricsUsers().subscribe({
-      next: (data: UserMetric[]) => {
-        this.users = data;
-      },
-      error: (err) => {
-        console.log('Error', err);
-      },
-    });
-  }
+  // getMetricsUsers(): void {
+  //   this.metricsService.getMetricsUsers().subscribe({
+  //     next: (data: UserMetric[]) => {
+  //       this.users = data;
+  //     },
+  //     error: (err) => {
+  //       console.log('Error', err);
+  //     },
+  //   });
+  // }
 
-  getMetricsPlans(): void {
-    this.metricsService.getMetricsPlans().subscribe({
-      next: (data: PlanStats[]) => {
-        this.plans = data;
-        this.initChart();
-      },
-      error: (err) => {
-        console.log('Error', err);
-      },
-    });
-  }
+  // getMetricsPlans(): void {
+  //   this.metricsService.getMetricsPlans().subscribe({
+  //     next: (data: PlanStats[]) => {
+  //       this.plans = data;
+  //       this.initChart();
+  //     },
+  //     error: (err) => {
+  //       console.log('Error', err);
+  //     },
+  //   });
+  // }
 
   getStatusSeverity(status: string): Severity{
     return TagUtil.getStatusSeverity(status);

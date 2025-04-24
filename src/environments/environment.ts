@@ -12,6 +12,8 @@ export const environment = {
         general: 'general',
         purcharses: 'purcharses',
         earlies: 'earlies',
+        metricsAdvanced: 'advanced/metrics',
+        
         metricsUsersDetail: 'metrics/users/detail',
         metricsUsersPlans: 'metrics/users/plans',
         metricsAdvancedMarketing: 'metrics/advanced/marketing',

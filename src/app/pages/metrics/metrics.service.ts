@@ -1,19 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { environment } from '@environment';
-import {
-  AlertsMetrics,
-  ChartMetrics,
-  EarlyAlerts,
-  GeneralMetrics,
-  MessageUsage,
-  PlanStats,
-  PurcharseSource,
-  PurchaseData,
-  UserMetric,
-} from '@app/interfaces/metrics.model';
+import { MetricsResponse } from '@app/interfaces/metrics-response.model';
+import { Metrics } from '@app/interfaces/metrics-data.model';
+import { MapperTransformData } from '@app/shared/utils/transformData';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +16,26 @@ export class MetricsService {
 
   constructor(private readonly http: HttpClient) {}
 
-  getGeneralMetrics(): Observable<GeneralMetrics> {
+  getMetrics(interval: string): Observable<Metrics> {
+    const body = {
+      interval
+    };
+
+    return this.http.post<MetricsResponse>(
+      `${this.apiDasboardUrl}/${environment.endpoints.metricsAdvanced}`,
+      body
+    ).pipe(
+      map(response => MapperTransformData.transformMetricsResponse(response))
+    );
+  }
+
+  // getMetrics(): Observable<GeneralMetrics> {
+  //   return this.http.get<GeneralMetrics>(
+  //     `${this.apiDasboardUrl}/${environment.endpoints.metrics}/${environment.endpoints.general}`
+  //   );
+  // }
+
+  /*getGeneralMetrics(): Observable<GeneralMetrics> {
     return this.http.get<GeneralMetrics>(
       `${this.apiDasboardUrl}/${environment.endpoints.metrics}/${environment.endpoints.general}`
     );
@@ -81,5 +93,5 @@ export class MetricsService {
     return this.http.get<PurcharseSource[]>(
       `${this.apiDasboardUrl}/${environment.endpoints.metricsAdvancedPurcharses}`
     );
-  }
+  }*/
 }
