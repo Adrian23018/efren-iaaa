@@ -1,0 +1,39 @@
+<div class="flex justify-content-center items-center w-full bg-[#F7F7F7] mt-8">
+  <div class="surface-card p-4 shadow-2 border-round w-full xs:m-4 sm:w-9 md:w-10 lg:w-7 xl:w-4">
+    <div class="text-center mb-5">
+      <div class="text-900 text-3xl font-medium mb-3">Iniciar sesión</div>
+    </div>
+
+    <div>
+      <form [formGroup]="loginForm" autocomplete="off" class="space-y-4 md:space-y-4" action="#">
+        <div class="field">
+          <label for="email" class="block text-900 font-medium mb-2">Correo</label>
+          <input id="email" type="email" name="email" formControlName="email" placeholder="example@dominio.com"
+            pInputText class="w-full mb-3" />
+          <div *ngIf="isValidField('email')">
+            <span class="text-sm text-red-500">{{
+              getFieldError("email")
+              }}</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="password" class="block text-900 font-medium mb-2">Contraseña</label>
+          <p-password id="password" type="password" name="password" formControlName="password" [toggleMask]="true"
+            placeholder="Tu contraseña" class="w-full mb-3" />
+          <div *ngIf="isValidField('password')">
+            <span class="text-sm text-red-500">{{
+              getFieldError("password")
+              }}</span>
+          </div>
+        </div>
+
+      </form>
+      <button pButton pRipple iconPos="right" label="Iniciar sesión" class="w-full" (click)="onSave()"
+        [loading]="loading()" severity="primary"></button>
+    </div>
+  </div>
+</div>
+
+<p-toast [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'1000ms'"
+  [hideTransitionOptions]="'1000ms'" [showTransformOptions]="'translateX(100%)'" />
