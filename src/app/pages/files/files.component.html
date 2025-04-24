@@ -4,8 +4,21 @@
       <p class="text-color-secondary mt-0">Revisa los expedientes y conversaciones de los usuarios</p>
     </div>
     <div class="flex gap-2">
-        <button pButton icon="pi pi-filter" label="Filtros" class="p-button-outlined"></button>
+        <button 
+            pButton 
+            icon="pi pi-filter" 
+            label="Filtros" 
+            class="p-button-outlined" 
+            (click)="filterPanelComponent.toggle($event)">
+        </button>
         <button pButton icon="pi pi-download" label="Exportar" class="p-button-primary"></button>
+
+        <molecule-user-filter-panel 
+            #filterPanelComponent 
+            [custom]="filterParams" 
+            (clearFilters)="clearFilters()" 
+            (applyFilters)="applyFilters()">
+        </molecule-user-filter-panel>
     </div>
 </div>
 
@@ -30,7 +43,7 @@
             <ng-template pTemplate="content">
                 <div class="flex flex-column gap-3">
                     <div class="flex flex-column gap-3">
-                        <app-files-users (fileSelected)="selectFile($event)"></app-files-users>
+                        <app-files-users (fileSelected)="selectFile($event)" [filters]="filters"></app-files-users>
                     </div>
                 </div>
             </ng-template>
