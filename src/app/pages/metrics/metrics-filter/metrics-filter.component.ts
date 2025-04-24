@@ -1,12 +1,13 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 
 import { PeriodChangeEvent, PeriodFilter } from '@app/interfaces/metrics.model';
 import { DateUtil } from '@app/shared/utils/dateUtil';
+import { MetricsFilter } from './metrics-filter.model';
 
 @Component({
   selector: 'app-metrics-filter',
@@ -15,61 +16,64 @@ import { DateUtil } from '@app/shared/utils/dateUtil';
     ButtonModule, 
     CalendarModule, 
     FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './metrics-filter.component.html',
   styleUrl: './metrics-filter.component.scss'
 })
 export class MetricsFilterComponent {
+  @Input() custom!: MetricsFilter;
+
   @Output() periodChange = new EventEmitter<PeriodChangeEvent>();
   
-  selectedPeriod: PeriodFilter = 'last7days';
+  selectedPeriod: PeriodFilter = '7D';
   currentPeriodText: string = '';
 
   ngOnInit() {
-    this.selectPeriod('last7days');
+    this.selectPeriod('7D');
     console.log("selectedPeriod", this.selectedPeriod);
-    
   }
 
   selectPeriod(period: PeriodFilter) {
     this.selectedPeriod = period;
+    this.custom?.formGroup?.get(this.custom.formControlName)?.setValue(period);
     
     const today = new Date();
     let startDate = new Date();
-    let endDate = new Date();
+    // let endDate = new Date();
     
     switch (period) {
-      case 'today':
+      case 'TODAY':
         this.currentPeriodText = DateUtil.formatDate(today);
         break;
         
-      case 'last7days':
+      case '7D':
         startDate.setDate(today.getDate() - 6);
         this.currentPeriodText = `${DateUtil.formatDate(startDate)} a ${DateUtil.formatDate(today)}`;
         break;
         
-      case 'lastmonth':
+      case '30D':
         startDate.setMonth(today.getMonth() - 1);
         this.currentPeriodText = `${DateUtil.formatDate(startDate)} a ${DateUtil.formatDate(today)}`;
         break;
         
-      case 'lastquarter':
+      case '90D':
         startDate.setMonth(today.getMonth() - 3);
         this.currentPeriodText = `${DateUtil.formatDate(startDate)} a ${DateUtil.formatDate(today)}`;
         break;
         
-      case 'lastyear':
+      case '365D':
         startDate.setFullYear(today.getFullYear() - 1);
         this.currentPeriodText = `${DateUtil.formatDate(startDate)} a ${DateUtil.formatDate(today)}`;
         break;
     }
     
-    this.periodChange.emit(<PeriodChangeEvent>{
-      period: this.selectedPeriod,
-      dateRange: {
-        start: startDate,
-        end: endDate
-      }
-    });
+    // this.periodChange.emit(<PeriodChangeEvent>{
+    //   period: this.selectedPeriod,
+    //   dateRange: {
+    //     start: startDate,
+    //     end: endDate
+    //   }
+    // });
   }
 }

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { TabViewModule } from 'primeng/tabview';
@@ -13,6 +13,10 @@ import { MetricsTabUsersComponent } from './metrics-tab-users/metrics-tab-users.
 import { MetricsTabAdvancedComponent } from "./metrics-tab-advanced/metrics-tab-advanced.component";
 import { MoleculeTabsComponent } from '@app/shared/molecules/tabs/tabs.component';
 import { Tab } from '@app/interfaces/tabs.model';
+import { MetricsFilter } from './metrics-filter/metrics-filter.model';
+import { MetricsService } from './metrics.service';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { Metrics } from '@app/interfaces/metrics-data.model';
 
 @Component({
   selector: 'app-metrics',
@@ -22,6 +26,7 @@ import { Tab } from '@app/interfaces/tabs.model';
     CalendarModule,
     TabViewModule,
     FormsModule,
+    ReactiveFormsModule,
     MetricsFilterComponent,
     MoleculeTabsComponent,
     MetricsTabGeneralComponent,
@@ -42,6 +47,44 @@ export class MetricsComponent {
     { id: 'users', label: 'Métricas de Usuarios' },
     { id: 'advanced', label: 'Métricas Avanzadas' }
   ];
+
+  metrics!: Metrics;
+  metricFilter: MetricsFilter = {
+    period: '7D',
+    formControlName: 'period'
+  }
+  formMetrics!: FormGroup;
+
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly metricsService: MetricsService,
+  ) {
+    this.formMetrics = this.formBuilder.group({
+      period: ['7D'],
+    });
+    this.metricFilter.formGroup = this.formMetrics;
+
+    this.loadMetrics();
+  }
+
+  loadMetrics() {
+    this.formMetrics.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged() 
+      )
+      .subscribe((value) => {
+        this.metricsService.getMetrics(value.period).subscribe({
+          next: (data: Metrics) => {
+            this.metrics = data;
+            console.log('Response:', this.metrics);
+          },
+          error: (err) => {
+            console.log('Error', err);
+          },
+        });
+      });
+  }
 
   onExport() {
     console.log('Exportando datos...');

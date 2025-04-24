@@ -1,0 +1,77 @@
+
+<ng-container *ngIf="custom && custom.formGroupName">
+    <form [formGroup]="custom.formGroupName">
+        <p-overlayPanel #filterPanel [style]="{ width: '20rem' }" [dismissable]="true">
+            <div class="flex flex-column gap-3 p-3 text-sm">
+                <span class="font-medium text-base">Filtros</span>
+                <small class="text-color-secondary">Aplica filtros para refinar los resultados</small>
+
+                <!-- Buscador -->
+                <div *ngIf="custom.showSearch && custom.searchConfig">
+                    <span class="text-sm text-color-secondary">{{ custom.searchConfig.label }}</span>
+                    <input pInputText type="text" class="w-full mt-1" 
+                        [placeholder]="custom.searchConfig.placeholder"
+                        [formControlName]="custom.searchConfig.formControlName" />
+                </div>
+
+                <!-- Plan -->
+                <div class="flex flex-column gap-1" *ngIf="custom.showPlan && custom.planConfig">
+                    <span class="text-sm text-color-secondary">{{custom.planConfig.label}}</span>
+                    <div class="flex gap-2 flex-wrap">
+                        <p-chip
+                            *ngFor="let plan of custom.planConfig.plans"
+                            type="button"
+                            (keydown)="$event.preventDefault()"
+                            [label]="plan.label"
+                            [removable]="false"
+                            class="cursor-pointer"
+                            [class.bg-primary]="custom.formGroupName.get(custom.planConfig.formControlName)?.value === plan.value"
+                            (click)="onSelectPlan(plan.value)"
+                        ></p-chip>
+                    </div>
+                </div>
+
+                <!-- Estado -->
+                <div class="flex flex-column gap-1" *ngIf="custom.showStatus && custom.statusConfig">
+                    <span class="text-sm text-color-secondary">{{custom.statusConfig.label}}</span>
+                    <div class="flex gap-2 flex-wrap">
+                        <p-chip
+                            *ngFor="let status of custom.statusConfig.states"
+                            type="button"
+                            (keydown)="$event.preventDefault()"
+                            [label]="status.label"
+                            [removable]="false"
+                            class="cursor-pointer"
+                            [class.bg-primary]="custom.formGroupName.get(custom.statusConfig.formControlName)?.value === status.value"
+                            (click)="onSelectStatus(status.value)"
+                        ></p-chip>
+                    </div>
+                </div>
+
+                <!-- Periodo -->
+                <div class="flex flex-column gap-1" *ngIf="custom.showPeriod && custom.periodConfig">
+                    <span class="text-sm text-color-secondary">{{custom.periodConfig.label}}</span>
+                    <div class="flex gap-2 flex-wrap">
+                        <p-chip
+                            *ngFor="let period of custom.periodConfig.periods"
+                            type="button"
+                            (keydown)="$event.preventDefault()"
+                            [label]="period.label"
+                            [removable]="false"
+                            class="cursor-pointer"
+                            [class.bg-blue-100]="custom.formGroupName.get(custom.periodConfig.formControlName)?.value === period.value"
+                            (click)="onSelectPeriod(period.value)"
+                        ></p-chip>
+                    </div>
+                </div>
+
+                <!-- Acciones -->
+                <div class="flex justify-between mt-3">
+                    <button pButton label="Limpiar" class="p-button-text p-button-sm"
+                        (click)="clearFilters.emit()"></button>
+                    <button pButton label="Aplicar filtros" class="p-button-sm" (click)="applyFilters.emit()"></button>
+                </div>
+            </div>
+        </p-overlayPanel>
+    </form>
+</ng-container>

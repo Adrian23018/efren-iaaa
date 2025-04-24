@@ -1,47 +1,51 @@
-<div class="p-3 bg-white border-round mb-3">
-    <div class="flex align-items-center justify-content-between flex-wrap">
-      <div class="flex align-items-center gap-2 mb-2 md:mb-0">
-        <i class="pi pi-calendar text-gray-500 mr-2"></i>
-        <span class="font-medium">Filtrar por período:</span>
-        
-        <button pButton 
-          class="p-button-text p-button-sm" 
-          [class.p-button-outlined]="selectedPeriod === 'today'"
-          label="Hoy" 
-          (click)="selectPeriod('today')">
-        </button>
-        
-        <button pButton 
-          class="p-button-text p-button-sm" 
-          [class.p-button-outlined]="selectedPeriod === 'last7days'"
-          label="Últimos 7 días" 
-          (click)="selectPeriod('last7days')">
-        </button>
-        
-        <button pButton 
-          class="p-button-text p-button-sm" 
-          [class.p-button-outlined]="selectedPeriod === 'lastmonth'"
-          label="Último mes" 
-          (click)="selectPeriod('lastmonth')">
-        </button>
-        
-        <button pButton 
-          class="p-button-text p-button-sm" 
-          [class.p-button-outlined]="selectedPeriod === 'lastquarter'"
-          label="Último trimestre" 
-          (click)="selectPeriod('lastquarter')">
-        </button>
-        
-        <button pButton 
-          class="p-button-text p-button-sm" 
-          [class.p-button-outlined]="selectedPeriod === 'lastyear'"
-          label="Último año" 
-          (click)="selectPeriod('lastyear')">
-        </button>
-      </div>
-      
-      <div class="text-sm text-gray-700">
-        Período actual: <strong>{{ currentPeriodText }}</strong>
-      </div>
+<ng-container *ngIf="custom && custom.formGroup">
+  <form [formGroup]="custom.formGroup">
+    <div class="p-3 bg-white border-round mb-3">
+        <div class="flex align-items-center justify-content-between flex-wrap">
+          <div class="flex align-items-center gap-2 mb-2 md:mb-0">
+            <i class="pi pi-calendar text-gray-500 mr-2"></i>
+            <span class="font-medium">Filtrar por período:</span>
+            
+            <button pButton 
+              class="p-button-text p-button-sm" 
+              [class.p-button-outlined]="selectedPeriod === 'TODAY'"
+              label="Hoy" 
+              (click)="selectPeriod('TODAY')">
+            </button>
+            
+            <button pButton 
+              class="p-button-text p-button-sm" 
+              [class.p-button-outlined]="selectedPeriod === '7D'"
+              label="Últimos 7 días" 
+              (click)="selectPeriod('7D')">
+            </button>
+            
+            <button pButton 
+              class="p-button-text p-button-sm" 
+              [class.p-button-outlined]="selectedPeriod === '30D'"
+              label="Último mes" 
+              (click)="selectPeriod('30D')">
+            </button>
+            
+            <button pButton 
+              class="p-button-text p-button-sm" 
+              [class.p-button-outlined]="selectedPeriod === '90D'"
+              label="Último trimestre" 
+              (click)="selectPeriod('90D')">
+            </button>
+            
+            <button pButton 
+              class="p-button-text p-button-sm" 
+              [class.p-button-outlined]="selectedPeriod === '365D'"
+              label="Último año" 
+              (click)="selectPeriod('365D')">
+            </button>
+          </div>
+          
+          <div class="text-sm text-gray-700">
+            Período actual: <strong>{{ currentPeriodText }}</strong>
+          </div>
+        </div>
     </div>
-</div>
+  </form>
+</ng-container>
