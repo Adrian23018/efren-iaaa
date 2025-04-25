@@ -1,95 +1,98 @@
-<div class="flex justify-content-between align-items-center mb-3">
-    <div class="flex flex-column">
-      <h1 class="text-xl font-medium m-0">Expedientes</h1>
-      <p class="text-color-secondary mt-0">Revisa los expedientes y conversaciones de los usuarios</p>
-    </div>
-    <div class="flex gap-2">
-        <button 
-            pButton 
-            icon="pi pi-filter" 
-            label="Filtros" 
-            class="p-button-outlined" 
-            (click)="filterPanelComponent.toggle($event)">
-        </button>
-        <button pButton icon="pi pi-download" label="Exportar" class="p-button-primary"></button>
+<form [formGroup]="formUsers">
+    <div class="flex justify-content-between align-items-center mb-3">
+        <div class="flex flex-column">
+        <h1 class="text-xl font-medium m-0">Expedientes</h1>
+        <p class="text-color-secondary mt-0">Revisa los expedientes y conversaciones de los usuarios</p>
+        </div>
+        <div class="flex gap-2">
+            <button 
+                pButton 
+                icon="pi pi-filter" 
+                label="Filtros" 
+                class="p-button-outlined" 
+                (click)="filterPanelComponent.toggle($event)">
+            </button>
+            <button pButton icon="pi pi-download" label="Exportar" class="p-button-primary"></button>
 
-        <molecule-user-filter-panel 
-            #filterPanelComponent 
-            [custom]="filterParams" 
-            (clearFilters)="clearFilters()" 
-            (applyFilters)="applyFilters()">
-        </molecule-user-filter-panel>
-    </div>
-</div>
-
-
-<div class="grid">
-    <div class="col-12 md:col-4">
-        <p-card styleClass="h-full">
-            <ng-template pTemplate="title">
-                <div>
-                    <h2 class="text-lg font-semibold m-0">Sesiones semanales</h2>
-                    <p class="text-color-secondary text-sm m-0">Expedientes de usuarios</p>
-                </div>
-            </ng-template>
-            <ng-template pTemplate="subtitle">
-                <p-inputgroup>
-                    <p-inputgroup-addon>
-                        <i class="pi pi-search"></i>
-                    </p-inputgroup-addon>
-                    <input type="text" pInputText placeholder="Buscar expedientes..."/>
-                </p-inputgroup>
-            </ng-template>
-            <ng-template pTemplate="content">
-                <div class="flex flex-column gap-3">
-                    <div class="flex flex-column gap-3">
-                        <app-files-users (fileSelected)="selectFile($event)" [filters]="filters"></app-files-users>
-                    </div>
-                </div>
-            </ng-template>
-        </p-card>
-    </div>
-  
-    <div class="col-12 md:col-8" *ngIf="selectedFile else noFileSelected">
-        <p-card styleClass="h-full">
-            <ng-template pTemplate="title">
-                <div class="flex justify-content-between align-items-start">
-                    <div>
-                        <h2 class="text-lg font-semibold m-0">{{ selectedFile.user_name }}</h2>
-                        <p class="text-color-secondary text-sm m-0">Expediente #{{ selectedFile.id }} • Usuario ID #{{ selectedFile.userId }}</p>
-                    </div>
-                    <button pButton icon="pi pi-ellipsis-h" class="p-button-text p-button-rounded"></button>
-                </div>
-            </ng-template>
-            <ng-template pTemplate="content">
-                <molecule-tabs [(activeTab)]="activeTab" [tabs]="tabs"></molecule-tabs>
-
-                <app-files-tab-summary *ngIf="activeTab === 'summary'" [selectedFile]="selectedFile"></app-files-tab-summary>
-                <app-files-tab-emotions *ngIf="activeTab === 'emotions'" [selectedFile]="selectedFile"></app-files-tab-emotions>
-                <app-files-tab-events *ngIf="activeTab === 'events'" [selectedFile]="selectedFile"></app-files-tab-events>
-                <app-files-tab-insights *ngIf="activeTab === 'insights'" [selectedFile]="selectedFile"></app-files-tab-insights>
-                <app-files-tab-notes *ngIf="activeTab === 'notes'" [selectedFile]="selectedFile"></app-files-tab-notes>
-                <app-files-tab-conversations *ngIf="activeTab === 'conversations'"></app-files-tab-conversations>
-            </ng-template>
-        </p-card>
+            <molecule-user-filter-panel 
+                #filterPanelComponent 
+                [custom]="filterParams" 
+                (clearFilters)="clearFilters()" 
+                (applyFilters)="applyFilters()">
+            </molecule-user-filter-panel>
+        </div>
     </div>
 
-    <ng-template #noFileSelected>
-        <div class="col-12 md:col-8">
+
+    <div class="grid">
+        <div class="col-12 md:col-4">
             <p-card styleClass="h-full">
                 <ng-template pTemplate="title">
+                    <div>
+                        <h2 class="text-lg font-semibold m-0">Sesiones semanales</h2>
+                        <p class="text-color-secondary text-sm m-0">Expedientes de usuarios</p>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="subtitle">
+                    <p-inputgroup>
+                        <p-inputgroup-addon>
+                            <i class="pi pi-search"></i>
+                        </p-inputgroup-addon>
+                        <input type="text" pInputText placeholder="Buscar expedientes..."
+                            formControlName="searchDirect"/>
+                    </p-inputgroup>
                 </ng-template>
                 <ng-template pTemplate="content">
-                    <div class="flex flex-column align-items-center justify-content-center py-5">
-                        <i class="pi pi-file-o text-6xl text-color-secondary mb-4"></i>
-                        <h3 class="text-xl font-medium text-center">Selecciona un expediente</h3>
-                        <p class="text-color-secondary text-center mt-2 mb-0 px-4">
-                            Haz clic en un expediente de la lista para ver sus detalles,
-                            resumen de sesiones, emociones detectadas e insights.
-                        </p>
+                    <div class="flex flex-column gap-3">
+                        <div class="flex flex-column gap-3">
+                            <app-files-users (fileSelected)="selectFile($event)" [filters]="filters"></app-files-users>
+                        </div>
                     </div>
                 </ng-template>
             </p-card>
         </div>
-    </ng-template>
-</div>
+    
+        <div class="col-12 md:col-8" *ngIf="selectedFile else noFileSelected">
+            <p-card styleClass="h-full">
+                <ng-template pTemplate="title">
+                    <div class="flex justify-content-between align-items-start">
+                        <div>
+                            <h2 class="text-lg font-semibold m-0">{{ selectedFile.user_name }}</h2>
+                            <p class="text-color-secondary text-sm m-0">Expediente #{{ selectedFile.id }} • Usuario ID #{{ selectedFile.userId }}</p>
+                        </div>
+                        <button pButton icon="pi pi-ellipsis-h" class="p-button-text p-button-rounded"></button>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="content">
+                    <molecule-tabs [(activeTab)]="activeTab" [tabs]="tabs"></molecule-tabs>
+
+                    <app-files-tab-summary *ngIf="activeTab === 'summary'" [selectedFile]="selectedFile"></app-files-tab-summary>
+                    <app-files-tab-emotions *ngIf="activeTab === 'emotions'" [selectedFile]="selectedFile"></app-files-tab-emotions>
+                    <app-files-tab-events *ngIf="activeTab === 'events'" [selectedFile]="selectedFile"></app-files-tab-events>
+                    <app-files-tab-insights *ngIf="activeTab === 'insights'" [selectedFile]="selectedFile"></app-files-tab-insights>
+                    <app-files-tab-notes *ngIf="activeTab === 'notes'" [selectedFile]="selectedFile"></app-files-tab-notes>
+                    <app-files-tab-conversations *ngIf="activeTab === 'conversations'"></app-files-tab-conversations>
+                </ng-template>
+            </p-card>
+        </div>
+
+        <ng-template #noFileSelected>
+            <div class="col-12 md:col-8">
+                <p-card styleClass="h-full">
+                    <ng-template pTemplate="title">
+                    </ng-template>
+                    <ng-template pTemplate="content">
+                        <div class="flex flex-column align-items-center justify-content-center py-5">
+                            <i class="pi pi-file-o text-6xl text-color-secondary mb-4"></i>
+                            <h3 class="text-xl font-medium text-center">Selecciona un expediente</h3>
+                            <p class="text-color-secondary text-center mt-2 mb-0 px-4">
+                                Haz clic en un expediente de la lista para ver sus detalles,
+                                resumen de sesiones, emociones detectadas e insights.
+                            </p>
+                        </div>
+                    </ng-template>
+                </p-card>
+            </div>
+        </ng-template>
+    </div>
+</form>

@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { ChartModule } from 'primeng/chart';
 import { DividerModule } from 'primeng/divider';
-// import { MetricsService } from '../metrics.service';
-import { MessageUsage, PurcharseSource } from '@app/interfaces/metrics.model';
 import { ColorUtil } from '@app/shared/utils/colorUtil';
+import { Metrics, MetricsMessageUsage } from '@app/interfaces/metrics-data.model';
 
 @Component({
   selector: 'app-metrics-tab-advanced',
@@ -21,57 +20,50 @@ import { ColorUtil } from '@app/shared/utils/colorUtil';
   templateUrl: './metrics-tab-advanced.component.html',
   styleUrl: './metrics-tab-advanced.component.scss'
 })
-export class MetricsTabAdvancedComponent implements OnInit {
+export class MetricsTabAdvancedComponent implements OnInit, OnChanges {
+  @Input() metrics!: Metrics;
+  
   // Purchase sources chart data
   purchaseSourcesData: any;
   purchaseSourcesOptions: any;
   
   // Message usage by plan
-  messageUsage: MessageUsage[] = [];
-  
-  // constructor(private readonly metricsService: MetricsService) {}
-  
-  ngOnInit() {
+  messageUsage: MetricsMessageUsage[] = [];
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['metrics'] && !changes['metrics'].firstChange) {
+      this.initPurchaseSourcesChart();
+      this.getMessageUsageByPlan();
+    }
+  }
+
+  ngOnInit(): void {
     this.initPurchaseSourcesChart();
     this.getMessageUsageByPlan();
   }
 
   getMessageUsageByPlan() {
-    // this.metricsService.getMessageUsageByPlan().subscribe({
-    //   next: (messageUsage: MessageUsage[]) => {
-    //     this.messageUsage = messageUsage;
-    //   },
-    //   error: (error: any) => {
-    //     console.error('Error fetching messages usages by plan:', error);
-    //   }
-    // });
+    this.messageUsage = this.metrics?.advancedMetrics?.messageUsageByPlan ?? [];
   }
   
   initPurchaseSourcesChart() {
-    // Fetch purchase sources data from service
-    // this.metricsService.getPurchaseSources().subscribe({
-    //   next: (data: PurcharseSource[]) => {
-    //     const labels = data.map(item => item.source);
-    //     const values = data.map(item => item.percentage);
-        
-    //     // Use ColorUtil to generate dynamic colors
-    //     const colors = ColorUtil.generateColors(labels.length);
-        
-    //     this.purchaseSourcesData = {
-    //       labels: labels,
-    //       datasets: [
-    //         {
-    //           data: values,
-    //           backgroundColor: colors,
-    //           hoverBackgroundColor: colors.map(color => ColorUtil.adjustBrightness(color, -10))
-    //         }
-    //       ]
-    //     };
-    //   },
-    //   error: (error) => {
-    //     console.error('Error fetching purchase sources:', error);
-    //   }
-    // });
+    const labels = this.metrics?.advancedMetrics?.topUtmSources?.map(item => item.source);
+    const total = this.metrics?.advancedMetrics?.topUtmSources?.reduce((acc, item) => acc + (item.revenue + item.userCount), 0) || 0;
+    if( total === 0 ) return;
+
+    const values = this.metrics?.advancedMetrics?.topUtmSources?.map(item => ((item.revenue + item.userCount) / total) * 100);
+    const colors = ColorUtil.generateColors(labels.length);
+
+    this.purchaseSourcesData = {
+      labels: labels,
+      datasets: [
+        {
+          data: values,
+          backgroundColor: colors,
+          hoverBackgroundColor: colors.map(color => ColorUtil.adjustBrightness(color, -10))
+        }
+      ]
+    };
     
     this.purchaseSourcesOptions = {
       plugins: {
