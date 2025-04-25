@@ -25,18 +25,20 @@
         <p-table [value]="messageUsage" [tableStyle]="{'min-width': '50rem'}" styleClass="p-datatable-sm">
           <ng-template pTemplate="header">
             <tr>
-              <th>Plan</th>
-              <th>Mensajes promedio por usuario</th>
-              <th>Tiempo promedio de uso</th>
-              <th>% de límite utilizado</th>
+              <th scope="col">Plan</th>
+              <th scope="col">Mensajes promedio por usuario</th>
+              <th scope="col">Cantidad de usuarios</th>
+              <th scope="col">Total de mensajes</th>
+              <!-- <th scope="col">Tiempo promedio de uso</th>
+              <th scope="col">% de límite utilizado</th> -->
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-usage>
             <tr>
-              <td>{{usage.plan}}</td>
-              <td>{{usage.averageMessages}}</td>
-              <td>{{usage.averageUsageTime}}</td>
-              <td>{{usage.limitPercentage}}%</td>
+              <td>{{usage.planName}}</td>
+              <td>{{usage.avgMessagesPerUser}}</td>
+              <td>{{usage.userCount}}</td>
+              <td>{{usage.totalMessages}}</td>
             </tr>
           </ng-template>
         </p-table>

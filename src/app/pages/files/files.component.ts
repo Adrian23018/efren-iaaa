@@ -19,6 +19,7 @@ import { MoleculeUserFilterPanelComponent } from '@app/shared/molecules/user-fil
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserFilterPanel } from '@app/shared/molecules/user-filter-panel/user-filter-panel.model';
 import { Filters } from '@app/interfaces/paginator.model';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-files',
@@ -28,7 +29,6 @@ import { Filters } from '@app/interfaces/paginator.model';
     CardModule,
     ButtonModule,
     InputTextModule,
-    // TabViewModule,
     InputGroupModule,
     InputGroupAddonModule,
     FormsModule,
@@ -115,6 +115,20 @@ export class FilesComponent implements OnInit {
       searchDirect: [''],
     });
     this.filterParams.formGroupName = this.formUsers;
+
+    this.formUsers.get('searchDirect')?.valueChanges
+      .pipe(
+        debounceTime(1300)
+      )
+      .subscribe(value => {
+        this.formUsers.patchValue({
+          name: value,
+          plan: null,
+          status: null,
+          period: null,
+        }, { emitEvent: false });
+        this.applyFilters();
+      });
   }
 
   ngOnInit() {
