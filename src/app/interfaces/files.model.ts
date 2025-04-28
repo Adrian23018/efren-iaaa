@@ -46,6 +46,7 @@ export interface UserFileBackend {
     price: string;
     product_id: string;
     user_name:string;
+    weekly_session_id:number;
 }
 
 export interface UserFile {
@@ -85,4 +86,5 @@ export interface UserFile {
     price: string;
     productId: string;
     user_name: string;
+    weekly_session_id:number;
 }

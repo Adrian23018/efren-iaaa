@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -20,6 +20,9 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { UserFilterPanel } from '@app/shared/molecules/user-filter-panel/user-filter-panel.model';
 import { Filters } from '@app/interfaces/paginator.model';
 import { debounceTime } from 'rxjs';
+import { FilesService } from './files.service';
+import { ToastService } from '@app/shared/service/alerts/toast.service';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-files',
@@ -42,6 +45,7 @@ import { debounceTime } from 'rxjs';
     FilesTabNotesComponent,
     FilesTabConversationsComponent,
     MoleculeUserFilterPanelComponent,
+    ToastModule,
 ],
   templateUrl: './files.component.html',
   styleUrl: './files.component.scss'
@@ -49,6 +53,8 @@ import { debounceTime } from 'rxjs';
 export class FilesComponent implements OnInit {
   selectedFile: UserFile | null = null;
   activeTab: string = 'summary';
+  private fileSrv = inject(FilesService);
+  private toastSrvc = inject(ToastService);
 
   tabs: Tab[] = [
     { id: 'summary', label: 'Resumen' },
@@ -56,7 +62,7 @@ export class FilesComponent implements OnInit {
     { id: 'events', label: 'Eventos' },
     { id: 'insights', label: 'Perspectivas' },
     { id: 'notes', label: 'Notas' },
-    { id: 'conversations', label: 'Conversación' },
+    // { id: 'conversations', label: 'Conversación' },
   ];
 
   formUsers!: FormGroup;
@@ -156,5 +162,11 @@ export class FilesComponent implements OnInit {
     const filters = { ... this.formUsers.getRawValue() };
     delete filters.searchDirect;
     this.filters = filters;
+  }
+
+  dowloadFile(){
+    if (this.selectedFile && this.selectedFile?.weekly_session_id) {
+      this.fileSrv.downloadCsvFile(this.selectedFile?.weekly_session_id, this.selectedFile?.userId +'-'+ this.selectedFile?.user_name);
+    }
   }
 }

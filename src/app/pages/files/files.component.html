@@ -12,7 +12,7 @@
                 class="p-button-outlined" 
                 (click)="filterPanelComponent.toggle($event)">
             </button>
-            <button pButton icon="pi pi-download" label="Exportar" class="p-button-primary"></button>
+            <button (click)="dowloadFile()" pButton icon="pi pi-download" label="Exportar" class="p-button-primary"></button>
 
             <molecule-user-filter-panel 
                 #filterPanelComponent 
@@ -96,3 +96,6 @@
         </ng-template>
     </div>
 </form>
+
+<p-toast [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'1000ms'"
+  [hideTransitionOptions]="'1000ms'" [showTransformOptions]="'translateX(100%)'" />

@@ -12,5 +12,6 @@ export const environment = {
         purcharses: 'purcharses',
         earlies: 'earlies',
         metricsUsersDetail: 'metrics/users/detail',
+        download: 'download',
     }
 };

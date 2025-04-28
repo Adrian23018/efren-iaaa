@@ -21,5 +21,6 @@ export const environment = {
         metricsAdvancedPurcharses: 'metrics/advanced/purcharses',
         files: 'files',
         login: 'login',
+        download: 'download',
     }
 };

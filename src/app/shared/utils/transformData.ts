@@ -45,6 +45,7 @@ export class MapperTransformData {
             price: backend.price,
             productId: backend.product_id,
             user_name: backend.user_name,
+            weekly_session_id: backend.weekly_session_id,
         }
     }
 
