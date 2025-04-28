@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MetaFile, UserFile, UserFileBackend } from '@app/interfaces/files.model';
-import { Parameters, Filters, PaginatorModel } from '@app/interfaces/paginator.model';
+import { Parameters, PaginatorModel, Filters } from '@app/interfaces/paginator.model';
 import { MapperTransformData } from '@app/shared/utils/transformData';
 import { environment } from '@environment';
 import { map, Observable } from 'rxjs';

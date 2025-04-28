@@ -1,15 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { AtomCardStatisticComponent } from '@app/shared/atoms/card-statistic/card-statistic.component';
 import { CardStatistic } from '@app/shared/atoms/card-statistic/card-statistic.model';
-import { MetricsService } from '../metrics.service';
-import { ChartMetrics, GeneralMetrics, PurchaseData } from '@app/interfaces/metrics.model';
 import { ChartOptionsService } from '@app/shared/service/chart-options/chart-options.service';
 import { MONTHS } from '@app/shared/constants';
 import { ChartModule } from 'primeng/chart';
 import { MoleculeChartSkeletonComponent } from '@app/shared/molecules/chart-skeleton/chart-skeleton.component';
 import { TableModule } from 'primeng/table';
-import { Metrics, MetricsGeneral } from '@app/interfaces/metrics-data.model';
+import { Metrics, MetricsGeneral, MetricsMontlyPlans } from '@app/interfaces/metrics-data.model';
 
 @Component({
   selector: 'app-metrics-tab-general',
@@ -23,7 +21,7 @@ import { Metrics, MetricsGeneral } from '@app/interfaces/metrics-data.model';
   templateUrl: './metrics-tab-general.component.html',
   styleUrl: './metrics-tab-general.component.scss'
 })
-export class MetricsTabGeneralComponent implements OnChanges {
+export class MetricsTabGeneralComponent implements OnInit, OnChanges {
   @Input() metrics!: Metrics;
 
   chartDataUsers: any;
@@ -34,7 +32,7 @@ export class MetricsTabGeneralComponent implements OnChanges {
   loadingUsers: boolean = true;
   loadingIncomes: boolean = true;
 
-  purchaseData: PurchaseData[] = [];
+  purchaseData: MetricsMontlyPlans[] = [];
 
   statistics: CardStatistic[] = [
     {
@@ -77,16 +75,21 @@ export class MetricsTabGeneralComponent implements OnChanges {
     private readonly chartOptionsService: ChartOptionsService,
   ) {}
 
-  ngOnInit() {
-  }
-
   ngOnChanges(changes: SimpleChanges) {
     if (changes['metrics'] && !changes['metrics'].firstChange) {
-      this.loadGeneralMetrics();
-      this.initChartDataAcummulatedIncomes();
-      this.initChartDataIncomes();
-      this.getPurcharses();
+      this.loadData();
     }
+  }
+
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData() {
+    this.loadGeneralMetrics();
+    this.initChartDataAcummulatedIncomes();
+    this.initChartDataIncomes();
+    this.getPurcharses();
   }
   
   loadGeneralMetrics(): void {
@@ -115,6 +118,8 @@ export class MetricsTabGeneralComponent implements OnChanges {
       month: MONTHS[new Date(item.date).getMonth()],
       value: item.value,
     }));
+
+    if(!chartDataUsers?.length) return;
 
     this.chartDataUsers = {
       labels: chartDataUsers.map((item) => item.month),
@@ -162,6 +167,8 @@ export class MetricsTabGeneralComponent implements OnChanges {
       month: MONTHS[new Date(item.date).getMonth()],
       value: item.value,
     }));
+
+    if(!chartDataIncomes?.length) return;
 
     this.chartDataIncomes = {
       labels: chartDataIncomes.map((item) => item.month),

@@ -22,17 +22,24 @@ import { MetricsFilter } from './metrics-filter.model';
   styleUrl: './metrics-filter.component.scss'
 })
 export class MetricsFilterComponent {
-  @Input() custom!: MetricsFilter;
+  private _custom!: MetricsFilter;
+
+  @Input()
+  set custom(value: MetricsFilter) {
+    this._custom = value;
+    if (value?.period) {
+      this.selectPeriod(value.period);
+    }
+  }
+
+  get custom(): MetricsFilter {
+    return this._custom;
+  }
 
   @Output() periodChange = new EventEmitter<PeriodChangeEvent>();
   
-  selectedPeriod: PeriodFilter = '7D';
+  selectedPeriod!: PeriodFilter;
   currentPeriodText: string = '';
-
-  ngOnInit() {
-    this.selectPeriod('7D');
-    console.log("selectedPeriod", this.selectedPeriod);
-  }
 
   selectPeriod(period: PeriodFilter) {
     this.selectedPeriod = period;
@@ -40,7 +47,6 @@ export class MetricsFilterComponent {
     
     const today = new Date();
     let startDate = new Date();
-    // let endDate = new Date();
     
     switch (period) {
       case 'TODAY':
@@ -67,13 +73,5 @@ export class MetricsFilterComponent {
         this.currentPeriodText = `${DateUtil.formatDate(startDate)} a ${DateUtil.formatDate(today)}`;
         break;
     }
-    
-    // this.periodChange.emit(<PeriodChangeEvent>{
-    //   period: this.selectedPeriod,
-    //   dateRange: {
-    //     start: startDate,
-    //     end: endDate
-    //   }
-    // });
   }
 }
