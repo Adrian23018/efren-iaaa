@@ -62,7 +62,8 @@ export class UsersComponent {
     name: '',
     plan: null,
     estado: null,
-    periodo: null
+    periodo: null,
+    tags: []
   };
 
 
@@ -111,7 +112,27 @@ export class UsersComponent {
         { label: 'Último año', value: '1y' }  
       ],
       formControlName: 'period'
-    }
+    },
+    showTags: true,
+    tagsConfig: {
+    label: 'Etiquetas',
+    tags: [
+      { label: 'Términos aceptados', value: 'terminos-aceptados' },
+      // { label: 'No compró Pro', value: 'no-compro-pro' },
+      { label: 'Demo finalizada', value: 'demo-finalizada' },
+      { label: 'Sin botones', value: 'sin-botones' },
+      { label: 'No compró Pro', value: 'quedo-pro' },
+      { label: 'No compró Élite', value: 'quedo-elite' },
+      { label: 'No ha usado el Pro', value: 'pro-no-uso' },
+      { label: 'No ha usado el Élite', value: 'elite-no-uso' },
+      { label: 'No ha probado la Demo', value: 'no-prueba' },
+      { label: 'No tiene ni data', value: 'no-datos' },
+      { label: 'Se quedo a la Mitad de Demo', value: 'demo-mitad' },
+      { label: 'Pro completado', value: 'pro-completado' },
+      { label: 'Demo completado', value: 'demo-completada' }
+    ],
+    formControlName: 'tags'
+  }
   }
 
   constructor(private readonly formBuilder: FormBuilder) {
@@ -121,6 +142,7 @@ export class UsersComponent {
       status: [''],
       period: [''],
       searchDirect: [''],
+      tags: [[]] // <-- ¡Este es el que permite que se envíen las etiquetas!
     });
     this.filterParams.formGroupName = this.formUsers;
 
@@ -134,6 +156,7 @@ export class UsersComponent {
           plan: null,
           status: null,
           period: null,
+          tags: [] // <-- ¡Este es el que permite que se envíen las etiquetas!
         }, { emitEvent: false });
         this.applyFilters();
       });
@@ -193,6 +216,7 @@ export class UsersComponent {
       plan: null,
       status: null,
       period: null,
+      tags: [], 
       searchDirect: '',
     }, { emitEvent: false });
 

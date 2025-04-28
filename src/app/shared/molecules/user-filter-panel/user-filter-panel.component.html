@@ -65,6 +65,39 @@
                     </div>
                 </div>
 
+                <!-- Etiquetas -->
+                <!-- <div class="flex flex-column gap-1" *ngIf="custom.showTags && custom.tagsConfig">
+                    <span class="text-sm text-color-secondary">{{custom.tagsConfig.label}}</span>
+                    <div class="flex gap-2 flex-wrap">
+                    <p-chip
+                        *ngFor="let tag of custom.tagsConfig.tags"
+                        type="button"
+                        (keydown)="$event.preventDefault()"
+                        [label]="tag.label"
+                        [removable]="false"
+                        class="cursor-pointer"
+                        [class.bg-green-200]="custom.formGroupName.get(custom.tagsConfig.formControlName)?.value.includes(tag.value)"
+                        (click)="toggleTag(tag.value)"
+                    ></p-chip>
+                    </div>
+                </div> -->
+                <!-- Etiquetas (nuevo con MultiSelect) -->
+                <div class="flex flex-column gap-1" *ngIf="custom.showTags && custom.tagsConfig">
+                    <span class="text-sm text-color-secondary">{{custom.tagsConfig.label}}</span>
+                    <p-multiSelect 
+                        [options]="custom.tagsConfig.tags" 
+                        optionLabel="label" 
+                        optionValue="value"
+                        display="chip"
+                        [filter]="true"
+                        [formControlName]="custom.tagsConfig.formControlName"
+                        placeholder="Selecciona etiquetas"
+                        class="w-full"
+                        [showHeader]="false">
+                    </p-multiSelect>
+
+                </div>
+
                 <!-- Acciones -->
                 <div class="flex justify-between mt-3">
                     <button pButton label="Limpiar" class="p-button-text p-button-sm"

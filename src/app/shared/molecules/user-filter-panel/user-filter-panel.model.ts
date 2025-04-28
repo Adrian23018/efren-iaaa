@@ -49,4 +49,12 @@ export interface UserFilterPanel {
     statusConfig?: UserFilterPanelStatusConfig;
     showPeriod?: boolean;
     periodConfig?: UserFilterPanelPeriodConfig;
+    showTags?: boolean;
+    tagsConfig?: UserFilterPanelTagsConfig; // 👈 Aquí el cambio correcto
 }
+
+export interface UserFilterPanelTagsConfig {
+    label: string;
+    tags: { label: string; value: string }[];
+    formControlName: string;
+  }
