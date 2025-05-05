@@ -14,11 +14,8 @@
                     (click)="filterPanelComponent.toggle($event)">
                 </button>
 
-                <molecule-user-filter-panel 
-                    #filterPanelComponent 
-                    [custom]="filterParams" 
-                    (clearFilters)="clearFilters()" 
-                    (applyFilters)="applyFilters()">
+                <molecule-user-filter-panel #filterPanelComponent [custom]="filterParams"
+                    (clearFilters)="clearFilters()" (applyFilters)="applyFilters()">
                 </molecule-user-filter-panel>
             </div>
 
@@ -26,25 +23,43 @@
 
         <!-- Card contenedor -->
         <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-5 border-1 border-round-xl border-gray-200">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-3">
-                <!-- Título y subtítulo -->
-                <div class="col-6">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-1 mt-1">Usuarios registrados</h2>
-                    <p class="text-sm text-gray-500 mb-1 mt-1">Listado de todos los usuarios de la plataforma</p>
+            <!-- <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-4"> -->
+            <div class="">
+                <div class="row">
+                    <div class="col-6">
+                        <h2 class="text-xl font-semibold text-gray-900 mt-0">Usuarios registrados</h2>
+                        <p class="text-sm text-gray-500">Listado de todos los usuarios de la plataforma</p>
+                    </div>
                 </div>
 
-                <!-- Buscador -->
-                <div class="flex align-items-center col-6 justify-content-end">
-                    <p-inputgroup class="w-6">
+                <div *ngIf="formUsers" class="flex flex-wrap gap-2 justify-content-center items-center pt-2 pb-2 col-12">
+                    <p-calendar [showIcon]="true"  formControlName="fechaInicio" placeholder="Fecha inicio" dateFormat="yy-mm-dd"
+                        inputClass="w-full md:w-40"></p-calendar>
+                
+                    <p-calendar [showIcon]="true"  formControlName="fechaFin" placeholder="Fecha fin" dateFormat="yy-mm-dd"
+                        inputClass="w-full md:w-40"></p-calendar>
+                
+                    <button pButton type="button" label="Filtrar" icon="pi pi-filter" class="w-full md:w-auto"
+                        (click)="filtrarPorFechas()"></button>
+                
+                    <button pButton type="button" label="Limpiar" icon="pi pi-times"
+                        class="p-button-secondary w-full md:w-auto" (click)="limpiarFiltros()"></button>
+                </div>
+                
+
+                <!-- 🔍 Buscador -->
+                <div class="w-full md:w-64 pt-2 pb-2">
+                    <p-inputgroup>
                         <p-inputgroup-addon>
                             <i class="pi pi-search"></i>
                         </p-inputgroup-addon>
-                        <input type="text" pInputText placeholder="Buscar por nombre..." class="w-18rem"
-                            formControlName="searchDirect" />
+                        <input type="text" pInputText placeholder="Buscar por nombre..." formControlName="searchDirect"
+                            class="w-full" />
                     </p-inputgroup>
                 </div>
 
             </div>
+
 
             <p-skeleton *ngIf="myUsers.isLoading()" height="3rem" class="mb-3"></p-skeleton>
 

@@ -36,7 +36,7 @@ export class MetricsFilterComponent {
     return this._custom;
   }
 
-  @Output() periodChange = new EventEmitter<PeriodChangeEvent>();
+  @Output() periodChange = new EventEmitter<any>();
   
   selectedPeriod!: PeriodFilter;
   currentPeriodText: string = '';
@@ -51,26 +51,31 @@ export class MetricsFilterComponent {
     switch (period) {
       case 'TODAY':
         this.currentPeriodText = DateUtil.formatDate(today);
+        this.periodChange.emit("TODAY");
         break;
         
       case '7D':
         startDate.setDate(today.getDate() - 6);
         this.currentPeriodText = `${DateUtil.formatDate(startDate)} a ${DateUtil.formatDate(today)}`;
+        this.periodChange.emit("7D");
         break;
         
       case '30D':
         startDate.setMonth(today.getMonth() - 1);
         this.currentPeriodText = `${DateUtil.formatDate(startDate)} a ${DateUtil.formatDate(today)}`;
+        this.periodChange.emit("30D");
         break;
         
       case '90D':
         startDate.setMonth(today.getMonth() - 3);
         this.currentPeriodText = `${DateUtil.formatDate(startDate)} a ${DateUtil.formatDate(today)}`;
+        this.periodChange.emit("90D");
         break;
         
       case '365D':
         startDate.setFullYear(today.getFullYear() - 1);
         this.currentPeriodText = `${DateUtil.formatDate(startDate)} a ${DateUtil.formatDate(today)}`;
+        this.periodChange.emit("365D");
         break;
     }
   }

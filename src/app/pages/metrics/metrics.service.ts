@@ -7,6 +7,7 @@ import { environment } from '@environment';
 import { MetricsResponse } from '@app/interfaces/metrics-response.model';
 import { Metrics } from '@app/interfaces/metrics-data.model';
 import { MapperTransformData } from '@app/shared/utils/transformData';
+import { AlertsMetrics, ChartMetrics, EarlyAlerts, GeneralMetrics, MessageUsage, PlanStats, PurcharseSource, PurchaseData, UserMetric } from '@app/interfaces/metrics.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,11 +15,11 @@ import { MapperTransformData } from '@app/shared/utils/transformData';
 export class MetricsService {
   private readonly apiDasboardUrl = `${environment.baseApiUrl}`;
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) { }
 
-  getMetrics(interval: string): Observable<Metrics> {
+  getMetrics(interval: string, type: number): Observable<Metrics> {
     const body = {
-      interval
+      interval, type
     };
 
     return this.http.post<MetricsResponse>(
@@ -35,7 +36,7 @@ export class MetricsService {
   //   );
   // }
 
-  /*getGeneralMetrics(): Observable<GeneralMetrics> {
+  getGeneralMetrics(): Observable<GeneralMetrics> {
     return this.http.get<GeneralMetrics>(
       `${this.apiDasboardUrl}/${environment.endpoints.metrics}/${environment.endpoints.general}`
     );
@@ -88,10 +89,49 @@ export class MetricsService {
       `${this.apiDasboardUrl}/${environment.endpoints.metricsAdvancedMessages}`
     );
   }
-  
+
   getPurchaseSources(): Observable<PurcharseSource[]> {
     return this.http.get<PurcharseSource[]>(
       `${this.apiDasboardUrl}/${environment.endpoints.metricsAdvancedPurcharses}`
     );
-  }*/
+  }
+
+  getMetricsAlerts(interval: string, type: number): Observable<Metrics> {
+    const body = {
+      interval, type
+    };
+    return this.http.post<Metrics>(`${this.apiDasboardUrl}/${environment.endpoints.metricsAdvanced}`, body).pipe(
+      map((response) => {
+        return response;
+      }),
+    );
+  }
+
+  getMetricsUsersData(interval: string, type: number, page: number, limit: number): Observable<Metrics> {
+    const body = {
+      interval, 
+      type,
+      page,
+      limit
+    };
+    return this.http.post<Metrics>(`${this.apiDasboardUrl}/${environment.endpoints.metricsAdvanced}`, body).pipe(
+      map((response) => {
+        return response;
+      }),
+    );
+  }
+
+
+  // getMetrics(interval: string, type:number): Observable<Metrics> {
+  //   const body = {
+  //     interval,type
+  //   };
+
+  //   return this.http.post<MetricsResponse>(
+  //     `${this.apiDasboardUrl}/${environment.endpoints.metricsAdvanced}`,
+  //     body
+  //   ).pipe(
+  //     map(response => MapperTransformData.transformMetricsResponse(response))
+  //   );
+  // }
 }

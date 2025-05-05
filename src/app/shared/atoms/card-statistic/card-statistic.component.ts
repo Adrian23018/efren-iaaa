@@ -14,4 +14,10 @@ import { CardStatistic } from './card-statistic.model';
 })
 export class AtomCardStatisticComponent {
   @Input() data!: CardStatistic;
+
+
+  ngAfterViewInit() {
+    // console.log("data : ",this.data);
+    
+  }
 }

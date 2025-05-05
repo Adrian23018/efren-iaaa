@@ -1,3 +1,4 @@
+import { MoleculeChartSkeletonComponent } from './../../shared/molecules/chart-skeleton/chart-skeleton.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -5,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { TabViewModule } from 'primeng/tabview';
 
-import { PeriodChangeEvent } from '@app/interfaces/metrics.model';
+import { PeriodChangeEvent, PeriodFilter } from '@app/interfaces/metrics.model';
 import { MetricsFilterComponent } from './metrics-filter/metrics-filter.component';
 import { MetricsTabGeneralComponent } from './metrics-tab-general/metrics-tab-general.component';
 import { MetricsTabAlertsComponent } from './metrics-tab-alerts/metrics-tab-alerts.component';
@@ -17,6 +18,9 @@ import { MetricsFilter } from './metrics-filter/metrics-filter.model';
 import { MetricsService } from './metrics.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Metrics } from '@app/interfaces/metrics-data.model';
+import { DateUtil } from '@app/shared/utils/dateUtil';
+import { MoleculeChartSkeletonAlertsComponent } from '@app/shared/molecules/chart-skeleton-alerts/chart-skeleton.component';
+import { MoleculeChartSkeletonUsersComponent } from '@app/shared/molecules/chart-skeleton-users/chart-skeleton.component';
 
 @Component({
   selector: 'app-metrics',
@@ -33,24 +37,36 @@ import { Metrics } from '@app/interfaces/metrics-data.model';
     MetricsTabAlertsComponent,
     MetricsTabUsersComponent,
     MetricsTabAdvancedComponent,
-],
+    MoleculeChartSkeletonAlertsComponent,
+    MoleculeChartSkeletonUsersComponent
+  ],
   templateUrl: './metrics.component.html',
   styleUrl: './metrics.component.scss'
 })
 export class MetricsComponent {
   activeTab: string = 'general';
   title: string = 'Métricas';
+  loadingAlerts: boolean = false;
+
+  selectedPeriod!: PeriodFilter;
+  currentPeriodText: string = '';
+  period: string = '7D';
+  loadingUser: boolean = false;
 
   tabs: Tab[] = [
     { id: 'general', label: 'General' },
     { id: 'alerts', label: 'Alertas Tempranas' },
     { id: 'users', label: 'Métricas de Usuarios' },
-    { id: 'advanced', label: 'Métricas Avanzadas' }
+    // { id: 'advanced', label: 'Métricas Avanzadas' }
   ];
 
-  metrics!: Metrics;
+  metrics!: any;
+  metricalerts: any = '';
+  metricaUsers: any = '';
+
   metricFilter: MetricsFilter = {
     period: '7D',
+    type: 1,
     formControlName: 'period'
   }
   formMetrics!: FormGroup;
@@ -61,36 +77,188 @@ export class MetricsComponent {
   ) {
     this.formMetrics = this.formBuilder.group({
       period: ['7D'],
+      type: [1]
     });
     this.metricFilter.formGroup = this.formMetrics;
 
-    this.loadMetrics();
+    // this.loadMetrics();
   }
 
   loadMetrics() {
-    this.formMetrics.valueChanges
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged() 
-      )
-      .subscribe((value) => {
-        this.metricsService.getMetrics(value.period).subscribe({
-          next: (data: Metrics) => {
-            this.metrics = data;
-            console.log('Response:', this.metrics);
-          },
-          error: (err) => {
-            console.log('Error', err);
-          },
-        });
-      });
+    // this.formMetrics.valueChanges
+    //   .pipe(
+    //     debounceTime(300),
+    //     distinctUntilChanged()
+    //   )
+    //   .subscribe((value) => {
+    this.metricsService.getMetrics(this.metricFilter.period, this.metricFilter.type).subscribe({
+      next: (data: Metrics) => {
+        this.metrics = data;
+        console.log('Response:', this.metrics);
+      },
+      error: (err) => {
+        console.log('Error', err);
+      },
+    });
+    // });
+  }
+
+  activeTabType(type: any) {
+    console.log("type:", type);
+    this.activeTab = type;
+
+    console.log("activeTab : ", this.activeTab);
+    switch (this.activeTab) {
+      case "general":
+        this.loadMetricsTabs(1);
+        this.metricFilter.type = 1;
+        break;
+      case "alerts":
+        this.loadMetricsTabs(2);
+        this.metricFilter.type = 2;
+        break;
+      case "users":
+        this.loadMetricsUsersPage(3, 1, 5);
+        this.metricFilter.type = 3;
+        break;
+      case "advanced":
+        this.loadMetricsTabs(4);
+        this.metricFilter.type = 4;
+        break;
+
+      default: "general"
+        this.loadMetricsTabs(1);
+        this.metricFilter.type = 1;
+        break;
+    }
+  }
+
+  loadMetricsTabs(type: number) {
+    this.metricFilter.type = type;
+    this.loadingAlerts = true;
+    this.metricsService.getMetricsAlerts(this.metricFilter.period, this.metricFilter.type).subscribe({
+      next: (data: any) => {
+        this.metricalerts = data;
+        console.log('Response: tabss alerts', this.metricalerts);
+        this.loadingAlerts = false;
+      },
+      error: (err) => {
+        console.log('Error', err);
+      },
+    });
   }
 
   onExport() {
     console.log('Exportando datos...');
   }
 
-  onPeriodChange(event: PeriodChangeEvent) {
+  onPeriodChange(event: any) {
     console.log('Período cambiado:', event);
+    // this.period = event;
+    this.metricFilter.period = event;
+    if (this.metricFilter.type == 3) {
+      switch (this.metricFilter.period) {
+        case 'TODAY':
+          this.loadMetricsUsersPage(3, 1, 5);
+          break;
+
+        case '7D':
+          this.loadMetricsUsersPage(3, 1, 5);
+          break;
+
+        case '30D':
+          this.loadMetricsUsersPage(3, 1, 5);
+          break;
+
+        case '90D':
+          this.loadMetricsUsersPage(3, 1, 5);
+          break;
+
+        case '365D':
+          this.loadMetricsUsersPage(3, 1, 5);
+          break;
+      }
+    } else if (this.metricFilter.type == 2) {
+      switch (this.metricFilter.period) {
+        case 'TODAY':
+          this.loadMetricsTabs(2);
+          break;
+
+        case '7D':
+          this.loadMetricsTabs(2);
+          break;
+
+        case '30D':
+          this.loadMetricsTabs(2);
+          break;
+
+        case '90D':
+          this.loadMetricsTabs(2);
+          break;
+
+        case '365D':
+          this.loadMetricsTabs(2);
+          break;
+      }
+    } else {
+      switch (this.metricFilter.period) {
+        case 'TODAY':
+          this.loadMetrics();
+          break;
+
+        case '7D':
+          this.loadMetrics();
+          break;
+
+        case '30D':
+          this.loadMetrics();
+          break;
+
+        case '90D':
+          this.loadMetrics();
+          break;
+
+        case '365D':
+          this.loadMetrics();
+          break;
+      }
+    }
+
+
+  }
+
+
+  loadMetricsUsers(type: number) {
+    this.metricFilter.type = type;
+    this.metricsService.getMetricsUsersData(this.metricFilter.period, this.metricFilter.type, 1, 5).subscribe({
+      next: (data: any) => {
+        this.metricaUsers = data;
+        console.log('Response: users', this.metricalerts);
+      },
+      error: (err) => {
+        console.log('Error', err);
+      },
+    });
+  }
+
+  loadMetricsUsersPage(type: number, page: number, limit: number) {
+    this.loadingUser = true;
+    this.metricFilter.type = type;
+    this.metricsService.getMetricsUsersData(this.metricFilter.period, this.metricFilter.type, page, limit).subscribe({
+      next: (data: any) => {
+        this.metricaUsers = data;
+        console.log('Response: users', this.metricalerts);
+        this.loadingUser = false;
+      },
+      error: (err) => {
+        console.log('Error', err);
+      },
+    });
+  }
+
+
+  pageUser(event_page: any) {
+    console.log("event_page", event_page);
+    this.loadMetricsUsersPage(3, event_page.page, event_page.limit);
   }
 }

@@ -48,22 +48,22 @@
             <div class="p-3">
                 <p-table [value]="purchaseData" styleClass="p-datatable-sm">
                     <ng-template pTemplate="header">
-                      <tr>
-                        <th scope="col">Período</th>
-                        <th scope="col">Compras Plan Pro</th>
-                        <th scope="col">Cancelaciones Plan Pro</th>
-                        <th scope="col">Compras Plan Élite</th>
-                        <th scope="col">Cancelaciones Plan Élite</th>
-                      </tr>
+                        <tr>
+                            <th scope="col">Período</th>
+                            <th scope="col" class="text-center">Compras Plan Pro</th>
+                            <th scope="col" class="text-center">Cancelaciones Plan Pro</th>
+                            <th scope="col" class="text-center">Compras Plan Élite</th>
+                            <th scope="col" class="text-center">Cancelaciones Plan Élite</th>
+                        </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-data>
-                      <tr>
-                        <td>{{ data.period }}</td>
-                        <td class="text-green-500 font-medium">{{ data.proPurchases }}</td>
-                        <td class="text-red-500 font-medium">{{ data.proCancellations }}</td>
-                        <td class="text-green-500 font-medium">{{ data.elitePurchases }}</td>
-                        <td class="text-red-500 font-medium">{{ data.eliteCancellations }}</td>
-                      </tr>
+                        <tr class="">
+                            <td>{{ data.period }}</td>
+                            <td class="text-green-500 font-medium text-center">{{ data.proPurchases }}</td>
+                            <td class="text-red-500 font-medium text-center">{{ data.proCancellations }}</td>
+                            <td class="text-green-500 font-medium text-center">{{ data.elitePurchases }}</td>
+                            <td class="text-red-500 font-medium text-center">{{ data.eliteCancellations }}</td>
+                        </tr>
                     </ng-template>
                 </p-table>
             </div>

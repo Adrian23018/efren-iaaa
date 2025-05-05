@@ -20,6 +20,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { FileUserComponent } from '@app/shared/components/file-user/file-user.component';
 import { MoleculeUserFilterPanelComponent } from '@app/shared/molecules/user-filter-panel/user-filter-panel.component';
 import { UserFilterPanel } from '@app/shared/molecules/user-filter-panel/user-filter-panel.model';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-users',
@@ -40,6 +41,7 @@ import { UserFilterPanel } from '@app/shared/molecules/user-filter-panel/user-fi
     SplitButtonModule,
     FileUserComponent,
     MoleculeUserFilterPanelComponent,
+    CalendarModule,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
@@ -63,7 +65,9 @@ export class UsersComponent {
     plan: null,
     estado: null,
     periodo: null,
-    tags: []
+    tags: [],
+    fechaInicio: null,
+    fechaFin: null,
   };
 
 
@@ -109,30 +113,30 @@ export class UsersComponent {
         { label: 'Últimos 7 días', value: '7d' },
         { label: 'Últimos 30 días', value: '30d' },
         { label: 'Últimos 3 meses', value: '3m' },
-        { label: 'Último año', value: '1y' }  
+        { label: 'Último año', value: '1y' }
       ],
       formControlName: 'period'
     },
     showTags: true,
     tagsConfig: {
-    label: 'Etiquetas',
-    tags: [
-      { label: 'Términos aceptados', value: 'terminos-aceptados' },
-      // { label: 'No compró Pro', value: 'no-compro-pro' },
-      { label: 'Demo finalizada', value: 'demo-finalizada' },
-      { label: 'Sin botones', value: 'sin-botones' },
-      { label: 'No compró Pro', value: 'quedo-pro' },
-      { label: 'No compró Élite', value: 'quedo-elite' },
-      { label: 'No ha usado el Pro', value: 'pro-no-uso' },
-      { label: 'No ha usado el Élite', value: 'elite-no-uso' },
-      { label: 'No ha probado la Demo', value: 'no-prueba' },
-      { label: 'No tiene ni data', value: 'no-datos' },
-      { label: 'Se quedo a la Mitad de Demo', value: 'demo-mitad' },
-      { label: 'Pro completado', value: 'pro-completado' },
-      { label: 'Demo completado', value: 'demo-completada' }
-    ],
-    formControlName: 'tags'
-  }
+      label: 'Etiquetas',
+      tags: [
+        { label: 'Términos aceptados', value: 'terminos-aceptados' },
+        // { label: 'No compró Pro', value: 'no-compro-pro' },
+        { label: 'Demo finalizada', value: 'demo-finalizada' },
+        { label: 'Sin botones', value: 'sin-botones' },
+        { label: 'No compró Pro', value: 'quedo-pro' },
+        { label: 'No compró Élite', value: 'quedo-elite' },
+        { label: 'No ha usado el Pro', value: 'pro-no-uso' },
+        { label: 'No ha usado el Élite', value: 'elite-no-uso' },
+        { label: 'No ha probado la Demo', value: 'no-prueba' },
+        { label: 'No tiene ni data', value: 'no-datos' },
+        { label: 'Se quedo a la Mitad de Demo', value: 'demo-mitad' },
+        { label: 'Pro completado', value: 'pro-completado' },
+        { label: 'Demo completado', value: 'demo-completada' }
+      ],
+      formControlName: 'tags'
+    }
   }
 
   constructor(private readonly formBuilder: FormBuilder) {
@@ -142,7 +146,9 @@ export class UsersComponent {
       status: [''],
       period: [''],
       searchDirect: [''],
-      tags: [[]] // <-- ¡Este es el que permite que se envíen las etiquetas!
+      tags: [[]],// <-- ¡Este es el que permite que se envíen las etiquetas!
+      fechaInicio: [null],
+      fechaFin: [null],
     });
     this.filterParams.formGroupName = this.formUsers;
 
@@ -153,10 +159,12 @@ export class UsersComponent {
       .subscribe(value => {
         this.formUsers.patchValue({
           name: value,
-          plan: null,
-          status: null,
-          period: null,
-          tags: [] // <-- ¡Este es el que permite que se envíen las etiquetas!
+          // plan: null,
+          // status: null,
+          // period: null,
+          // tags: [], // <-- ¡Este es el que permite que se envíen las etiquetas!
+          // fechaInicio: null,
+          // fechaFin: null,
         }, { emitEvent: false });
         this.applyFilters();
       });
@@ -179,7 +187,10 @@ export class UsersComponent {
   }
 
   loadUsers(page: number, limit: number) {
-    this.myUsers = this.usersService.getUsers(page, limit, this.filters);
+    // this.myUsers = this.usersService.getUsers(page, limit, this.filters);
+    const filters = { ... this.formUsers.getRawValue() };
+    delete filters.searchDirect;
+    this.myUsers = this.usersService.getUsers(page, limit, filters);
   }
 
   onGlobalFilter(event: Event) {
@@ -216,8 +227,10 @@ export class UsersComponent {
       plan: null,
       status: null,
       period: null,
-      tags: [], 
+      tags: [],
       searchDirect: '',
+      fechaInicio: null,
+      fechaFin: null,
     }, { emitEvent: false });
 
     const filters = { ... this.formUsers.getRawValue() };
@@ -228,12 +241,47 @@ export class UsersComponent {
   applyFilters() {
     const filters = { ... this.formUsers.getRawValue() };
     delete filters.searchDirect;
-    this.myUsers = this.usersService.getUsers(1, 5, filters);    
+    this.myUsers = this.usersService.getUsers(1, 5, filters);
   }
 
-   // Método para cerrar el modal
-   onCloseModal() {
+  // Método para cerrar el modal
+  onCloseModal() {
     console.log("llega al padre");
     this.display = false;
+  }
+
+  filtrarPorFechas(): void {
+    const filters = { ...this.formUsers.getRawValue() };
+
+    if (filters.fechaInicio) {
+      filters.fechaInicio = this.formatDateOnly(filters.fechaInicio);
+    }
+
+    if (filters.fechaFin) {
+      filters.fechaFin = this.formatDateOnly(filters.fechaFin);
+    }
+
+    this.myUsers = this.usersService.getUsers(1, 5, filters);
+  }
+
+  private formatDateOnly(date: Date): string {
+    return date.toISOString().split('T')[0]; // Devuelve "2025-04-01"
+  }
+
+  limpiarFiltros(): void {
+    this.formUsers.patchValue({
+      name: '',
+      plan: null,
+      status: null,
+      period: null,
+      tags: [],
+      searchDirect: '',
+      fechaInicio: null,
+      fechaFin: null,
+    }, { emitEvent: false });
+
+    const filters = { ... this.formUsers.getRawValue() };
+    delete filters.searchDirect;
+    this.myUsers = this.usersService.getUsers(1, 5, filters);
   }
 }

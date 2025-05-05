@@ -1,4 +1,4 @@
-<div class="grid mt-4">
+<div class="grid mt-4" >
     <div class="col-12 lg:col-12">
         <div class="bg-white border-round shadow-1">
             <div class="p-3 border-bottom-1 border-gray-200">
@@ -12,8 +12,8 @@
                         <th scope="col">Contacto</th>
                         <th scope="col">Plan</th>
                         <th scope="col">Fecha inicio</th>
-                        <th scope="col">Interacciones semana</th>
-                        <th scope="col">Interacciones mes</th>
+                        <th scope="col" class="text-center">Interacciones semana</th>
+                        <th scope="col" class="text-center">Interacciones mes</th>
                         <th scope="col">Estado</th>
                       </tr>
                     </ng-template>
@@ -27,13 +27,13 @@
                             </div>
                           </td>
                           <td>{{ user.plan }}</td>
-                          <td>{{ user.startDate | date:'yyyy-MM-dd' }}</td>
-                          <td>{{ user.weeklyInteractions }}</td>
-                          <td>{{ user.monthlyInteractions }}</td>
+                          <td>{{ user.fecha_inicio | date:'yyyy-MM-dd' }}</td>
+                          <td class="text-center">{{ user.interacciones_semanales }}</td>
+                          <td class="text-center">{{ user.interacciones_mensuales }}</td>
                           <td>
-                            <ng-container *ngIf="user.status">
-                                <p-tag [value]="user.status" 
-                                      [severity]="getStatusSeverity(user.status)"
+                            <ng-container *ngIf="user.estado">
+                                <p-tag [value]="user.estado" 
+                                      [severity]="getStatusSeverity(user.estado)"
                                       [rounded]="true"></p-tag>
                             </ng-container>
                             
@@ -42,6 +42,8 @@
                       </ng-template>
                 </p-table>
             </div>
+            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rowsPerPage"
+            [totalRecords]="totalUser" [rowsPerPageOptions]="[5, 10, 20, 30]" />
         </div>
     </div>
 </div>

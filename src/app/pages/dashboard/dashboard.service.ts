@@ -30,4 +30,8 @@ export class DashboardService {
   getIncomes(): Observable<DashboardIncomes[]> {
     return this.http.get<DashboardIncomes[]>(`${this.apiDasboardUrl}/${environment.endpoints.incomes}`);
   }
+
+  getAlertsModal(page: number, limit: number,): Observable<Alert[]> {
+    return this.http.get<Alert[]>(`${this.apiDasboardUrl}/${environment.endpoints.alerts}?alerts=true&page=${page}&limit=${limit}`);
+  }
 }

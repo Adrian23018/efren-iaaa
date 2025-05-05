@@ -1,54 +1,156 @@
-<div class="grid">
+<div *ngIf="!loadingalerts" class="grid">
     <div class="col-12 md:col-6 lg:col-4" *ngFor="let statistic of statistics">
         <atom-card-statistic [data]="statistic">
         </atom-card-statistic>
     </div>
 </div>
 
-<div class="grid mt-4">
+<div *ngIf="!loadingalerts" class="grid mt-4">
     <div class="col-12 lg:col-12">
         <div class="bg-white border-round shadow-1">
             <div class="p-3 border-bottom-1 border-gray-200">
                 <h2 class="text-base font-medium m-0">Alertas Tempranas</h2>
             </div>
             <div class="p-3">
-                <p-table [value]="earlyAlerts" styleClass="p-datatable-sm">
+                <p-table *ngIf="earlyAlerts" [value]="earlyAlerts" styleClass="p-datatable-sm">
                     <ng-template pTemplate="header">
-                      <tr>
-                        <th scope="col">Tipo de Alerta</th>
-                        <th scope="col">Cantidad</th>
-                        <th scope="col">Descripción</th>
-                        <th scope="col">Usuarios Afectados</th>
-                        <th scope="col">Acción</th>
-                      </tr>
+                        <tr>
+                            <th scope="col">Tipo de Alerta</th>
+                            <th scope="col" class="text-center">Cantidad</th>
+                            <th scope="col" class="text-center">Descripción</th>
+                            <th scope="col" class="text-center">Usuarios Afectados</th>
+                            <th scope="col" class="text-center">Acción</th>
+                        </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-alert>
-                      <tr>
-                        <td>{{ alert.alertType }}</td>
-                        <td class="text-center font-medium">{{ alert.quantity }}</td>
-                        <td>{{ alert.description }}</td>
-                        <td>
-                          <atom-truncate-text [text]="alert.affectedUsers?.slice(0, 2).join(', ')" [limit]="50"
-                            [maxWidth]="250"></atom-truncate-text>
-                        </td>
-                        <td>
-                          <button 
-                            pButton 
-                            [label]="translateAction(alert.action)" 
-                            class="p-button-sm" 
-                            [ngClass]="{
-                              'p-button-outlined p-button-secondary': alert.action === 'contact',
-                              'p-button-outlined p-button-info': alert.action === 'verify',
-                              'p-button-outlined p-button-warning': alert.action === 'notify',
-                              'p-button-outlined p-button-help': alert.action === 'remind',
-                              'p-button-outlined p-button-primary': alert.action === 'toSurvey'
-                            }">
-                          </button>
-                        </td>
-                      </tr>
+                        <tr>
+                            <td>{{ alert.tipo_alerta }}</td>
+                            <td class="text-center font-medium">{{ alert.quantity }}</td>
+                            <td class="text-center">{{ alert.description }}</td>
+                            <td class="text-center">
+                                <atom-truncate-text [text]="getFirstTwoUserNames(alert.affectedUsers)" [limit]="50"
+                                    [maxWidth]="250">
+                                </atom-truncate-text>
+                            <td class="text-center">
+                                <button [disabled]="!alert.affectedUsers.length" (click)="viewUsers(alert)" pButton label="Ver"
+                                    class="p-button-sm p-button-outlined p-button-secondary">
+                                </button>
+                            </td>
+                        </tr>
                     </ng-template>
                 </p-table>
             </div>
         </div>
     </div>
 </div>
+
+
+<p-dialog header="Alertas" [(visible)]="mostrarModal" [modal]="true" [style]="{width: 'text-700'}" [closable]="true">
+
+    <ng-template pFooter>
+        <button pButton type="button" label="Cerrar" (click)="mostrarModal = false"></button>
+    </ng-template>
+
+    <div class="grid mt-4">
+        <div class="col-12 lg:col-12">
+            <div class="bg-white border-round shadow-1">
+                <div class="p-3 border-bottom-1 border-gray-200 flex justify-content-between align-items-center">
+                    <h2 class="text-base font-medium m-0">Usuarios afectados</h2>
+                </div>
+                <p-table [value]="userviewAfect" styleClass="p-datatable-sm" [tableStyle]="{'min-width': '50rem'}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col" class="text-center">Usuario</th>
+                            <th scope="col" class="text-center">Acción</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-user>
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td class="text-center">
+                                <div class="flex flex-column">
+                                    <span class="font-medium">{{ user.name }}</span>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-text"
+                                    (click)="viewUsersData(user)"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+
+<p-dialog [(visible)]="displayModal" [modal]="true" [closable]="true" [dismissableMask]="true"
+    [style]="{ width: '420px' }" header="Detalles del usuario" [contentStyle]="{ 'padding-bottom': '1.5rem' }">
+
+
+    <!-- Avatar y nombre -->
+    <div class="flex flex-column align-items-center mb-4 align-items-center col-12 justify-content-center">
+        <i class="pi pi-user text-6xl text-500 mb-3 img"></i>
+        <h3 class="text-lg font-bold text-800 mb-2">
+            {{ user?.name }}
+        </h3>
+
+        <!-- Estado y plan -->
+        <div class="flex justify-content-center flex-wrap gap-2">
+            <span class="text-xs font-medium px-2 py-1 border-round" [ngClass]="{
+                    'bg-green-100 text-green-800': user?.status === true,
+                    'bg-red-100 text-red-800': user?.status === false
+                    }">
+            </span>
+
+            <span class="text-xs font-medium px-2 py-1 border-round" [ngClass]="{
+                    'bg-purple-100 text-purple-700': user.plan_id === 1,
+                    'bg-blue-100 text-blue-700': user.plan_id === 2,
+                    'bg-gray-200 text-gray-700': user.plan_id === 3
+                    }">
+                {{ getNamePlan(user.plan_id) }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Información general -->
+    <div class="flex flex-column gap-3 text-sm text-800 px-1">
+
+        <div class="flex align-items-start gap-2">
+            <i class="pi pi-phone mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">Telefono</p>
+                <p class="m-0 text-700">{{ user?.phone }}</p>
+            </div>
+        </div>
+
+        <div class="flex align-items-start gap-2">
+            <i class="pi pi-envelope mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">Email</p>
+                <p class="m-0 text-700">{{ user?.email }}</p>
+            </div>
+        </div>
+
+        <div class="flex align-items-start gap-2">
+            <i class="pi pi-briefcase mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">Empresa</p>
+                <p class="m-0 text-700">{{ user?.company_id || 'B2C' }}</p>
+            </div>
+        </div>
+
+        <div class="flex align-items-start gap-2">
+            <i class="pi pi-calendar mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">Fecha de registro</p>
+                <p class="m-0 text-700">{{ user?.created_at | date: 'yyyy-MM-dd' }}</p>
+            </div>
+        </div>
+
+    </div>
+
+</p-dialog>

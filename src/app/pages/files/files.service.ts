@@ -61,7 +61,7 @@ export class FilesService {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = name_user_id+'.csv'; // Nombre que quieres darle
+        a.download = name_user_id+'.pdf'; // Nombre que quieres darle
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

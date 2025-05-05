@@ -68,7 +68,7 @@ export class LoginComponent {
     this.loginSrv.loginUser(loginData).subscribe({
       next: (response:any) => {
         this.loading.set(false);
-        this.toastSrvc.showSuccess('Éxito', response.message, false);
+        this.toastSrvc.showSuccess('Éxito', 'Acceso exitoso', false);
         sessionStorage.setItem('access_token', response.message.access_token);
         // Redirigir al usuario después del login exitoso
         this.loginForm.reset();

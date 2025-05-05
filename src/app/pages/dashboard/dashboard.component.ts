@@ -18,6 +18,7 @@ import { MoleculeAlertDetailDialogComponent } from '@app/shared/molecules/alert-
 import { MoleculeChartSkeletonComponent } from '@app/shared/molecules/chart-skeleton/chart-skeleton.component';
 import { DashboardMetrics } from '@app/interfaces/metrics.model';
 import { getStatistics, getStatisticsUsers, getStatisticsStatus } from './dashboard-statistics.data';
+import { PaginatorModule } from 'primeng/paginator';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,6 +33,7 @@ import { getStatistics, getStatisticsUsers, getStatisticsStatus } from './dashbo
     AtomTruncateTextComponent,
     MoleculeAlertDetailDialogComponent,
     MoleculeChartSkeletonComponent,
+    PaginatorModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -42,9 +44,12 @@ export class DashboardComponent {
   chartDataIncomes: any;
   chartOptionsIncomes: any;
   alerts: Alert[] = [];
+  alertsModal: any = [];
+  alertsModalLength: any = 5;
 
   displayModal: boolean = false;
   selectedAlert!: Alert;
+  mostrarModal: boolean = false;
 
   metrics!: DashboardMetrics;
   statistics: CardStatistic[] = getStatistics();
@@ -52,11 +57,13 @@ export class DashboardComponent {
   statisticsStatus: CardStatistic[] = getStatisticsStatus();
   loadingUsers: boolean = true;
   loadingIncomes: boolean = true;
+  public first = 0;
+  public rowsPerPage = 5;
 
   constructor(
     private readonly dashboardService: DashboardService,
     private readonly chartOptionsService: ChartOptionsService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadMetrics();
@@ -185,5 +192,34 @@ export class DashboardComponent {
   showAlertDetails(alert: Alert): void {
     this.selectedAlert = alert;
     this.displayModal = true;
+  }
+
+  viewAll() {
+    this.mostrarModal = true;
+    this.loadAlertsModal(1, 5);
+  }
+
+
+  loadAlertsModal(page: number, limit: number): void {
+    this.dashboardService.getAlertsModal(page, limit).subscribe({
+      next: (data: any) => {
+        this.alertsModal = data.data;
+        console.log("this.alertsModal",this.alertsModal);
+        
+        this.alertsModalLength = data.meta.totalAlerts;
+      },
+      error: (err) => {
+        console.log('Error', err);
+      },
+    });
+  }
+
+  onPageChange(event: any) {
+    this.first = event.first;         // posición del primer registro en la página
+    this.rowsPerPage = event.rows;           // cuántos registros por página
+    const page = event.page + 1;      // número de página (0 indexado)
+    const limit = event.rows;         // cantidad por página
+
+    this.loadAlertsModal(page, limit);
   }
 }

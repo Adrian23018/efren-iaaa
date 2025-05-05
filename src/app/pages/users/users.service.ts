@@ -62,4 +62,21 @@ export class UsersService {
     return { data$: data$, isLoading };
   }
 
+  getUserId(user_id: number) {
+    const isLoading = signal(true);
+  
+    const data$ = this.http.get<any>(`${this.apiUsersUrl}/user?userId=${user_id}`).pipe(
+      tap(() => {
+        // Aquí podrías hacer algo si necesitas (opcional)
+      }),
+      finalize(() => {
+        isLoading.set(false);
+      }),
+      share()
+    );
+  
+    return { data$: data$, isLoading };
+  }
+  
+
 }

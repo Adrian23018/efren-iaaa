@@ -9,8 +9,8 @@
 
         <div class="mt-0 py-0 col-12 md:col-12 lg:col-12 flex align-items-center">
             <h2 class="text-sm font-medium text-gray-700 mb-0">
-                <i class="pi pi-users"></i> 
-                Total Usuarios: 
+                <i class="pi pi-users"></i>
+                Total Usuarios:
                 <b *ngIf="metrics?.users">{{ metrics.users }}</b>
             </h2>
         </div>
@@ -21,7 +21,7 @@
 
         <div class="mt-0 py-0 col-12 md:col-12 lg:col-12 flex align-items-center">
             <h2 class="text-sm font-medium text-gray-700 mb-0">
-                <i class="pi pi-users"></i> 
+                <i class="pi pi-users"></i>
                 Estado de Usuarios:
             </h2>
         </div>
@@ -32,7 +32,7 @@
     </div>
 
     <div class="grid mt-4">
-        <div class="col-12 lg:col-8">
+        <div class="col-12 lg:col-6">
             <div *ngIf="loadingUsers; else loadedChart">
                 <molecule-chart-skeleton></molecule-chart-skeleton>
             </div>
@@ -48,7 +48,23 @@
             </ng-template>
         </div>
 
-        <div class="col-12 lg:col-4">
+        <div class="col-12 lg:col-6">
+            <div *ngIf="loadingIncomes; else loadedIncomes">
+                <molecule-chart-skeleton></molecule-chart-skeleton>
+            </div>
+            <ng-template #loadedIncomes>
+                <div class="bg-white border-round shadow-1">
+                    <div class="p-3 border-bottom-1 border-gray-200">
+                        <h2 class="text-base font-medium m-0">Ingresos mensuales</h2>
+                    </div>
+                    <div class="p-3" style="width: 100%; height: 300px">
+                        <p-chart type="line" [data]="chartDataIncomes" [options]="chartOptionsIncomes"></p-chart>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+
+        <!-- <div class="col-12 lg:col-4">
             <div class="bg-primary border-round shadow-1 h-full">
                 <div class="p-3 flex align-items-center">
                     <i class="pi pi-bell mr-2 text-white"></i>
@@ -60,15 +76,15 @@
                         class="p-button-sm p-button-outlined p-button-light"></button>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <div class="grid mt-4">
-        <div class="col-12 lg:col-8">
+        <div class="col-12 lg:col-12">
             <div class="bg-white border-round shadow-1">
                 <div class="p-3 border-bottom-1 border-gray-200 flex justify-content-between align-items-center">
                     <h2 class="text-base font-medium m-0">Alertas recientes</h2>
-                    <button pButton type="button" label="Ver todas" icon="pi pi-angle-right"
+                    <button (click)="viewAll()" pButton type="button" label="Ver todas" icon="pi pi-angle-right"
                         class="p-button-text p-button-sm"></button>
                 </div>
                 <p-table [value]="alerts" styleClass="p-datatable-sm" [tableStyle]="{'min-width': '50rem'}">
@@ -78,7 +94,7 @@
                             <th scope="col">Usuario</th>
                             <th scope="col">Plan</th>
                             <th scope="col" [width]="250">Tipo</th>
-                            <th scope="col">Acción</th>
+                            <th scope="col" class="text-center">Acción</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-alert>
@@ -95,9 +111,8 @@
                                 <atom-truncate-text [text]="alert.alertType" [limit]="30"
                                     [maxWidth]="250"></atom-truncate-text>
                             </td>
-                            <td>
-                                <button pButton type="button" icon="pi pi-eye"
-                                    class="p-button-rounded p-button-text"
+                            <td class="text-center">
+                                <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-text"
                                     (click)="showAlertDetails(alert)"></button>
                             </td>
                         </tr>
@@ -106,7 +121,7 @@
             </div>
         </div>
 
-        <div class="col-12 lg:col-4">
+        <!-- <div class="col-12 lg:col-4">
             <div class="bg-white border-round shadow-1">
                 <div class="p-3 border-bottom-1 border-gray-200">
                     <h2 class="text-base font-medium m-0">Actividades recientes</h2>
@@ -141,10 +156,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
-    <div class="grid mt-4">
+    <!-- <div class="grid mt-4">
         <div class="col-12 lg:col-12">
             <div *ngIf="loadingIncomes; else loadedIncomes">
                 <molecule-chart-skeleton></molecule-chart-skeleton>
@@ -160,10 +175,60 @@
                 </div>
             </ng-template>
         </div>
-    </div>
+    </div> -->
 </div>
 
-<molecule-alert-detail-dialog 
-    [(visible)]="displayModal" 
-    [alert]="selectedAlert">
+<p-dialog header="Alertas" [(visible)]="mostrarModal" [modal]="true" [style]="{width: '1200px'}" [closable]="true">
+
+    <ng-template pFooter>
+        <button pButton type="button" label="Cerrar" (click)="mostrarModal = false"></button>
+    </ng-template>
+
+    <div class="grid mt-4">
+        <div class="col-12 lg:col-12">
+            <div class="bg-white border-round shadow-1">
+                <div class="p-3 border-bottom-1 border-gray-200 flex justify-content-between align-items-center">
+                    <h2 class="text-base font-medium m-0">Alertas recientes</h2>
+                </div>
+                <p-table [value]="alertsModal" styleClass="p-datatable-sm" [tableStyle]="{'min-width': '50rem'}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Plan</th>
+                            <th scope="col" [width]="250">Tipo</th>
+                            <th scope="col" class="text-center">Acción</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-alert>
+                        <tr>
+                            <td>{{ alert.alertId }}</td>
+                            <td>
+                                <div class="flex flex-column">
+                                    <span class="font-medium">{{ alert.userName }}</span>
+                                    <span class="text-xs text-gray-500">{{ alert.userEmail }}</span>
+                                </div>
+                            </td>
+                            <td>{{ alert.planName }}</td>
+                            <td>
+                                <atom-truncate-text [text]="alert.alertType" [limit]="30"
+                                    [maxWidth]="250"></atom-truncate-text>
+                            </td>
+                            <td class="text-center">
+                                <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-text"
+                                    (click)="showAlertDetails(alert)"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+                <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rowsPerPage"
+                [totalRecords]="5"  />
+
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+<molecule-alert-detail-dialog [(visible)]="displayModal" [alert]="selectedAlert">
 </molecule-alert-detail-dialog>
