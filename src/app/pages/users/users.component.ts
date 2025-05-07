@@ -246,7 +246,6 @@ export class UsersComponent {
 
   // Método para cerrar el modal
   onCloseModal() {
-    console.log("llega al padre");
     this.display = false;
   }
 

@@ -12,7 +12,6 @@ export class FilesTabEmotionsComponent {
   @Input() selectedFile: UserFile | null = null;
 
   ngAfterViewInit() {
-    console.log("selectfiles : ",this.selectedFile);
   }
 
 

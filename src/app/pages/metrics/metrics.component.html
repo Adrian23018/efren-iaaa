@@ -1,12 +1,5 @@
 <div class="flex justify-content-between align-items-center mb-3">
   <h1 class="text-xl font-medium m-0">{{ title }}</h1>
-  <!-- <button 
-      pButton 
-      icon="pi pi-download" 
-      label="Exportar Datos" 
-      class="p-button-outlined"
-      (click)="onExport()">
-    </button> -->
 </div>
 
 
@@ -22,9 +15,13 @@
 <molecule-chart-skeleton-users
   *ngIf="activeTab === 'users' && loadingUser"></molecule-chart-skeleton-users>
 
+  <!-- Skeleton avance-->
+<molecule-chart-skeleton-users
+*ngIf="activeTab === 'advanced' && loadingAvance"></molecule-chart-skeleton-users>
+
 <app-metrics-tab-general *ngIf="activeTab === 'general'" [metrics]="metrics"></app-metrics-tab-general>
 <app-metrics-tab-alerts *ngIf="activeTab === 'alerts' && metricalerts && !loadingAlerts"
   [metrics]="metricalerts"></app-metrics-tab-alerts>
 <app-metrics-tab-users *ngIf="activeTab === 'users' && metricaUsers && !loadingUser" (page_user)="pageUser($event)"
   [metrics]="metricaUsers"></app-metrics-tab-users>
-<app-metrics-tab-advanced *ngIf="activeTab === 'advanced'" [metrics]="metrics"></app-metrics-tab-advanced>
+<app-metrics-tab-advanced *ngIf="activeTab === 'advanced' && metricsAvance && !loadingAvance" [metrics]="metricsAvance"></app-metrics-tab-advanced>

@@ -17,7 +17,5 @@ export class AtomCardStatisticComponent {
 
 
   ngAfterViewInit() {
-    // console.log("data : ",this.data);
-    
   }
 }

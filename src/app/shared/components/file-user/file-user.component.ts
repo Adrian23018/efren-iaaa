@@ -61,21 +61,17 @@ export class FileUserComponent implements OnInit {
     { id: 'events', label: 'Eventos' },
     { id: 'insights', label: 'Insights' },
     { id: 'notes', label: 'Notas' },
-    { id: 'conversations', label: 'Conversación' },
+    // { id: 'conversations', label: 'Conversación' },
   ];
 
   ngOnInit() {
     this.selectedFile = this.sessionData;
-    console.log("this.selectedFile : ", this.selectedFile);
-
     this.showFileDialog = this.display;
-    console.log("this.showFileDialog : ", this.showFileDialog);
 
   }
 
   selectFile(file: UserFile) {
     this.selectedFile = { ...file };
-    // console.log(this.file);
   }
 
   getTagSeverity(tag: string): Severity {
@@ -83,7 +79,6 @@ export class FileUserComponent implements OnInit {
   }
 
   closeFileDialog() {
-    console.log("llega a cerrar modal hijo");
     this.closeModal.emit(); // Emite el evento
   }
 

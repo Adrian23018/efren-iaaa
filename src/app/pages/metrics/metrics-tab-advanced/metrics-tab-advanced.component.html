@@ -26,19 +26,19 @@
           <ng-template pTemplate="header">
             <tr>
               <th scope="col">Plan</th>
-              <th scope="col">Mensajes promedio por usuario</th>
-              <th scope="col">Cantidad de usuarios</th>
-              <th scope="col">Total de mensajes</th>
+              <th scope="col" class="text-center">Mensajes promedio por usuario</th>
+              <th scope="col" class="text-center">Cantidad de usuarios</th>
+              <th scope="col" class="text-center">Total de mensajes</th>
               <!-- <th scope="col">Tiempo promedio de uso</th>
               <th scope="col">% de límite utilizado</th> -->
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-usage>
             <tr>
-              <td>{{usage.planName}}</td>
-              <td>{{usage.avgMessagesPerUser}}</td>
-              <td>{{usage.userCount}}</td>
-              <td>{{usage.totalMessages}}</td>
+              <td >{{usage.plan_name}}</td>
+              <td class="text-center">{{usage.avg_messages_per_user}}</td>
+              <td class="text-center">{{usage.user_count}}</td>
+              <td class="text-center">{{usage.total_messages}}</td>
             </tr>
           </ng-template>
         </p-table>

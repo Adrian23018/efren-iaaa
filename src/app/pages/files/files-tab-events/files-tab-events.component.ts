@@ -12,6 +12,5 @@ export class FilesTabEventsComponent {
   @Input() selectedFile: UserFile | null = null;
 
   ngAfterViewInit() {
-    console.log("selectfiles : ",this.selectedFile);
   }
 }

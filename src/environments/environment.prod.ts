@@ -11,7 +11,16 @@ export const environment = {
         general: 'general',
         purcharses: 'purcharses',
         earlies: 'earlies',
+        metricsAdvanced: 'advanced/metrics',
+        
         metricsUsersDetail: 'metrics/users/detail',
+        metricsUsersPlans: 'metrics/users/plans',
+        metricsAdvancedMarketing: 'metrics/advanced/marketing',
+        metricsAdvancedMessages: 'metrics/advanced/messages',
+        metricsAdvancedPurcharses: 'metrics/advanced/purcharses',
+        files: 'files',
+        login: 'login',
         download: 'download',
     }
+    
 };

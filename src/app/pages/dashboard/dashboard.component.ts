@@ -203,9 +203,7 @@ export class DashboardComponent {
   loadAlertsModal(page: number, limit: number): void {
     this.dashboardService.getAlertsModal(page, limit).subscribe({
       next: (data: any) => {
-        this.alertsModal = data.data;
-        console.log("this.alertsModal",this.alertsModal);
-        
+        this.alertsModal = data.data;        
         this.alertsModalLength = data.meta.totalAlerts;
       },
       error: (err) => {

@@ -121,6 +121,17 @@ export class MetricsService {
     );
   }
 
+  getMetricsAvance(interval: string, type: number): Observable<Metrics> {
+    const body = {
+      interval, type
+    };
+    return this.http.post<Metrics>(`${this.apiDasboardUrl}/${environment.endpoints.metricsAdvanced}`, body).pipe(
+      map((response) => {
+        return response;
+      }),
+    );
+  }
+
 
   // getMetrics(interval: string, type:number): Observable<Metrics> {
   //   const body = {

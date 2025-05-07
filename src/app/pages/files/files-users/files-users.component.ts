@@ -52,12 +52,10 @@ export class FilesUsersComponent {
   }
 
   loadInitialData() {
-    console.log("this.filters: ", this.filters);
-    
+
     this.filesService.getFiles(this.pageDefault, this.pageSize, this.filters).subscribe({
       next: (response: PaginatorModel<UserFile[], MetaFile>) => {
         this.files = response.data;
-        console.log("files", this.files);
         this.totalRecords = response.meta.totalFiles;
         this.page++;
       },

@@ -162,16 +162,13 @@ export class MetricsTabUsersComponent {
 
 
   getEarliesAlerts(): void {
-    console.log("metrics users: ", this.metrics);
     this.totalUser = this.metrics.pagination_info.total_records;
     this.users = this.metrics.user_details;
-    console.log("this.users : ", this.users);
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
 
-      console.log("users", this.metrics);
       this.users = this.metrics?.user_details;
       this.initChart(this.metrics?.user_metrics);
 
@@ -185,9 +182,6 @@ export class MetricsTabUsersComponent {
     this.rowsPerPage = event.rows;           // cuántos registros por página
     const page = event.page + 1;      // número de página (0 indexado)
     const limit = event.rows;
-
-    console.log("page hijo :",event);
-    
 
     this.page_user.emit({
       "page": page,

@@ -52,17 +52,19 @@ export class MetricsComponent {
   currentPeriodText: string = '';
   period: string = '7D';
   loadingUser: boolean = false;
+  loadingAvance: boolean = false;
 
   tabs: Tab[] = [
     { id: 'general', label: 'General' },
     { id: 'alerts', label: 'Alertas Tempranas' },
     { id: 'users', label: 'Métricas de Usuarios' },
-    // { id: 'advanced', label: 'Métricas Avanzadas' }
+    { id: 'advanced', label: 'Métricas Avanzadas' }
   ];
 
   metrics!: any;
   metricalerts: any = '';
   metricaUsers: any = '';
+  metricsAvance: any = '';
 
   metricFilter: MetricsFilter = {
     period: '7D',
@@ -94,7 +96,6 @@ export class MetricsComponent {
     this.metricsService.getMetrics(this.metricFilter.period, this.metricFilter.type).subscribe({
       next: (data: Metrics) => {
         this.metrics = data;
-        console.log('Response:', this.metrics);
       },
       error: (err) => {
         console.log('Error', err);
@@ -104,10 +105,8 @@ export class MetricsComponent {
   }
 
   activeTabType(type: any) {
-    console.log("type:", type);
     this.activeTab = type;
 
-    console.log("activeTab : ", this.activeTab);
     switch (this.activeTab) {
       case "general":
         this.loadMetricsTabs(1);
@@ -122,7 +121,7 @@ export class MetricsComponent {
         this.metricFilter.type = 3;
         break;
       case "advanced":
-        this.loadMetricsTabs(4);
+        this.loadMetricsAvance(4);
         this.metricFilter.type = 4;
         break;
 
@@ -139,7 +138,6 @@ export class MetricsComponent {
     this.metricsService.getMetricsAlerts(this.metricFilter.period, this.metricFilter.type).subscribe({
       next: (data: any) => {
         this.metricalerts = data;
-        console.log('Response: tabss alerts', this.metricalerts);
         this.loadingAlerts = false;
       },
       error: (err) => {
@@ -153,7 +151,6 @@ export class MetricsComponent {
   }
 
   onPeriodChange(event: any) {
-    console.log('Período cambiado:', event);
     // this.period = event;
     this.metricFilter.period = event;
     if (this.metricFilter.type == 3) {
@@ -200,6 +197,28 @@ export class MetricsComponent {
           this.loadMetricsTabs(2);
           break;
       }
+    } else if (this.metricFilter.type == 4) {
+      switch (this.metricFilter.period) {
+        case 'TODAY':
+          this.loadMetricsAvance(4);
+          break;
+
+        case '7D':
+          this.loadMetricsAvance(4);
+          break;
+
+        case '30D':
+          this.loadMetricsAvance(4);
+          break;
+
+        case '90D':
+          this.loadMetricsAvance(4);
+          break;
+
+        case '365D':
+          this.loadMetricsAvance(4);
+          break;
+      }
     } else {
       switch (this.metricFilter.period) {
         case 'TODAY':
@@ -233,7 +252,6 @@ export class MetricsComponent {
     this.metricsService.getMetricsUsersData(this.metricFilter.period, this.metricFilter.type, 1, 5).subscribe({
       next: (data: any) => {
         this.metricaUsers = data;
-        console.log('Response: users', this.metricalerts);
       },
       error: (err) => {
         console.log('Error', err);
@@ -247,7 +265,6 @@ export class MetricsComponent {
     this.metricsService.getMetricsUsersData(this.metricFilter.period, this.metricFilter.type, page, limit).subscribe({
       next: (data: any) => {
         this.metricaUsers = data;
-        console.log('Response: users', this.metricalerts);
         this.loadingUser = false;
       },
       error: (err) => {
@@ -256,9 +273,23 @@ export class MetricsComponent {
     });
   }
 
-
   pageUser(event_page: any) {
-    console.log("event_page", event_page);
     this.loadMetricsUsersPage(3, event_page.page, event_page.limit);
+  }
+
+  loadMetricsAvance(type: number) {
+    this.loadingAvance = true;
+    this.metricFilter.type = type;
+    this.metricsService.getMetricsAvance(this.metricFilter.period, this.metricFilter.type).subscribe({
+      next: (data: any) => {
+        this.metricsAvance = data;
+        this.loadingAvance = false;
+        console.log("test  :",this.metricsAvance);
+        
+      },
+      error: (err) => {
+        console.log('Error', err);
+      },
+    });
   }
 }
