@@ -5,7 +5,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { AlertsMetrics, EarlyAlerts, TypeButtonAlert } from '@app/interfaces/metrics.model';
 import { AtomCardStatisticComponent } from '@app/shared/atoms/card-statistic/card-statistic.component';
-import { AtomTruncateTextComponent } from '@app/shared/atoms/truncate-text/truncate-text.component';
+// import { AtomTruncateTextComponent } from '@app/shared/atoms/truncate-text/truncate-text.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { DialogModule } from 'primeng/dialog';
 import { UsersService } from '@app/pages/users/users.service';
@@ -16,7 +16,7 @@ import { UsersService } from '@app/pages/users/users.service';
     CommonModule,
     TableModule,
     ButtonModule,
-    AtomTruncateTextComponent,
+    // AtomTruncateTextComponent,
     AtomCardStatisticComponent,
     PaginatorModule,
     DialogModule,
@@ -166,6 +166,14 @@ export class MetricsTabAlertsComponent {
       break;
    }
    return namePlan;
+  }
+
+  exportToExcel(alerts:any){
+    const userIds: number[] = alerts.affectedUsers.map((user: any) => user.id);
+    console.log("IDs de usuarios:", userIds);
+    this.usersService.postUserIds(userIds).data$.subscribe((res:any)=>{
+      
+    })
   }
 
 }

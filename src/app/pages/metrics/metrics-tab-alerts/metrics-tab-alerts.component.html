@@ -18,7 +18,7 @@
                             <th scope="col">Tipo de Alerta</th>
                             <th scope="col" class="text-center">Cantidad</th>
                             <th scope="col" class="text-center">Descripción</th>
-                            <th scope="col" class="text-center">Usuarios Afectados</th>
+                            <!-- <th scope="col" class="text-center">Usuarios Afectados</th> -->
                             <th scope="col" class="text-center">Acción</th>
                         </tr>
                     </ng-template>
@@ -28,13 +28,16 @@
                             <td class="text-center font-medium">{{ alert.quantity }}</td>
                             <td class="text-center">{{ alert.description }}</td>
                             <td class="text-center">
-                                <atom-truncate-text [text]="getFirstTwoUserNames(alert.affectedUsers)" [limit]="50"
-                                    [maxWidth]="250">
-                                </atom-truncate-text>
-                            <td class="text-center">
                                 <button [disabled]="!alert.affectedUsers.length" (click)="viewUsers(alert)" pButton label="Ver"
                                     class="p-button-sm p-button-outlined p-button-secondary">
-                                </button>
+                                </button>&nbsp;
+                                <button (click)="exportToExcel(alert)" pButton 
+                                class="p-button-sm p-button-success p-button-text" 
+                                [disabled]="!alert.affectedUsers.length"
+                                tooltip="Exportar a Excel">
+                          <i class="pi pi-file-excel "></i>
+                          Exportar
+                        </button>
                             </td>
                         </tr>
                     </ng-template>

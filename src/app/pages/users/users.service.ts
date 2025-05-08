@@ -77,6 +77,25 @@ export class UsersService {
   
     return { data$: data$, isLoading };
   }
+
+
+  postUserIds(userIds: number[]) {
+    const isLoading = signal(true);
+  
+    const data$ = this.http.post<any>(`${this.apiUsersUrl}/download`, { userIds }).pipe(
+      tap(() => {
+        // Aquí podrías hacer algo si necesitas
+      }),
+      finalize(() => {
+        isLoading.set(false);
+      }),
+      share()
+    );
+  
+    return { data$: data$, isLoading };
+  }
+  
+  
   
 
 }

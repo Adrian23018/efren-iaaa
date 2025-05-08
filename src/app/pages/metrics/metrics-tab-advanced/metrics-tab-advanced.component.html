@@ -36,7 +36,7 @@
           <ng-template pTemplate="body" let-usage>
             <tr>
               <td >{{usage.plan_name}}</td>
-              <td class="text-center">{{usage.avg_messages_per_user}}</td>
+              <td class="text-center">{{ usage.avg_messages_per_user | number:'1.2-2' }}%</td>
               <td class="text-center">{{usage.user_count}}</td>
               <td class="text-center">{{usage.total_messages}}</td>
             </tr>

@@ -52,40 +52,6 @@ export class MetricsTabAdvancedComponent implements OnInit, OnChanges {
     this.messageUsage = this.metrics?.advanced_metrics?.message_usage_by_plan ?? [];
   }
 
-  // initPurchaseSourcesChart() {
-  //   const labels = this.metrics?.advancedMetrics?.topUtmSources?.map(item => item.source);
-  //   const total = this.metrics?.advancedMetrics?.topUtmSources?.reduce((acc, item) => acc + (item.revenue + item.userCount), 0) || 0;
-  //   if( total === 0 ) return;
-
-  //   const values = this.metrics?.advancedMetrics?.topUtmSources?.map(item => ((item.revenue + item.userCount) / total) * 100);
-  //   const colors = ColorUtil.generateColors(labels.length);
-
-  //   this.purchaseSourcesData = {
-  //     labels: labels,
-  //     datasets: [
-  //       {
-  //         data: values,
-  //         backgroundColor: colors,
-  //         hoverBackgroundColor: colors.map(color => ColorUtil.adjustBrightness(color, -10))
-  //       }
-  //     ]
-  //   };
-
-  //   this.purchaseSourcesOptions = {
-  //     plugins: {
-  //       legend: {
-  //         position: 'bottom'
-  //       },
-  //       title: {
-  //         display: false
-  //       }
-  //     },
-  //     responsive: true,
-  //     maintainAspectRatio: false
-  //   };
-  // }
-
-
   ngAfterViewInit() {
 
     Promise.resolve().then(() => {

@@ -25,7 +25,8 @@
                 Estado de Usuarios:
             </h2>
         </div>
-        <div class="mt-0 col-12 md:col-6 lg:col-6" *ngFor="let statistic of statisticsStatus">
+        <div class="mt-0 col-12 md:col-6 lg:col-4" *ngFor="let statistic of statisticsStatus"
+            (click)="handleMetricClick(statistic)">
             <atom-card-statistic [data]="statistic">
             </atom-card-statistic>
         </div>
@@ -63,20 +64,6 @@
                 </div>
             </ng-template>
         </div>
-
-        <!-- <div class="col-12 lg:col-4">
-            <div class="bg-primary border-round shadow-1 h-full">
-                <div class="p-3 flex align-items-center">
-                    <i class="pi pi-bell mr-2 text-white"></i>
-                    <h2 class="text-base font-medium m-0 text-white">Nuevas alertas</h2>
-                </div>
-                <div class="p-3 flex flex-column justify-content-between flex-1">
-                    <p class="text-white mb-3">Hay 5 usuarios Pro sin actividad por más de 3 días.</p>
-                    <button pButton type="button" label="Ver alertas"
-                        class="p-button-sm p-button-outlined p-button-light"></button>
-                </div>
-            </div>
-        </div> -->
     </div>
 
     <div class="grid mt-4">
@@ -120,62 +107,8 @@
                 </p-table>
             </div>
         </div>
-
-        <!-- <div class="col-12 lg:col-4">
-            <div class="bg-white border-round shadow-1">
-                <div class="p-3 border-bottom-1 border-gray-200">
-                    <h2 class="text-base font-medium m-0">Actividades recientes</h2>
-                </div>
-                <div class="p-0">
-                    <div class="p-3 border-bottom-1 border-gray-200">
-                        <div class="flex">
-                            <div
-                                class="flex align-items-center justify-content-center w-2rem h-2rem border-circle bg-primary-100 text-primary mr-3">
-                                <i class="pi pi-comments"></i>
-                            </div>
-                            <div class="flex flex-column">
-                                <span class="font-medium mb-1">Nuevo mensaje de ayuda</span>
-                                <span class="text-sm text-gray-600 mb-1">Usuario solicitó ayuda con su
-                                    suscripción</span>
-                                <span class="text-xs text-gray-500">Justo ahora</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-3 border-bottom-1 border-gray-200">
-                        <div class="flex">
-                            <div
-                                class="flex align-items-center justify-content-center w-2rem h-2rem border-circle bg-primary-100 text-primary mr-3">
-                                <i class="pi pi-exclamation-circle"></i>
-                            </div>
-                            <div class="flex flex-column">
-                                <span class="font-medium mb-1">Alerta de usuario inactivo</span>
-                                <span class="text-sm text-gray-600 mb-1">Usuario no ha iniciado sesión en 30 días</span>
-                                <span class="text-xs text-gray-500">Hace 2 horas</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
     </div>
 
-    <!-- <div class="grid mt-4">
-        <div class="col-12 lg:col-12">
-            <div *ngIf="loadingIncomes; else loadedIncomes">
-                <molecule-chart-skeleton></molecule-chart-skeleton>
-            </div>
-            <ng-template #loadedIncomes>
-                <div class="bg-white border-round shadow-1">
-                    <div class="p-3 border-bottom-1 border-gray-200">
-                        <h2 class="text-base font-medium m-0">Ingresos mensuales</h2>
-                    </div>
-                    <div class="p-3" style="width: 100%; height: 300px">
-                        <p-chart type="line" [data]="chartDataIncomes" [options]="chartOptionsIncomes"></p-chart>
-                    </div>
-                </div>
-            </ng-template>
-        </div>
-    </div> -->
 </div>
 
 <p-dialog header="Alertas" [(visible)]="mostrarModal" [modal]="true" [style]="{width: '1200px'}" [closable]="true">
@@ -223,7 +156,205 @@
                 </p-table>
 
                 <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rowsPerPage"
-                [totalRecords]="5"  />
+                    [totalRecords]="5" />
+
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+
+<p-dialog header="Usuarios pendientes de cancelación Pro" [(visible)]="viewModalPro" [modal]="true"
+    [style]="{width: 'text-700'}" [closable]="true">
+
+    <ng-template pFooter>
+        <button pButton type="button" label="Cerrar" (click)="viewModalPro = false"></button>
+    </ng-template>
+
+    <div class="grid mt-4">
+        <div class="col-12 lg:col-12">
+            <div class="bg-white border-round shadow-1">
+                <div class="p-3 border-bottom-1 border-gray-200 flex justify-content-between align-items-center">
+                    <h2 class="text-base font-medium m-0">Usuarios con Plan Pro pendientes de cancelar</h2>
+                </div>
+                <p-table [value]="userPendingCanceledPro" styleClass="p-datatable-sm"
+                    [tableStyle]="{'min-width': '50rem'}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col" class="text-center">Usuario</th>
+                            <th scope="col" class="text-center">Acción</th>
+                            <th scope="col" class="text-center">Plan Actual</th>
+                            <th scope="col" class="text-center">Periodo de cancelado</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-user>
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td class="text-center">
+                                <div class="flex flex-column">
+                                    <span class="font-medium">{{ user.name }}</span>
+                                    <span class="text-xs text-gray-500">{{ user.email }}</span>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="flex flex-column">
+                                    <span class="font-medium">{{ user.phone }}</span>
+                                    <span class="text-xs text-gray-500 border px-2 py-1 rounded" [ngClass]="{
+                                      'border-green-500 text-green-600 bg-green-50': user.active,
+                                      'border-red-500 text-red-600 bg-red-50': !user.active
+                                    }">
+                                        {{ user.active ? 'Activo' : 'Inactivo' }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="flex flex-column">
+                                    <span class="text-xs text-gray-500 border px-2 py-1 rounded" [ngClass]="{
+                                      'border-green-500 text-green-600 bg-green-50': user.plan_id == 1,
+                                      'border-blue-500 text-blue-600 bg-blue-50': user.plan_id == 2
+                                    }">
+                                        {{ user.plan_id == 1 ? 'Plan Elite' : 'Plan Pro' }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="text-center text-xs text-gray-600">
+                                {{ getCancelationInfo(user) }}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+
+<p-dialog header="Usuarios pendientes de cancelación Elite" [(visible)]="viewModalElite" [modal]="true"
+    [style]="{width: 'text-700'}" [closable]="true">
+
+    <ng-template pFooter>
+        <button pButton type="button" label="Cerrar" (click)="viewModalElite = false"></button>
+    </ng-template>
+
+    <div class="grid mt-4">
+        <div class="col-12 lg:col-12">
+            <div class="bg-white border-round shadow-1">
+                <div class="p-3 border-bottom-1 border-gray-200 flex justify-content-between align-items-center">
+                    <h2 class="text-base font-medium m-0">Usuarios con Plan Elite pendientes de cancelar</h2>
+                </div>
+                <p-table [value]="userPendingCanceledElite" styleClass="p-datatable-sm"
+                    [tableStyle]="{'min-width': '50rem'}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col" class="text-center">Usuario</th>
+                            <th scope="col" class="text-center">Telefono</th>
+                            <th scope="col" class="text-center">Plan Actual</th>
+                            <th scope="col" class="text-center">Periodo de cancelado</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-user>
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td class="text-center">
+                                <div class="flex flex-column">
+                                    <span class="font-medium">{{ user.name }}</span>
+                                    <span class="text-xs text-gray-500">{{ user.email }}</span>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="flex flex-column">
+                                    <span class="font-medium">{{ user.phone }}</span>
+                                    <span class="text-xs text-gray-500 border px-2 py-1 rounded" [ngClass]="{
+                                      'border-green-500 text-green-600 bg-green-50': user.active,
+                                      'border-red-500 text-red-600 bg-red-50': !user.active
+                                    }">
+                                        {{ user.active ? 'Activo' : 'Inactivo' }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="flex flex-column">
+                                    <span class="text-xs text-gray-500 border px-2 py-1 rounded" [ngClass]="{
+                                      'border-green-500 text-green-600 bg-green-50': user.plan_id == 1,
+                                      'border-blue-500 text-blue-600 bg-blue-50': user.plan_id == 2
+                                    }">
+                                        {{ user.plan_id == 1 ? 'Plan Elite' : 'Plan Pro' }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="text-center text-xs text-gray-600">
+                                {{ getCancelationInfo(user) }}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+
+<p-dialog header="Usuarios Cancelados" [(visible)]="viewModalAll" [modal]="true" [style]="{width: 'text-700'}"
+    [closable]="true">
+
+    <ng-template pFooter>
+        <button pButton type="button" label="Cerrar" (click)="viewModalAll = false"></button>
+    </ng-template>
+
+    <div class="grid mt-4">
+        <div class="col-12 lg:col-12">
+            <div class="bg-white border-round shadow-1">
+                <div class="p-3 border-bottom-1 border-gray-200 flex justify-content-between align-items-center">
+                    <h2 class="text-base font-medium m-0">Usuarios cancelados</h2>
+                </div>
+                <p-table [value]="userCancelledAll" styleClass="p-datatable-sm" [tableStyle]="{'min-width': '50rem'}"
+                    [scrollable]="true" scrollHeight="280px">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col" class="text-center">Usuario</th>
+                            <th scope="col" class="text-center">Acción</th>
+                            <th scope="col" class="text-center">Plan Actual</th>
+
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-user>
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td class="text-center">
+                                <div class="flex flex-column">
+                                    <span class="font-medium">{{ user.name }}</span>
+                                    <span class="text-xs text-gray-500">{{ user.email }}</span>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="flex flex-column">
+                                    <span class="font-medium">{{ user.phone }}</span>
+                                    <span class="text-xs text-gray-500 border px-2 py-1 rounded" [ngClass]="{
+                                      'border-green-500 text-green-600 bg-green-50': user.active,
+                                      'border-red-500 text-red-600 bg-red-50': !user.active
+                                    }">
+                                        {{ user.active ? 'Activo' : 'Inactivo' }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="flex flex-column">
+                                    <span class="text-xs text-gray-500 border px-2 py-1 rounded" [ngClass]="{
+                                      'border-green-500 text-green-600 bg-green-50': user.plan_id == 1,
+                                      'border-blue-500 text-blue-600 bg-blue-50': user.plan_id == 2
+                                    }">
+                                        {{ user.plan_id == 1 ? 'Plan Elite' : 'Plan Pro' }}
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
 
             </div>
         </div>

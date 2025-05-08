@@ -91,8 +91,8 @@ export class MetricsTabUsersComponent {
         percentage: Math.round((user_metrics.active_users.pro / user_metrics.active_users.total) * 100),
         stats: [
           { label: 'Promedio de uso', value: user_metrics.usage_metrics.pro.avg_messages+' mensaje/semana' },
-          { label: 'Tasa de retención', value: user_metrics.retention_rates.pro+'%' },
-          { label: 'Tasa de renovación', value: user_metrics.renewal_rates.pro+'%' }
+          { label: 'Tasa de retención', value: user_metrics.retention_rates.pro.toFixed(2)+'%' },
+          { label: 'Tasa de renovación', value: user_metrics.renewal_rates.pro.toFixed(2)+'%' }
         ]
       },
       {
@@ -103,8 +103,8 @@ export class MetricsTabUsersComponent {
         percentage: Math.round((user_metrics.active_users.elite / user_metrics.active_users.total) * 100),
         stats: [
           { label: 'Promedio de uso', value: user_metrics.usage_metrics.elite.avg_messages+' mensajes/semana' },
-          { label: 'Tasa de retención', value: user_metrics.retention_rates.elite+'%' },
-          { label: 'Tasa de renovación', value: user_metrics.renewal_rates.elite+'%' }
+          { label: 'Tasa de retención', value: user_metrics.retention_rates.elite.toFixed(2)+'%' },
+          { label: 'Tasa de renovación', value: user_metrics.renewal_rates.elite.toFixed(2)+'%' }
         ]
       },
       {
@@ -115,7 +115,7 @@ export class MetricsTabUsersComponent {
         percentage: Math.round((user_metrics.active_users.demo / user_metrics.active_users.total) * 100),
         stats: [
           { label: 'Tasa de conversión a pago', value: user_metrics.conversion_metrics.demo_to_paid_rate },
-          { label: 'Tiempo promedio en demo', value: user_metrics.conversion_metrics.avg_days_in_demo+' días' },
+          { label: 'Tiempo promedio en demo', value: user_metrics.conversion_metrics.avg_days_in_demo.toFixed(2)+' días' },
           { label: 'Plan más seleccionado', value: 'Élite' }
         ]
       }

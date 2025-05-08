@@ -21,4 +21,9 @@ export class FilesTabSummaryComponent {
   getTagSeverity(tag: string): Severity {
     return TagUtil.getTagSeverity(tag);
   }
+
+  getFormattedSummary(): string {
+    if (!this.selectedFile?.summary) return '';
+    return this.selectedFile.summary.replace(/\*\*\*/g, '<br><br>');
+  }
 }

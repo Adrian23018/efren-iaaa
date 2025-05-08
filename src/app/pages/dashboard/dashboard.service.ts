@@ -12,8 +12,8 @@ import { DashboardMetrics } from '@app/interfaces/metrics.model';
 })
 export class DashboardService {
   private readonly apiDasboardUrl = `${environment.baseApiUrl}/${environment.endpoints.statistics}`;
-  
-  constructor(private readonly http: HttpClient) {}
+
+  constructor(private readonly http: HttpClient) { }
 
   getMetrics(): Observable<DashboardMetrics> {
     return this.http.get<DashboardMetrics>(`${this.apiDasboardUrl}/${environment.endpoints.metrics}`);
@@ -33,5 +33,17 @@ export class DashboardService {
 
   getAlertsModal(page: number, limit: number,): Observable<Alert[]> {
     return this.http.get<Alert[]>(`${this.apiDasboardUrl}/${environment.endpoints.alerts}?alerts=true&page=${page}&limit=${limit}`);
+  }
+
+  getAlertsModalProCancelledPending(): Observable<Alert[]> {
+    return this.http.get<any[]>(`${this.apiDasboardUrl}/canceledPro`);
+  }
+
+  getAlertsModalEliteCancelledPending(): Observable<Alert[]> {
+    return this.http.get<any[]>(`${this.apiDasboardUrl}/canceledElite`);
+  }
+
+  getAlertsModalCancelledAll(): Observable<Alert[]> {
+    return this.http.get<any[]>(`${this.apiDasboardUrl}/canceledAll`);
   }
 }

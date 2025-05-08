@@ -59,6 +59,13 @@ export class DashboardComponent {
   loadingIncomes: boolean = true;
   public first = 0;
   public rowsPerPage = 5;
+  public userPendingCanceledPro: any = [];
+  public userPendingCanceledElite: any = [];
+  public viewModalElite = false;
+  public viewModalPro = false;
+
+  userCancelledAll: any = [];
+  viewModalAll = false;
 
   constructor(
     private readonly dashboardService: DashboardService,
@@ -203,7 +210,7 @@ export class DashboardComponent {
   loadAlertsModal(page: number, limit: number): void {
     this.dashboardService.getAlertsModal(page, limit).subscribe({
       next: (data: any) => {
-        this.alertsModal = data.data;        
+        this.alertsModal = data.data;
         this.alertsModalLength = data.meta.totalAlerts;
       },
       error: (err) => {
@@ -220,4 +227,72 @@ export class DashboardComponent {
 
     this.loadAlertsModal(page, limit);
   }
+
+  handleMetricClick(statistic: any) {
+    console.log("statistic : ", statistic);
+
+    switch (statistic.id) {
+      case 'userscanceledtodayelite':
+        this.cancelledElitePending();
+        break;
+      case 'userscanceledtodaypro':
+        this.cancelledProPending();
+        break;
+      case 'userCanceled':
+        this.cancelledAll();
+        break;
+      default:
+      // console.log('Click en: ', statistic);
+    }
+  }
+
+  cancelledElitePending() {
+    this.dashboardService.getAlertsModalEliteCancelledPending().subscribe((res: any) => {
+      this.userPendingCanceledElite = res;
+      this.viewModalElite = true;
+    })
+  }
+
+  cancelledProPending() {
+    this.dashboardService.getAlertsModalProCancelledPending().subscribe((res: any) => {
+      this.userPendingCanceledPro = res;
+      this.viewModalPro = true;
+    })
+  }
+
+  cancelledAll() {
+    this.dashboardService.getAlertsModalCancelledAll().subscribe((res: any) => {
+      console.log("data users penient pro : ", res);
+      this.userCancelledAll = res;
+      this.viewModalAll = true;
+    })
+  }
+
+  getCancelationInfo(user: any): string {
+    const canceledDate = new Date(user.canceled_date);
+    const canceledAt = new Date(user.canceled_at);
+    const hoy = new Date();
+  
+    const fechaCancelacion = canceledDate.toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  
+    const fechaEfectiva = canceledAt.toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  
+    const MILISEGUNDOS_POR_DIA = 1000 * 60 * 60 * 24;
+    const diferenciaEnMs = canceledAt.getTime() - hoy.getTime();
+    const diasRestantes = Math.ceil(diferenciaEnMs / MILISEGUNDOS_POR_DIA);
+  
+    return `Canceló el: ${fechaCancelacion} · Se cancela el: ${fechaEfectiva} / Faltan ${diasRestantes} días`;
+  }
+  
+  
+  
+
 }
