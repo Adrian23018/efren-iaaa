@@ -54,14 +54,21 @@ export class FilesService {
     );
   }
 
+  downloadPdfFile(id_file: number, name_user_id: any, filters: any, flag: boolean) {
+    const body = {
+      id_file,
+      filters,
+      flag
+    };
 
-  downloadCsvFile(id_file: number, name_user_id: any) {
-    this.http.get(`${this.apiDasboardUrl}/${environment.endpoints.files}/${environment.endpoints.download}?id_file=${id_file}`, { responseType: 'blob' })
-      .subscribe((blob:any) => {
+    this.http.post(`${this.apiDasboardUrl}/${environment.endpoints.files}/${environment.endpoints.download}`, body, {
+      responseType: 'blob'
+    })
+      .subscribe((blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = name_user_id+'.pdf'; // Nombre que quieres darle
+        a.download = name_user_id + '.pdf'; // o .csv según lo que descargues
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -70,7 +77,31 @@ export class FilesService {
         console.error('Error descargando archivo', error);
       });
   }
-  
+
+  downloadCsvFile(id_file: number, name_user_id: any, filters: any, flag: boolean) {
+    const body = {
+      id_file,
+      filters,
+      flag
+    };
+
+    this.http.post(`${this.apiDasboardUrl}/${environment.endpoints.files}/${environment.endpoints.download}`, body, {
+      responseType: 'blob'
+    })
+      .subscribe((blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'archivo' + '.csv'; // o .csv según lo que descargues
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }, error => {
+        console.error('Error descargando archivo', error);
+      });
+  }
+
   getEmotionsTopis(): Observable<any> {
     return this.http.get<any>(
       `${this.apiDasboardUrl}/${environment.endpoints.files}/enum/sessions`

@@ -58,7 +58,7 @@ export interface UserFile {
     summary: string;
     topics: string[];
     emotionsDetected: string[];
-    mentalStateTags: string[];
+    mentalStateTags: string[]; 
     importantEvents: string[];
     conversationLength: number;
     engagementLevel: string;

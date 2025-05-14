@@ -257,7 +257,14 @@ export class FilesComponent implements OnInit {
 
   dowloadFile() {
     if (this.selectedFile && this.selectedFile?.weekly_session_id) {
-      this.fileSrv.downloadCsvFile(this.selectedFile?.weekly_session_id, this.selectedFile?.userId + '-' + this.selectedFile?.user_name);
+
+      if (this.isFiltroActivo()) {
+        console.log('Hay al menos un filtro aplicado ✅');
+        this.fileSrv.downloadCsvFile(this.selectedFile?.weekly_session_id, this.selectedFile?.userId + '-' + this.selectedFile?.user_name, this.formUsers.value,true);
+      } else {
+        console.log('Todos los filtros están vacíos ❌');
+        this.fileSrv.downloadPdfFile(this.selectedFile?.weekly_session_id, this.selectedFile?.userId + '-' + this.selectedFile?.user_name, this.formUsers.value,false);
+      }
     }
   }
 
@@ -296,6 +303,18 @@ export class FilesComponent implements OnInit {
     const filters = { ... this.formUsers.getRawValue() };
     delete filters.searchDirect;
     // this.myUsers = this.usersService.getUsers(1, 5, filters);
+  }
+
+  isFiltroActivo(): boolean {
+    const valores = this.formUsers.value;
+
+    // Recorre los campos y verifica si alguno tiene valor útil
+    return Object.values(valores).some(value => {
+      if (Array.isArray(value)) {
+        return value.length > 0;
+      }
+      return value !== null && value !== '';
+    });
   }
 
 }
