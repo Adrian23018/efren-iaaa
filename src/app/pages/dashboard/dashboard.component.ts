@@ -65,7 +65,9 @@ export class DashboardComponent {
   public viewModalPro = false;
 
   userCancelledAll: any = [];
+  userCancelledAllPro: any = [];
   viewModalAll = false;
+  viewModalAllPro = false;
 
   constructor(
     private readonly dashboardService: DashboardService,
@@ -238,8 +240,11 @@ export class DashboardComponent {
       case 'userscanceledtodaypro':
         this.cancelledProPending();
         break;
-      case 'userCanceled':
+      case 'userCanceledelite':
         this.cancelledAll();
+        break;
+      case 'userCanceledpro':
+        this.cancelledAllPro();
         break;
       default:
       // console.log('Click en: ', statistic);
@@ -261,10 +266,18 @@ export class DashboardComponent {
   }
 
   cancelledAll() {
-    this.dashboardService.getAlertsModalCancelledAll().subscribe((res: any) => {
+    this.dashboardService.getAlertsModalCancelledAllElite().subscribe((res: any) => {
       console.log("data users penient pro : ", res);
       this.userCancelledAll = res;
       this.viewModalAll = true;
+    })
+  }
+
+   cancelledAllPro() {
+    this.dashboardService.getAlertsModalCancelledAllPro().subscribe((res: any) => {
+      console.log("data users penient pro : ", res);
+      this.userCancelledAllPro = res;
+      this.viewModalAllPro = true;
     })
   }
 

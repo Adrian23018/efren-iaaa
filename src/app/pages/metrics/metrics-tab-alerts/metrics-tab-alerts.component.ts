@@ -170,10 +170,7 @@ export class MetricsTabAlertsComponent {
 
   exportToExcel(alerts:any){
     const userIds: number[] = alerts.affectedUsers.map((user: any) => user.id);
-    console.log("IDs de usuarios:", userIds);
-    this.usersService.postUserIds(userIds).data$.subscribe((res:any)=>{
-      
-    })
+    this.usersService.downloadCsvFile(userIds,alerts.tipo_alerta);
   }
 
 }

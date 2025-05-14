@@ -1,0 +1,132 @@
+<ng-container *ngIf="custom && custom.formGroupName">
+    <form [formGroup]="custom.formGroupName">
+        <p-overlayPanel #filterPanel [style]="{ width: '20rem' }" [dismissable]="true">
+            <div class="flex flex-column gap-3 p-3 text-sm">
+                <span class="font-medium text-base">Filtros</span>
+                <small class="text-color-secondary">Aplica filtros para refinar los resultados</small>
+
+                <!-- Buscador -->
+                <div *ngIf="custom.showSearch && custom.searchConfig">
+                    <span class="text-sm text-color-secondary">{{ custom.searchConfig.label }}</span>
+                    <input pInputText type="text" class="w-full mt-1" [placeholder]="custom.searchConfig.placeholder"
+                        [formControlName]="custom.searchConfig.formControlName" />
+                </div>
+
+                <!-- Plan -->
+                <div class="flex flex-column gap-1" *ngIf="custom.showPlan && custom.planConfig">
+                    <span class="text-sm text-color-secondary">{{custom.planConfig.label}}</span>
+                    <div class="flex gap-2 flex-wrap">
+                        <p-chip *ngFor="let plan of custom.planConfig.plans" type="button"
+                            (keydown)="$event.preventDefault()" [label]="plan.label" [removable]="false"
+                            class="cursor-pointer"
+                            [class.bg-primary]="custom.formGroupName.get(custom.planConfig.formControlName)?.value === plan.value"
+                            (click)="onSelectPlan(plan.value)"></p-chip>
+                    </div>
+                </div>
+
+                <!-- Estado -->
+                <div class="flex flex-column gap-1" *ngIf="custom.showStatus && custom.statusConfig">
+                    <span class="text-sm text-color-secondary">{{custom.statusConfig.label}}</span>
+                    <div class="flex gap-2 flex-wrap">
+                        <p-chip *ngFor="let status of custom.statusConfig.states" type="button"
+                            (keydown)="$event.preventDefault()" [label]="status.label" [removable]="false"
+                            class="cursor-pointer"
+                            [class.bg-primary]="custom.formGroupName.get(custom.statusConfig.formControlName)?.value === status.value"
+                            (click)="onSelectStatus(status.value)"></p-chip>
+                    </div>
+                </div>
+
+                <!-- Periodo -->
+                <div class="flex flex-column gap-1" *ngIf="custom.showPeriod && custom.periodConfig">
+                    <span class="text-sm text-color-secondary">{{custom.periodConfig.label}}</span>
+                    <div class="flex gap-2 flex-wrap">
+                        <p-chip *ngFor="let period of custom.periodConfig.periods" type="button"
+                            (keydown)="$event.preventDefault()" [label]="period.label" [removable]="false"
+                            class="cursor-pointer"
+                            [class.bg-blue-100]="custom.formGroupName.get(custom.periodConfig.formControlName)?.value === period.value"
+                            (click)="onSelectPeriod(period.value)"></p-chip>
+                    </div>
+                </div>
+
+                <!-- Etiquetas -->
+                <!-- <div class="flex flex-column gap-1" *ngIf="custom.showTags && custom.tagsConfig">
+                    <span class="text-sm text-color-secondary">{{custom.tagsConfig.label}}</span>
+                    <div class="flex gap-2 flex-wrap">
+                    <p-chip
+                        *ngFor="let tag of custom.tagsConfig.tags"
+                        type="button"
+                        (keydown)="$event.preventDefault()"
+                        [label]="tag.label"
+                        [removable]="false"
+                        class="cursor-pointer"
+                        [class.bg-green-200]="custom.formGroupName.get(custom.tagsConfig.formControlName)?.value.includes(tag.value)"
+                        (click)="toggleTag(tag.value)"
+                    ></p-chip>
+                    </div>
+                </div> -->
+
+
+                <!-- <div *ngIf="custom.showDate && custom.dateConfig">
+                    <div 
+                        class="flex flex-wrap gap-2 justify-content-center items-center pt-2 pb-2 col-12">
+                        <p-calendar [showIcon]="true" formControlName="fechaInicio" placeholder="Fecha inicio"
+                            dateFormat="yy-mm-dd" inputClass="w-full md:w-40"></p-calendar>
+
+                        <p-calendar [showIcon]="true" formControlName="fechaFin" placeholder="Fecha fin"
+                            dateFormat="yy-mm-dd" inputClass="w-full md:w-40"></p-calendar>
+
+                        <button pButton type="button" label="Filtrar" icon="pi pi-filter" class="w-full md:w-auto"
+                            ></button>
+
+                    </div>
+                </div> -->
+
+                <div class="flex flex-column gap-1" *ngIf="custom.showDate && custom.dateConfig">
+                    <span class="text-sm text-color-secondary">{{ custom.dateConfig.labelInicio }}</span>
+                    <p-calendar [showIcon]="true" [formControlName]="custom.dateConfig.formControlNameInicio"
+                        placeholder="Selecciona fecha" dateFormat="yy-mm-dd" inputClass="w-full"></p-calendar>
+
+                    <span class="text-sm text-color-secondary">{{ custom.dateConfig.labelFin }}</span>
+                    <p-calendar [showIcon]="true" [formControlName]="custom.dateConfig.formControlNameFin"
+                        placeholder="Selecciona fecha" dateFormat="yy-mm-dd" inputClass="w-full"></p-calendar>
+                </div>
+
+
+                <!-- Etiquetas (nuevo con MultiSelect) -->
+                <div class="flex flex-column gap-1" *ngIf="custom.showTags && custom.tagsConfig">
+                    <span class="text-sm text-color-secondary">{{custom.tagsConfig.label}}</span>
+                    <p-multiSelect [options]="custom.tagsConfig.tags" optionLabel="label" optionValue="value"
+                        display="chip" [filter]="true" [formControlName]="custom.tagsConfig.formControlName"
+                        placeholder="Selecciona temas" class="w-full" [showHeader]="false">
+                    </p-multiSelect>
+                </div>
+
+                <div class="flex flex-column gap-1" *ngIf="custom.showTopics && custom.tagsConfigTopis">
+                    <span class="text-sm text-color-secondary">{{custom.tagsConfigTopis.label}}</span>
+                    <p-multiSelect [options]="custom.tagsConfigTopis.topic" optionLabel="label" optionValue="value"
+                        display="chip" [filter]="true" [formControlName]="custom.tagsConfigTopis.formControlName"
+                        placeholder="Selecciona temas" class="w-full" [showHeader]="false">
+                    </p-multiSelect>
+
+                </div>
+
+                <div class="flex flex-column gap-1" *ngIf="custom.showEmotions && custom.tagsConfigEmotions">
+                    <span class="text-sm text-color-secondary">{{custom.tagsConfigEmotions.label}}</span>
+                    <p-multiSelect [options]="custom.tagsConfigEmotions.emotions" optionLabel="label"
+                        optionValue="value" display="chip" [filter]="true"
+                        [formControlName]="custom.tagsConfigEmotions.formControlName" placeholder="Selecciona emociones"
+                        class="w-full" [showHeader]="false">
+                    </p-multiSelect>
+
+                </div>
+
+                <!-- Acciones -->
+                <div class="flex justify-between mt-3">
+                    <button pButton label="Limpiar" class="p-button-text p-button-sm"
+                        (click)="clearFilters.emit()"></button>
+                    <button pButton label="Aplicar filtros" class="p-button-sm" (click)="applyFilters.emit()"></button>
+                </div>
+            </div>
+        </p-overlayPanel>
+    </form>
+</ng-container>

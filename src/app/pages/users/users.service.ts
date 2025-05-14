@@ -64,7 +64,7 @@ export class UsersService {
 
   getUserId(user_id: number) {
     const isLoading = signal(true);
-  
+
     const data$ = this.http.get<any>(`${this.apiUsersUrl}/user?userId=${user_id}`).pipe(
       tap(() => {
         // Aquí podrías hacer algo si necesitas (opcional)
@@ -74,14 +74,14 @@ export class UsersService {
       }),
       share()
     );
-  
+
     return { data$: data$, isLoading };
   }
 
 
   postUserIds(userIds: number[]) {
     const isLoading = signal(true);
-  
+
     const data$ = this.http.post<any>(`${this.apiUsersUrl}/download`, { userIds }).pipe(
       tap(() => {
         // Aquí podrías hacer algo si necesitas
@@ -91,11 +91,30 @@ export class UsersService {
       }),
       share()
     );
-  
+
     return { data$: data$, isLoading };
   }
-  
-  
-  
+
+ downloadCsvFile(userIds: number[], fileName: string) {
+  const body = { userIds }; // o { ids: userIds } según tu backend
+
+  this.http.post(`${this.apiUsersUrl}/download`, body, { responseType: 'blob' })
+    .subscribe((blob: Blob) => {
+      console.log("blob:",blob);
+      
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName + '.csv'; // o '.csv' según el tipo real
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, error => {
+      console.error('Error descargando archivo', error);
+    });
+}
+
+
 
 }

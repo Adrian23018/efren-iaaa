@@ -23,6 +23,9 @@ import { debounceTime } from 'rxjs';
 import { FilesService } from './files.service';
 import { ToastService } from '@app/shared/service/alerts/toast.service';
 import { ToastModule } from 'primeng/toast';
+import { CalendarModule } from 'primeng/calendar';
+import { MoleculeUserFilterPanelExpentComponent } from '@app/shared/molecules/user-filter-panel-expen/user-filter-panel-expen.component';
+import { UserFilterPanelExpe } from '@app/shared/molecules/user-filter-panel-expen/user-filter-panel-expen.model';
 
 @Component({
   selector: 'app-files',
@@ -44,9 +47,10 @@ import { ToastModule } from 'primeng/toast';
     FilesTabInsightsComponent,
     FilesTabNotesComponent,
     FilesTabConversationsComponent,
-    MoleculeUserFilterPanelComponent,
+    MoleculeUserFilterPanelExpentComponent,
     ToastModule,
-],
+    CalendarModule,
+  ],
   templateUrl: './files.component.html',
   styleUrl: './files.component.scss'
 })
@@ -66,13 +70,13 @@ export class FilesComponent implements OnInit {
   ];
 
   formUsers!: FormGroup;
-  filterParams: UserFilterPanel = {
+  filterParams: UserFilterPanelExpe = {
     showSearch: true,
-    searchConfig: {
-      label: 'Buscar',
-      placeholder: 'Buscar por nombre',
-      formControlName: 'name'
-    },
+    // searchConfig: {
+    //   label: 'Buscar',
+    //   placeholder: 'Buscar por nombre',
+    //   formControlName: 'name'
+    // },
     showPlan: true,
     planConfig: {
       label: 'Plan',
@@ -83,42 +87,124 @@ export class FilesComponent implements OnInit {
       ],
       formControlName: 'plan'
     },
-    showStatus: true,
-    statusConfig: {
-      label: 'Estado',
-      states: [
-        { label: 'Activo', value: 'Activo' },
-        { label: 'Inactivo', value: 'Inactivo' },
+    // showStatus: true,
+    // statusConfig: {
+    //   label: 'Estado',
+    //   states: [
+    //     { label: 'Activo', value: 'Activo' },
+    //     { label: 'Inactivo', value: 'Inactivo' },
+    //   ],
+    //   formControlName: 'status'
+    // },
+    // showPeriod: true,
+    // periodConfig: {
+    //   label: 'Periodo',
+    //   periods: [
+    //     { label: 'Últimos 7 días', value: '7d' },
+    //     { label: 'Últimos 30 días', value: '30d' },
+    //     { label: 'Últimos 3 meses', value: '3m' },
+    //     { label: 'Último año', value: '1y' }
+    //   ],
+    //   formControlName: 'period'
+    // },
+    showTopics: true,
+    tagsConfigTopis: {
+      label: 'Temas',
+      topic: [
+        { label: 'Términos aceptados', value: 'terminos-aceptados' },
+        // { label: 'No compró Pro', value: 'no-compro-pro' },
+        { label: 'Demo finalizada', value: 'demo-finalizada' },
+        { label: 'Sin botones', value: 'sin-botones' },
+        { label: 'No compró Pro', value: 'quedo-pro' },
+        { label: 'No compró Élite', value: 'quedo-elite' },
+        { label: 'No ha usado el Pro', value: 'pro-no-uso' },
+        { label: 'No ha usado el Élite', value: 'elite-no-uso' },
+        { label: 'No ha probado la Demo', value: 'no-prueba' },
+        { label: 'No tiene ni data', value: 'no-datos' },
+        { label: 'Se quedo a la Mitad de Demo', value: 'demo-mitad' },
+        { label: 'Pro completado', value: 'pro-completado' },
+        { label: 'Demo completado', value: 'demo-completada' }
       ],
-      formControlName: 'status'
+      formControlName: 'topic'
     },
-    showPeriod: true,
-    periodConfig: {
-      label: 'Periodo',
-      periods: [
-        { label: 'Últimos 7 días', value: '7d' },
-        { label: 'Últimos 30 días', value: '30d' },
-        { label: 'Últimos 3 meses', value: '3m' },
-        { label: 'Último año', value: '1y' }  
+    showEmotions: true,
+    tagsConfigEmotions: {
+      label: 'Emociones',
+      emotions: [
+        { label: 'Términos aceptados', value: 'terminos-aceptados' },
+        // { label: 'No compró Pro', value: 'no-compro-pro' },
+        { label: 'Demo finalizada', value: 'demo-finalizada' },
+        { label: 'Sin botones', value: 'sin-botones' },
+        { label: 'No compró Pro', value: 'quedo-pro' },
+        { label: 'No compró Élite', value: 'quedo-elite' },
+        { label: 'No ha usado el Pro', value: 'pro-no-uso' },
+        { label: 'No ha usado el Élite', value: 'elite-no-uso' },
+        { label: 'No ha probado la Demo', value: 'no-prueba' },
+        { label: 'No tiene ni data', value: 'no-datos' },
+        { label: 'Se quedo a la Mitad de Demo', value: 'demo-mitad' },
+        { label: 'Pro completado', value: 'pro-completado' },
+        { label: 'Demo completado', value: 'demo-completada' }
       ],
-      formControlName: 'period'
+      formControlName: 'emotions'
+    },
+    showDate: true,
+    dateConfig: {
+      labelInicio: 'Fecha inicio',
+      labelFin: 'Fecha fin',
+      formControlNameInicio: 'fechaInicio',
+      formControlNameFin: 'fechaFin'
     }
   }
 
-  filters: Filters = {
+  filters: any = {
     name: '',
     plan: null,
     status: null,
-    period: null
+    period: null,
+    fechaInicio: null,
+    fechaFin: null,
+    tags: [],// <-- ¡Este es el que permite que se envíen las etiquetas!
+    topic: [],
+    emotions: []
   };
 
   constructor(private readonly formBuilder: FormBuilder) {
+
+    this.fileSrv.getEmotionsTopis().subscribe((res: any) => {
+      console.log("respuesta : ", res);
+
+      // let temasFormateados: any = res.filters.temas.map((item: any) => ({ label: item, value: item }));
+      // let emocionesFormateadas: any = res.filters.emociones.map((item: any) => ({ label: item, value: item }));
+
+      let temasFormateados: any = res.filters.temas.map((item: any) => ({
+        label: item.toLowerCase(),
+        value: item.toLowerCase()
+      }));
+
+      let emocionesFormateadas: any = res.filters.emociones.map((item: any) => ({
+        label: item.toLowerCase(),
+        value: item.toLowerCase()
+      }));
+
+      console.log("temasFormateados", temasFormateados);
+      console.log("emocionesFormateadas", emocionesFormateadas);
+      if (res.filters?.temas && res.filters?.emociones && this.filterParams && this.filterParams.tagsConfigTopis && this.filterParams.tagsConfigEmotions) {
+        this.filterParams.tagsConfigTopis.topic = temasFormateados || [];
+        this.filterParams.tagsConfigEmotions.emotions = emocionesFormateadas || [];
+      }
+    })
+
     this.formUsers = this.formBuilder.group({
       name: [''],
       plan: [''],
       status: [''],
       period: [''],
       searchDirect: [''],
+      fechaInicio: [null],
+      fechaFin: [null],
+      tags: [[]],// <-- ¡Este es el que permite que se envíen las etiquetas!
+      topic: [[]],
+      emotions: [[]]
     });
     this.filterParams.formGroupName = this.formUsers;
 
@@ -141,7 +227,7 @@ export class FilesComponent implements OnInit {
   }
 
   selectFile(file: UserFile) {
-    this.selectedFile = {...file};
+    this.selectedFile = { ...file };
   }
 
   clearFilters() {
@@ -151,6 +237,11 @@ export class FilesComponent implements OnInit {
       status: null,
       period: null,
       searchDirect: '',
+      fechaInicio: null,
+      fechaFin: null,
+      tags: [],
+      topic: [],
+      emotions: []
     }, { emitEvent: false });
 
     const filters = { ... this.formUsers.getRawValue() };
@@ -164,9 +255,47 @@ export class FilesComponent implements OnInit {
     this.filters = filters;
   }
 
-  dowloadFile(){
+  dowloadFile() {
     if (this.selectedFile && this.selectedFile?.weekly_session_id) {
-      this.fileSrv.downloadCsvFile(this.selectedFile?.weekly_session_id, this.selectedFile?.userId +'-'+ this.selectedFile?.user_name);
+      this.fileSrv.downloadCsvFile(this.selectedFile?.weekly_session_id, this.selectedFile?.userId + '-' + this.selectedFile?.user_name);
     }
   }
+
+  filtrarPorFechas(): void {
+    const filters = { ...this.formUsers.getRawValue() };
+
+    if (filters.fechaInicio) {
+      filters.fechaInicio = this.formatDateOnly(filters.fechaInicio);
+    }
+
+    if (filters.fechaFin) {
+      filters.fechaFin = this.formatDateOnly(filters.fechaFin);
+    }
+
+    // this.myUsers = this.usersService.getUsers(1, 5, filters);
+  }
+
+  private formatDateOnly(date: Date): string {
+    return date.toISOString().split('T')[0]; // Devuelve "2025-04-01"
+  }
+
+  limpiarFiltros(): void {
+    this.formUsers.patchValue({
+      name: '',
+      plan: null,
+      status: null,
+      period: null,
+      tags: [],
+      topic: [],
+      emotions: [],
+      // searchDirect: '',
+      fechaInicio: null,
+      fechaFin: null,
+    }, { emitEvent: false });
+
+    const filters = { ... this.formUsers.getRawValue() };
+    delete filters.searchDirect;
+    // this.myUsers = this.usersService.getUsers(1, 5, filters);
+  }
+
 }

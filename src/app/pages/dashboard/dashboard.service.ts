@@ -43,7 +43,11 @@ export class DashboardService {
     return this.http.get<any[]>(`${this.apiDasboardUrl}/canceledElite`);
   }
 
-  getAlertsModalCancelledAll(): Observable<Alert[]> {
-    return this.http.get<any[]>(`${this.apiDasboardUrl}/canceledAll`);
+  getAlertsModalCancelledAllElite(): Observable<Alert[]> {
+    return this.http.get<any[]>(`${this.apiDasboardUrl}/canceledAllElite`);
+  }
+
+   getAlertsModalCancelledAllPro(): Observable<Alert[]> {
+    return this.http.get<any[]>(`${this.apiDasboardUrl}/canceledAllPro`);
   }
 }

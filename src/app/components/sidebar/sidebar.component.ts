@@ -52,9 +52,14 @@ export class SidebarComponent {
       routerLink: '/metricas'
     },
     {
-      label: 'Expedientes',
-      icon: 'pi-folder',
-      routerLink: '/expedientes'
+      label: 'Expedientes', 
+      icon: 'pi-folder', 
+      routerLink: '/expedientes' 
+    },
+    {
+      label: 'Marketing', 
+      icon: 'pi-globe', 
+      routerLink: '/marketing' 
     }
   ];
 }

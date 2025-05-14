@@ -58,9 +58,17 @@ export const getStatisticsUsers = (metrics?: any): CardStatistic[] => [
 
 export const getStatisticsStatus = (metrics?: any): CardStatistic[] => [
   {
-    id: 'userCanceled',
-    title: 'Usuarios Cancelados',
-    value: metrics?.userCanceled ?? '',
+    id: 'userCanceledelite',
+    title: 'Usuarios Cancelados Elite',
+    value: metrics?.userCanceledelite ?? '',
+    iconClass: 'pi pi-users',
+    iconBgClass: 'bg-orange-500',
+    loading: !metrics,
+  },
+  {
+    id: 'userCanceledpro',
+    title: 'Usuarios Cancelados Pro',
+    value: metrics?.userCanceledpro ?? '',
     iconClass: 'pi pi-users',
     iconBgClass: 'bg-orange-500',
     loading: !metrics,

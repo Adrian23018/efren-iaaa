@@ -3,7 +3,7 @@ import { FormGroup } from "@angular/forms";
 export interface UserFilterPanelSearchConfig {
     label: string;
     placeholder: string;
-    formControlName: string; 
+    formControlName: string;
 }
 
 export interface UserFilterPanelPlan {
@@ -14,7 +14,7 @@ export interface UserFilterPanelPlan {
 export interface UserFilterPanelPlanConfig {
     label: string;
     plans: UserFilterPanelPlan[];
-    formControlName: string; 
+    formControlName: string;
 }
 
 export interface UserFilterPanelStatus {
@@ -25,7 +25,7 @@ export interface UserFilterPanelStatus {
 export interface UserFilterPanelStatusConfig {
     label: string;
     states: UserFilterPanelStatus[];
-    formControlName: string; 
+    formControlName: string;
 }
 
 export interface UserFilterPanelPeriod {
@@ -36,10 +36,10 @@ export interface UserFilterPanelPeriod {
 export interface UserFilterPanelPeriodConfig {
     label: string;
     periods: UserFilterPanelPeriod[];
-    formControlName: string; 
+    formControlName: string;
 }
 
-export interface UserFilterPanel {
+export interface UserFilterPanelExpe {
     formGroupName?: FormGroup;
     showSearch?: boolean;
     searchConfig?: UserFilterPanelSearchConfig;
@@ -50,11 +50,39 @@ export interface UserFilterPanel {
     showPeriod?: boolean;
     periodConfig?: UserFilterPanelPeriodConfig;
     showTags?: boolean;
-    tagsConfig?: UserFilterPanelTagsConfig; // 👈 tags
+    tagsConfig?: UserFilterPanelTagsConfig; // 👈 Aquí el cambio correcto
+    showTopics?: boolean;
+    tagsConfigTopis?: UserFilterPanelTagsTopisConfig; // 👈 temas,
+    showEmotions?: boolean;
+    tagsConfigEmotions?: UserFilterPanelTagsEmotionsConfig; // 👈 temas,
+    showDate?: boolean;
+    dateConfig?: UserFilterPanelDateConfig; // 👈 fecha,
+
 }
 
 export interface UserFilterPanelTagsConfig {
     label: string;
     tags: { label: string; value: string }[];
     formControlName: string;
-  }
+}
+
+
+export interface UserFilterPanelTagsTopisConfig {
+    label: string;
+    topic: { label: string; value: string }[];
+    formControlName: string;
+}
+
+
+export interface UserFilterPanelTagsEmotionsConfig {
+    label: string;
+    emotions: { label: string; value: string }[];
+    formControlName: string;
+}
+
+export interface UserFilterPanelDateConfig {
+  labelInicio: string;
+  labelFin: string;
+  formControlNameInicio: string;
+  formControlNameFin: string;
+}

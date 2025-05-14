@@ -71,6 +71,10 @@ export class FilesService {
       });
   }
   
-  
+  getEmotionsTopis(): Observable<any> {
+    return this.http.get<any>(
+      `${this.apiDasboardUrl}/${environment.endpoints.files}/enum/sessions`
+    );
+  }
 
 }
