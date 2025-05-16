@@ -82,6 +82,7 @@
                     <molecule-tabs [(activeTab)]="activeTab" [tabs]="tabs"></molecule-tabs>
 
                     <app-files-tab-summary *ngIf="activeTab === 'summary'" [selectedFile]="selectedFile"></app-files-tab-summary>
+                    <app-files-tab-topics *ngIf="activeTab === 'topics'" [selectedFile]="selectedFile"></app-files-tab-topics>
                     <app-files-tab-emotions *ngIf="activeTab === 'emotions'" [selectedFile]="selectedFile"></app-files-tab-emotions>
                     <app-files-tab-events *ngIf="activeTab === 'events'" [selectedFile]="selectedFile"></app-files-tab-events>
                     <app-files-tab-insights *ngIf="activeTab === 'insights'" [selectedFile]="selectedFile"></app-files-tab-insights>

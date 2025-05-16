@@ -1,0 +1,12 @@
+<h4 class="text-base font-semibold mb-3">Temas detectadas</h4>
+
+<div class="flex flex-wrap gap-2 p-2 border-round surface-100">
+    <ng-container *ngFor="let emotion of selectedFile?.topics">
+      <p-chip 
+        [label]="emotion"
+        class="p-m-0 p-px-3 p-py-2 text-sm surface-0 shadow-1 border-1 border-primary-100 text-primary-800"
+        >
+      </p-chip>
+    </ng-container>
+  </div>
+  

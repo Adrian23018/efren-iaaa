@@ -35,8 +35,8 @@
        style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
     {{ file.summary }}
   </div>
-  <div class="flex flex-wrap gap-2">
-    <p-tag *ngFor="let tag of file.mentalStateTags.slice(0,2)"  
+  <div *ngIf="file.mentalStateTags" class="flex flex-wrap gap-2">
+    <p-tag  *ngFor="let tag of file.mentalStateTags.slice(0,2)"  
             [value]="tag" 
             [severity]="getTagSeverity(tag)"
             [style]="{'height': '20px', 'font-size': '0.75rem'}">

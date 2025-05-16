@@ -100,7 +100,6 @@ export class UsersService {
 
   this.http.post(`${this.apiUsersUrl}/download`, body, { responseType: 'blob' })
     .subscribe((blob: Blob) => {
-      console.log("blob:",blob);
       
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');

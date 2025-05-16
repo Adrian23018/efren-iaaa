@@ -267,7 +267,6 @@ export class DashboardComponent {
 
   cancelledAll() {
     this.dashboardService.getAlertsModalCancelledAllElite().subscribe((res: any) => {
-      console.log("data users penient pro : ", res);
       this.userCancelledAll = res;
       this.viewModalAll = true;
     })
@@ -275,7 +274,6 @@ export class DashboardComponent {
 
    cancelledAllPro() {
     this.dashboardService.getAlertsModalCancelledAllPro().subscribe((res: any) => {
-      console.log("data users penient pro : ", res);
       this.userCancelledAllPro = res;
       this.viewModalAllPro = true;
     })

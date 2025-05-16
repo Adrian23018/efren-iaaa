@@ -55,9 +55,15 @@ export class FilesUsersComponent {
 
     this.filesService.getFiles(this.pageDefault, this.pageSize, this.filters).subscribe({
       next: (response: PaginatorModel<UserFile[], MetaFile>) => {
+        if(response.data?.length){
         this.files = response.data;
-        this.totalRecords = response.meta.totalFiles;
-        this.page++;
+          this.totalRecords = response.meta.totalFiles;
+          this.page++;
+        }else{
+          this.files = [];
+          this.totalRecords = 0;
+          this.page = 0;
+        }
       },
       error: (err) => {
         console.log('Error', err);
@@ -81,9 +87,11 @@ export class FilesUsersComponent {
     this.lazyLoading = true;
     this.filesService.getFiles(this.page, this.pageSize, this.filters).subscribe({
       next: (response: PaginatorModel<UserFile[], MetaFile>) => {
-        this.files = [...this.files, ...response.data];
-        this.totalRecords = response.meta.totalFiles;
-        this.page++;
+        if(response.data?.length){
+          this.files = [...this.files, ...response.data];
+          this.totalRecords = response.meta.totalFiles;
+          this.page++;
+        }
         this.lazyLoading = false;
       },
       error: (err) => {

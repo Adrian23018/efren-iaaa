@@ -26,6 +26,7 @@ import { ToastModule } from 'primeng/toast';
 import { CalendarModule } from 'primeng/calendar';
 import { MoleculeUserFilterPanelExpentComponent } from '@app/shared/molecules/user-filter-panel-expen/user-filter-panel-expen.component';
 import { UserFilterPanelExpe } from '@app/shared/molecules/user-filter-panel-expen/user-filter-panel-expen.model';
+import { FilesTabTopicsComponent } from './files-tab-topics/files-tab-topics.component';
 
 @Component({
   selector: 'app-files',
@@ -47,6 +48,7 @@ import { UserFilterPanelExpe } from '@app/shared/molecules/user-filter-panel-exp
     FilesTabInsightsComponent,
     FilesTabNotesComponent,
     FilesTabConversationsComponent,
+    FilesTabTopicsComponent,
     MoleculeUserFilterPanelExpentComponent,
     ToastModule,
     CalendarModule,
@@ -62,9 +64,10 @@ export class FilesComponent implements OnInit {
 
   tabs: Tab[] = [
     { id: 'summary', label: 'Resumen' },
+    { id: 'topics', label: 'Temas' },
     { id: 'emotions', label: 'Emociones' },
     { id: 'events', label: 'Eventos' },
-    { id: 'insights', label: 'Perspectivas' },
+    { id: 'insights', label: 'Insights' },
     { id: 'notes', label: 'Notas' },
     // { id: 'conversations', label: 'Conversación' },
   ];
@@ -171,7 +174,6 @@ export class FilesComponent implements OnInit {
   constructor(private readonly formBuilder: FormBuilder) {
 
     this.fileSrv.getEmotionsTopis().subscribe((res: any) => {
-      console.log("respuesta : ", res);
 
       // let temasFormateados: any = res.filters.temas.map((item: any) => ({ label: item, value: item }));
       // let emocionesFormateadas: any = res.filters.emociones.map((item: any) => ({ label: item, value: item }));
@@ -186,8 +188,6 @@ export class FilesComponent implements OnInit {
         value: item.toLowerCase()
       }));
 
-      console.log("temasFormateados", temasFormateados);
-      console.log("emocionesFormateadas", emocionesFormateadas);
       if (res.filters?.temas && res.filters?.emociones && this.filterParams && this.filterParams.tagsConfigTopis && this.filterParams.tagsConfigEmotions) {
         this.filterParams.tagsConfigTopis.topic = temasFormateados || [];
         this.filterParams.tagsConfigEmotions.emotions = emocionesFormateadas || [];
@@ -259,11 +259,9 @@ export class FilesComponent implements OnInit {
     if (this.selectedFile && this.selectedFile?.weekly_session_id) {
 
       if (this.isFiltroActivo()) {
-        console.log('Hay al menos un filtro aplicado ✅');
-        this.fileSrv.downloadCsvFile(this.selectedFile?.weekly_session_id, this.selectedFile?.userId + '-' + this.selectedFile?.user_name, this.formUsers.value,true);
+        this.fileSrv.downloadCsvFile(this.selectedFile?.weekly_session_id, this.selectedFile?.userId + '-' + this.selectedFile?.user_name, this.formUsers.value, true);
       } else {
-        console.log('Todos los filtros están vacíos ❌');
-        this.fileSrv.downloadPdfFile(this.selectedFile?.weekly_session_id, this.selectedFile?.userId + '-' + this.selectedFile?.user_name, this.formUsers.value,false);
+        this.fileSrv.downloadPdfFile(this.selectedFile?.weekly_session_id, this.selectedFile?.userId + '-' + this.selectedFile?.user_name, this.formUsers.value, false);
       }
     }
   }
