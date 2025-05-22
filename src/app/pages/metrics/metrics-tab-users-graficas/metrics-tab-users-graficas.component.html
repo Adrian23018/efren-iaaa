@@ -1,0 +1,93 @@
+<!-- <div class="grid mt-4" >
+    <div class="col-12 lg:col-12">
+        <div class="bg-white border-round shadow-1">
+            <div class="p-3 border-bottom-1 border-gray-200">
+                <h2 class="text-base font-medium m-0">Métricas de Usuarios</h2>
+            </div>
+            <div class="p-3">
+                <p-table [value]="users" styleClass="p-datatable-sm">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th scope="col">Usuario</th>
+                        <th scope="col">Contacto</th>
+                        <th scope="col">Plan</th>
+                        <th scope="col">Fecha inicio</th>
+                        <th scope="col" class="text-center">Interacciones semana</th>
+                        <th scope="col" class="text-center">Interacciones mes</th>
+                        <th scope="col">Estado</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-user>
+                        <tr>
+                          <td>{{ user.name }}</td>
+                          <td>
+                            <div class="flex flex-column">
+                              <span class="mb-1">{{ user.email }}</span>
+                              <span class="text-xs text-gray-500">{{ user.phone }}</span>
+                            </div>
+                          </td>
+                          <td>{{ user.plan }}</td>
+                          <td>{{ user.fecha_inicio | date:'yyyy-MM-dd' }}</td>
+                          <td class="text-center">{{ user.interacciones_semanales }}</td>
+                          <td class="text-center">{{ user.interacciones_mensuales }}</td>
+                          <td>
+                            <ng-container *ngIf="user.estado">
+                                <p-tag [value]="user.estado" 
+                                      [severity]="getStatusSeverity(user.estado)"
+                                      [rounded]="true"></p-tag>
+                            </ng-container>
+                            
+                          </td>
+                        </tr>
+                      </ng-template>
+                </p-table>
+            </div>
+            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rowsPerPage"
+            [totalRecords]="totalUser" [rowsPerPageOptions]="[5, 10, 20, 30]" />
+        </div>
+    </div>
+</div> -->
+
+<div class="grid mt-4">
+    <div class="col-12 lg:col-12">
+        <div class="bg-white border-round shadow-1">
+            <div class="p-3 border-bottom-1 border-gray-200">
+                <h2 class="text-base font-medium m-0">Distribución de Usuarios por Plan</h2>
+            </div>
+        
+            <div class="grid mt-3">
+                <div class="col-12 lg:col-6">
+                    <div class="flex flex-column align-items-center">
+                    <p-chart type="pie" [data]="chartData" [options]="chartOptions" [style]="{ width: '100%', maxWidth: '450px' }"></p-chart>
+                    
+                    <div class="flex justify-content-center mt-3">
+                        <div *ngFor="let plan of plans" class="flex align-items-center mr-4">
+                        <span class="color-indicator mr-2" [style.background-color]="plan.color"></span>
+                        <span>{{ plan.name }}: {{ plan.percentage }}%</span>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 lg:col-6">
+                    <div class="text-xl font-medium mb-3">Estadísticas por Plan</div>
+                    
+                    <div *ngFor="let plan of plans; let last = last">
+                    <div class="mb-3">
+                        <div class="text-xl font-medium" [style.color]="plan.color">{{ plan.name }}</div>
+                        <div class="text-gray-600 mb-2">{{ plan.activeUsers }} usuarios activos</div>
+                        
+                        <ul class="m-0 pl-3">
+                        <li *ngFor="let stat of plan.stats" class="mb-1">
+                            {{ stat.label }}: <span class="font-medium">{{ stat.value }}</span>
+                        </li>
+                        </ul>
+                    </div>
+                    
+                    <p-divider *ngIf="!last"></p-divider>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

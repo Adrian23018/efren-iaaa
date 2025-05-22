@@ -15,6 +15,9 @@
 <molecule-chart-skeleton-users
   *ngIf="activeTab === 'users' && loadingUser"></molecule-chart-skeleton-users>
 
+  <molecule-chart-skeleton-users-grafica
+  *ngIf="activeTab === 'users' && loadingUserGrafica"></molecule-chart-skeleton-users-grafica>
+
   <!-- Skeleton avance-->
 <molecule-chart-skeleton-users
 *ngIf="activeTab === 'advanced' && loadingAvance"></molecule-chart-skeleton-users>
@@ -22,6 +25,8 @@
 <app-metrics-tab-general *ngIf="activeTab === 'general'" [metrics]="metrics"></app-metrics-tab-general>
 <app-metrics-tab-alerts *ngIf="activeTab === 'alerts' && metricalerts && !loadingAlerts"
   [metrics]="metricalerts"></app-metrics-tab-alerts>
-<app-metrics-tab-users *ngIf="activeTab === 'users' && metricaUsers && !loadingUser" (page_user)="pageUser($event)"
-  [metrics]="metricaUsers"></app-metrics-tab-users>
+<app-metrics-tab-users *ngIf="activeTab === 'users' && metricaUsers && !loadingUser" [page_actual]="page_actual" (filters)="filters($event)" (page_user)="pageUser($event)"
+  [metrics]="metricaUsers" ></app-metrics-tab-users>
+<app-metrics-tab-users-graficas *ngIf="activeTab === 'users' && metricaUsersGraficas && !loadingUserGrafica"  (page_user)="pageUser($event)"
+  [metricsGraficas]="metricaUsersGraficas"></app-metrics-tab-users-graficas>
 <app-metrics-tab-advanced *ngIf="activeTab === 'advanced' && metricsAvance && !loadingAvance" [metrics]="metricsAvance"></app-metrics-tab-advanced>

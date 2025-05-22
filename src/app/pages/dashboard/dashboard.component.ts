@@ -280,8 +280,8 @@ export class DashboardComponent {
   }
 
   getCancelationInfo(user: any): string {
-    const canceledDate = new Date(user.canceled_date);
-    const canceledAt = new Date(user.canceled_at);
+    const canceledDate = new Date(user.canceled_at);
+    const canceledAt = new Date(user.canceled_date);
     const hoy = new Date();
   
     const fechaCancelacion = canceledDate.toLocaleDateString('es-ES', {

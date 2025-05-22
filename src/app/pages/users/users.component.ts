@@ -94,6 +94,12 @@ export class UsersComponent {
         { label: 'Elite', value: 1 },
         { label: 'Pro', value: 2 },
         { label: 'Demo', value: 3 },
+        { label: 'Cancelado', value: 0 },
+        { label: 'Demo Finalizada', value: 4 },
+        { label: 'Dado de baja', value: 5 },
+        { label: 'Global y Aliados de Efren', value: 6 },
+        { label: 'Usuarios B2B', value: 7 },
+        { label: 'Pago no procesado', value: 8 },
       ],
       formControlName: 'plan'
     },

@@ -107,14 +107,31 @@ export class MetricsService {
     );
   }
 
-  getMetricsUsersData(interval: string, type: number, page: number, limit: number): Observable<Metrics> {
+  getMetricsUsersData(interval: string, type: number, page: number, limit: number, filter: any, flag: any): Observable<Metrics> {
     const body = {
-      interval, 
+      interval,
       type,
       page,
-      limit
+      limit,
+      filter,
+      flag
     };
     return this.http.post<Metrics>(`${this.apiDasboardUrl}/${environment.endpoints.metricsAdvanced}`, body).pipe(
+      map((response) => {
+        return response;
+      }),
+    );
+  }
+
+  getMetricsUsersDataGrafica(interval: string, type: number, page: number, limit: number, flag: boolean): Observable<Metrics> {
+    const body = {
+      interval,
+      type,
+      page,
+      limit,
+      flag
+    };
+    return this.http.post<Metrics>(`${this.apiDasboardUrl}/${environment.endpoints.metricsAdvanced}-graficas`, body).pipe(
       map((response) => {
         return response;
       }),

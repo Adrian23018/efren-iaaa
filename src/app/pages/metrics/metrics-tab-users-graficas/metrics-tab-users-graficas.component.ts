@@ -12,13 +12,9 @@ import { DividerModule } from 'primeng/divider';
 import { ColorUtil } from '@app/shared/utils/colorUtil';
 import { Severity, TagUtil } from '@app/shared/utils/tagUtil';
 import { PaginatorModule } from 'primeng/paginator';
-import { SliderModule } from 'primeng/slider';
-import { FormsModule } from '@angular/forms';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { ToggleButtonModule } from 'primeng/togglebutton';
 
 @Component({
-  selector: 'app-metrics-tab-users',
+  selector: 'app-metrics-tab-users-graficas',
   imports: [
     CommonModule,
     TableModule,
@@ -28,38 +24,29 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
     CardModule,
     DividerModule,
     PaginatorModule,
-    SliderModule,
-    FormsModule,
-    OverlayPanelModule,
-    ToggleButtonModule
   ],
-  templateUrl: './metrics-tab-users.component.html',
-  styleUrl: './metrics-tab-users.component.scss'
+  templateUrl: './metrics-tab-users-graficas.component.html',
+  styleUrl: './metrics-tab-users-graficas.component.scss'
 })
-export class MetricsTabUsersComponent {
+export class MetricsTabUsersGraficasComponent {
+  // users: UserMetric[] = [];
+  // plans: PlanStats[] = [];
   plans: any[] = [];
-  @Input() page_actual = 0;
-  rangeValuesWeek: number[] = [1, 500];
-  rangeValuesMonth: number[] = [1, 500];
+
   chartData: any;
   chartOptions: any;
-  @Input() metrics!: any;
+  // @Input() metrics!: any;
+  @Input() metricsGraficas!: any;
   users: any[] = [];
   public first = 0;
   public rowsPerPage = 5;
   public totalUser: number = 150;
 
-  minWeek = 0;
-  maxWeek = 10;
-  minMonth = 0;
-  maxMonth = 30;
-  mostrarSemana: boolean = true;
-
   @Output() page_user = new EventEmitter<any>();
-  @Output() filters = new EventEmitter<any>();
 
   constructor(
   ) { }
+
 
   getStatusSeverity(status: string): Severity {
     return TagUtil.getStatusSeverity(status);
@@ -75,7 +62,7 @@ export class MetricsTabUsersComponent {
         activeUsers: user_metrics.active_users.pro,
         percentage: Math.round((user_metrics.active_users.pro / user_metrics.active_users.total) * 100),
         stats: [
-          { label: 'Promedio de uso', value: user_metrics.usage_metrics.pro.avg_messages + ' mensaje/semana' },
+          { label: 'Promedio de uso', value: (user_metrics.usage_metrics.pro) ? user_metrics.usage_metrics.pro.avg_messages + ' mensaje/semana': 0 + ' mensaje/semana'},
           { label: 'Tasa de retención', value: (user_metrics.renewal_rates.pro) ? user_metrics.retention_rates.pro.toFixed(2) + '%' : 0 },
           { label: 'Tasa de renovación', value: (user_metrics.renewal_rates.pro) ? user_metrics.renewal_rates.pro.toFixed(2) + '%' : 0 }
         ]
@@ -146,40 +133,34 @@ export class MetricsTabUsersComponent {
   }
 
 
-  getEarliesAlerts(): void {
-    this.totalUser = this.metrics.pagination_info.total_records;
-    this.users = this.metrics.user_details;
-  }
+  // getEarliesAlerts(): void {
+  //   this.totalUser = this.metrics.pagination_info.total_records;
+  //   this.users = this.metrics.user_details;
+  // }
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.users = this.metrics?.user_details;
-      this.totalUser = this.metrics.pagination_info.total_records;
-      this.first = this.page_actual;
+
+      // this.users = this.metrics?.user_details;
+      this.initChart(this.metricsGraficas?.user_metrics);
+
     }, 1500);
 
   }
 
+  // Cuando cambia de página
   onPageChange(event: any) {
-    this.first = event.first;
-    this.rowsPerPage = event.rows;
-    const page = event.page + 1;
+    this.first = event.first;         // posición del primer registro en la página
+    this.rowsPerPage = event.rows;           // cuántos registros por página
+    const page = event.page + 1;      // número de página (0 indexado)
     const limit = event.rows;
 
-    this.page_user.emit({ page, limit });
-  }
+    this.page_user.emit({
+      "page": page,
+      "limit": limit
+    });
 
-  calcularWeek(value: number): number {
-    return value;
-  }
-
-  calcularMonth(value: number): number {
-    return value;
-  }
-
-  aplicarFiltro() {
-    // Aquí pones la lógica para filtrar según los valores seleccionados
-    this.filters.emit({ semana: this.rangeValuesWeek, mes: this.rangeValuesMonth, flag: this.mostrarSemana });
+    // this.loadUsers(page, limit);
   }
 
 }

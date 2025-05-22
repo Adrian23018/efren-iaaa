@@ -87,6 +87,12 @@ export class FilesComponent implements OnInit {
         { label: 'Elite', value: 1 },
         { label: 'Pro', value: 2 },
         { label: 'Demo', value: 3 },
+        // { label: 'Cancelado', value: 0 },
+        // { label: 'Demo Finalizada', value: 4 },
+        // { label: 'Dado de baja', value: 5 },
+        // { label: 'Global y Aliados de Efren', value: 6 },
+        { label: 'Usuarios B2B', value: 7 },
+        // { label: 'Pago no procesado', value: 8 },
       ],
       formControlName: 'plan'
     },
@@ -177,6 +183,9 @@ export class FilesComponent implements OnInit {
 
       // let temasFormateados: any = res.filters.temas.map((item: any) => ({ label: item, value: item }));
       // let emocionesFormateadas: any = res.filters.emociones.map((item: any) => ({ label: item, value: item }));
+
+      console.log("res : ",res);
+      
 
       let temasFormateados: any = res.filters.temas.map((item: any) => ({
         label: item.toLowerCase(),

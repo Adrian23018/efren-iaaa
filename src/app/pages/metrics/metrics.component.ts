@@ -21,6 +21,8 @@ import { Metrics } from '@app/interfaces/metrics-data.model';
 import { DateUtil } from '@app/shared/utils/dateUtil';
 import { MoleculeChartSkeletonAlertsComponent } from '@app/shared/molecules/chart-skeleton-alerts/chart-skeleton.component';
 import { MoleculeChartSkeletonUsersComponent } from '@app/shared/molecules/chart-skeleton-users/chart-skeleton.component';
+import { MetricsTabUsersGraficasComponent } from "./metrics-tab-users-graficas/metrics-tab-users-graficas.component";
+import { MoleculeChartSkeletonUsersGraficaComponent } from '@app/shared/molecules/chart-skeleton-users-grafica/chart-skeleton-grafica.component';
 
 @Component({
   selector: 'app-metrics',
@@ -38,7 +40,10 @@ import { MoleculeChartSkeletonUsersComponent } from '@app/shared/molecules/chart
     MetricsTabUsersComponent,
     MetricsTabAdvancedComponent,
     MoleculeChartSkeletonAlertsComponent,
-    MoleculeChartSkeletonUsersComponent
+    MoleculeChartSkeletonUsersComponent,
+    MetricsTabUsersGraficasComponent,
+    MoleculeChartSkeletonUsersGraficaComponent
+
   ],
   templateUrl: './metrics.component.html',
   styleUrl: './metrics.component.scss'
@@ -52,7 +57,11 @@ export class MetricsComponent {
   currentPeriodText: string = '';
   period: string = '7D';
   loadingUser: boolean = false;
+  loadingUserGrafica: boolean = false;
   loadingAvance: boolean = false;
+  page_actual: number = 0;
+  weekMonth: any = [0, 0]
+  flagWeekMonth: any = 'sin data';
 
   tabs: Tab[] = [
     { id: 'general', label: 'General' },
@@ -64,6 +73,7 @@ export class MetricsComponent {
   metrics!: any;
   metricalerts: any = '';
   metricaUsers: any = '';
+  metricaUsersGraficas: any = '';
   metricsAvance: any = '';
 
   metricFilter: MetricsFilter = {
@@ -87,12 +97,6 @@ export class MetricsComponent {
   }
 
   loadMetrics() {
-    // this.formMetrics.valueChanges
-    //   .pipe(
-    //     debounceTime(300),
-    //     distinctUntilChanged()
-    //   )
-    //   .subscribe((value) => {
     this.metricsService.getMetrics(this.metricFilter.period, this.metricFilter.type).subscribe({
       next: (data: Metrics) => {
         this.metrics = data;
@@ -117,7 +121,8 @@ export class MetricsComponent {
         this.metricFilter.type = 2;
         break;
       case "users":
-        this.loadMetricsUsersPage(3, 1, 5);
+        this.loadMetricsUsersPage(3, 1, 5,(this.weekMonth), this.flagWeekMonth);
+        this.loadMetricsUsersPageGraficas(3, 1, 5);
         this.metricFilter.type = 3;
         break;
       case "advanced":
@@ -156,23 +161,28 @@ export class MetricsComponent {
     if (this.metricFilter.type == 3) {
       switch (this.metricFilter.period) {
         case 'TODAY':
-          this.loadMetricsUsersPage(3, 1, 5);
+          this.loadMetricsUsersPage(3, 1, 5, (this.weekMonth), this.flagWeekMonth);
+          this.loadMetricsUsersPageGraficas(3, 1, 5);
           break;
 
         case '7D':
-          this.loadMetricsUsersPage(3, 1, 5);
+          this.loadMetricsUsersPage(3, 1, 5, (this.weekMonth), this.flagWeekMonth);
+          this.loadMetricsUsersPageGraficas(3, 1, 5);
           break;
 
         case '30D':
-          this.loadMetricsUsersPage(3, 1, 5);
+          this.loadMetricsUsersPage(3, 1, 5, (this.weekMonth), this.flagWeekMonth);
+          this.loadMetricsUsersPageGraficas(3, 1, 5);
           break;
 
         case '90D':
-          this.loadMetricsUsersPage(3, 1, 5);
+          this.loadMetricsUsersPage(3, 1, 5, (this.weekMonth), this.flagWeekMonth);
+          this.loadMetricsUsersPageGraficas(3, 1, 5);
           break;
 
         case '365D':
-          this.loadMetricsUsersPage(3, 1, 5);
+          this.loadMetricsUsersPage(3, 1, 5, (this.weekMonth), this.flagWeekMonth);
+          this.loadMetricsUsersPageGraficas(3, 1, 5);
           break;
       }
     } else if (this.metricFilter.type == 2) {
@@ -249,7 +259,7 @@ export class MetricsComponent {
 
   loadMetricsUsers(type: number) {
     this.metricFilter.type = type;
-    this.metricsService.getMetricsUsersData(this.metricFilter.period, this.metricFilter.type, 1, 5).subscribe({
+    this.metricsService.getMetricsUsersData(this.metricFilter.period, this.metricFilter.type, 1, 5, [0, 0], false).subscribe({
       next: (data: any) => {
         this.metricaUsers = data;
       },
@@ -259,12 +269,16 @@ export class MetricsComponent {
     });
   }
 
-  loadMetricsUsersPage(type: number, page: number, limit: number) {
+  loadMetricsUsersPage(type: number, page: number, limit: number, filter: any, flag: any) {
     this.loadingUser = true;
+    this.page_actual = page;
+    console.log("page padre:", page);
+
     this.metricFilter.type = type;
-    this.metricsService.getMetricsUsersData(this.metricFilter.period, this.metricFilter.type, page, limit).subscribe({
+    this.metricsService.getMetricsUsersData(this.metricFilter.period, this.metricFilter.type, page, limit, filter, flag).subscribe({
       next: (data: any) => {
         this.metricaUsers = data;
+        console.log("app-metrics-tab-users ***:", this.metricaUsers);
         this.loadingUser = false;
       },
       error: (err) => {
@@ -274,7 +288,16 @@ export class MetricsComponent {
   }
 
   pageUser(event_page: any) {
-    this.loadMetricsUsersPage(3, event_page.page, event_page.limit);
+    console.log("event_page", event_page);
+
+    this.loadMetricsUsersPage(3, event_page.page, event_page.limit, (this.weekMonth), this.flagWeekMonth);
+  }
+
+  filters(event: any) {
+    console.log("filter", event);
+    this.weekMonth = (event.flag == true) ? event.semana : event.mes
+    this.flagWeekMonth = (event.flag == true) ? 'semana' : 'mes';
+    this.loadMetricsUsersPage(3, 1, 5, (this.weekMonth), this.flagWeekMonth);
   }
 
   loadMetricsAvance(type: number) {
@@ -284,8 +307,38 @@ export class MetricsComponent {
       next: (data: any) => {
         this.metricsAvance = data;
         this.loadingAvance = false;
-        console.log("test  :",this.metricsAvance);
-        
+        console.log("test  :", this.metricsAvance);
+
+      },
+      error: (err) => {
+        console.log('Error', err);
+      },
+    });
+  }
+
+  ///////////////////////////////////
+  loadMetricsUsersGraficas(type: number) {
+    this.metricFilter.type = type;
+    this.metricsService.getMetricsUsersDataGrafica(this.metricFilter.period, this.metricFilter.type, 1, 5, false).subscribe({
+      next: (data: any) => {
+        this.metricaUsersGraficas = data;
+        console.log("app-metrics-tab-users:", this.metricaUsersGraficas);
+
+      },
+      error: (err) => {
+        console.log('Error', err);
+      },
+    });
+  }
+
+  loadMetricsUsersPageGraficas(type: number, page: number, limit: number) {
+    this.loadingUserGrafica = true;
+    this.metricFilter.type = type;
+    this.metricsService.getMetricsUsersDataGrafica(this.metricFilter.period, this.metricFilter.type, page, limit, false).subscribe({
+      next: (data: any) => {
+        this.metricaUsersGraficas = data;
+        console.log("app-metrics-tab-users ***:", this.metricaUsersGraficas);
+        this.loadingUserGrafica = false;
       },
       error: (err) => {
         console.log('Error', err);
