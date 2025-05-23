@@ -19,6 +19,7 @@ import { FilesTabEventsComponent } from '@app/pages/files/files-tab-events/files
 import { FilesTabSummaryComponent } from '@app/pages/files/files-tab-summary/files-tab-summary.component';
 import { MoleculeTabsComponent } from '@app/shared/molecules/tabs/tabs.component';
 import { Tab } from '@app/interfaces/tabs.model';
+import { FilesTabTopicsComponent } from '@app/pages/files/files-tab-topics/files-tab-topics.component';
 
 @Component({
   selector: 'app-file-user',
@@ -41,6 +42,7 @@ import { Tab } from '@app/interfaces/tabs.model';
     FilesTabNotesComponent,
     FilesTabConversationsComponent,
     MoleculeTabsComponent,
+    FilesTabTopicsComponent,
   ],
   templateUrl: './file-user.component.html',
   styleUrl: './file-user.component.scss'
@@ -57,6 +59,7 @@ export class FileUserComponent implements OnInit {
 
   tabs: Tab[] = [
     { id: 'summary', label: 'Resumen' },
+    { id: 'topics', label: 'Temas' },
     { id: 'emotions', label: 'Emociones' },
     { id: 'events', label: 'Eventos' },
     { id: 'insights', label: 'Insights' },

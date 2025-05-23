@@ -16,6 +16,8 @@ import { ChipModule } from 'primeng/chip';
 import { FormsModule } from '@angular/forms';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { UsersService } from '../users/users.service';
+import { FileUserComponent } from '@app/shared/components/file-user/file-user.component';
 
 @Component({
   selector: 'app-companies',
@@ -32,7 +34,8 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     ChipModule,
     FormsModule,
     InputGroupModule,
-    InputGroupAddonModule
+    InputGroupAddonModule,
+    FileUserComponent,
   ],
   templateUrl: './companies.component.html',
   styleUrl: './companies.component.scss'
@@ -45,13 +48,21 @@ export class CompaniesComponent {
   public rowsPerPage = 5;
   public totalUsuarios = 100;
   public displayModal: boolean = false;
+  public displayModalUserID: boolean = false;
+  public displayModalUsers: boolean = false;
   public company: any = '';
   public menuItems: MenuItem[] = [];
   public showMenu: boolean = false;
   public totalRecords = 0; // Aquí debes poner el total real si lo tienes  
   isLoading = signal(true); // o simplemente: isLoading = true;
   private searchInput$ = new Subject<string>();
-
+  public companyUsers: any = [];
+  public companyData: any = '';
+  private usersService = inject(UsersService);
+  public selectedSession: any = '';
+  public user: any = '';
+  public display: boolean = false;
+  public filtro = '';
 
   filters: any = {
     name: '',
@@ -70,7 +81,7 @@ export class CompaniesComponent {
   @ViewChild('dt') dt!: Table;
 
   public myCompanies: { data$: Observable<Companies[]>; totalCompanies$: Observable<number>; isLoading: Signal<boolean> } =
-    this.companyServices.getCompanies(1, 5,this.filters);
+    this.companyServices.getCompanies(1, 5, this.filters);
 
   // Método de ejemplo para actualizar la lista de las compañías
   refreshCompanies(): void {
@@ -124,10 +135,6 @@ export class CompaniesComponent {
     companyData.showMenu = !companyData.showMenu;
   }
 
-  viewFiles(companyData: any) {
-
-  }
-
   enabledCompany(companyData: any) {
 
   }
@@ -161,6 +168,47 @@ export class CompaniesComponent {
   onSearchChange(event: Event) {
     const input = event.target as HTMLInputElement;
     this.searchInput$.next(input.value);
+  }
+
+  openCompanyUsers(companyData: any) {
+    this.companyData = companyData;
+    this.companyServices.getUsersCompany(companyData.id).subscribe((res: any) => {
+      this.companyUsers = res.data;
+      this.displayModalUsers = true;
+    })
+  }
+
+  viewUsersData(id_user: any) {
+    this.openUserDetail(id_user);
+  }
+
+  openUserDetail(user_id: any) {
+    this.usersService.getUserId(user_id).data$.subscribe((result: any) => {
+      this.user = result.data;
+      this.displayModalUserID = true;
+    });
+
+  }
+
+  viewFiles(user: any) {
+    this.usersService.getUserIdFiles(user.user_id).data$.subscribe((result: any) => {
+      this.selectedSession = result;
+      this.display = true;
+    });
+  }
+
+  // Método para cerrar el modal
+  onCloseModal() {
+    this.display = false;
+  }
+
+  //buscador de usuarios de una compañía
+  get usuariosFiltrados() {
+    const filtroLimpio = this.filtro?.toLowerCase() || '';
+    return this.companyUsers.filter((u:any) =>
+      (u.name?.toLowerCase() || '').includes(filtroLimpio) ||
+      (u.email?.toLowerCase() || '').includes(filtroLimpio)
+    );
   }
 
 

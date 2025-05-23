@@ -56,7 +56,6 @@ export class UsersComponent {
   public user: any = '';
   public menuItems: MenuItem[] = [];
   public showMenu: boolean = false;
-  // isLoading = signal(true); // o simplemente: isLoading = true;
   public selectedSession: any = '';
   public display: boolean = false;
 

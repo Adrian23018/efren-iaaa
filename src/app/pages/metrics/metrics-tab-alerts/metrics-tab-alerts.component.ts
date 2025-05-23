@@ -135,6 +135,7 @@ export class MetricsTabAlertsComponent {
   viewUsersData(id_user: any) {
     this.openUserDetail(id_user.id);
   }
+  
   openUserDetail(user_id: any) {
     this.usersService.getUserId(user_id).data$.subscribe((result: any) => {
       this.user = result.data;

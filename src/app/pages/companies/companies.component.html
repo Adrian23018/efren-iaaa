@@ -194,6 +194,11 @@
                                 <i class="pi pi-eye text-600"></i>
                                 <span class="text-sm">Ver detalles</span>
                             </div>
+                            <div class="p-2 cursor-pointer hover:bg-gray-100 border-round flex align-items-center gap-2 text-sm"
+                                (click)="openCompanyUsers(company)">
+                                <i class="pi pi-users text-600"></i>
+                                <span class="text-sm">Ver usuarios</span>
+                            </div>
                             <div class="border-top-1 my-2 border-gray-200"></div>
                             <div class="p-2 cursor-pointer hover:bg-red-50 border-round flex align-items-center gap-2 text-sm"
                                 (click)="enabledCompany(company)">
@@ -222,7 +227,8 @@
     <!-- Avatar y nombre de la empresa -->
     <div class="flex flex-column align-items-center mb-4">
         <img *ngIf="company?.profile_pic" [src]="company?.profile_pic" alt="logo"
-            class="rounded shadow-2 border-1 border-300 mb-3 rounded-full border-1 border-round-xl border-white-200" width="64" height="64" />
+            class="rounded shadow-2 border-1 border-300 mb-3 rounded-full border-1 border-round-xl border-white-200"
+            width="64" height="64" />
 
         <h3 class="text-lg font-bold text-800 mb-2">
             {{ company?.name }}
@@ -308,3 +314,134 @@
 
     </div>
 </p-dialog>
+
+
+
+<p-dialog header="Usuarios" [(visible)]="displayModalUsers" [modal]="true" [style]="{width: 'text-700'}"
+    [closable]="true">
+
+    <ng-template pFooter>
+        <button pButton type="button" label="Cerrar" (click)="displayModalUsers = false"></button>
+    </ng-template>
+
+    <div class="grid mt-4">
+        <div class="col-12 lg:col-12">
+            <div class="bg-white border-round shadow-1">
+                <div class="p-3 border-bottom-1 border-gray-200 flex justify-content-between align-items-center">
+                    <h2 class="text-base font-medium m-0">Usuarios de la empresa <b>{{companyData.name}}</b></h2>
+
+                    <div class="flex align-items-center gap-3 mb-3 just-searh">
+                        <input pInputText [(ngModel)]="filtro" placeholder="Buscar por nombre o correo"
+                            class="w-30rem" />
+                    </div>
+
+                </div>
+                <p-table [value]="usuariosFiltrados" styleClass="p-datatable-sm" [tableStyle]="{'min-width': '50rem'}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col" class="text-center">Usuario</th>
+                            <th scope="col" class="text-center">Plan</th>
+                            <th scope="col" class="text-center">Interaciones</th>
+                            <th scope="col" class="text-center">Acción</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-user>
+                        <tr>
+                            <td>{{ user.user_id }}</td>
+                            <td class="text-center">
+                                <div class="font-semibold text-gray-900 capitalize">{{ user.user_name }}</div>
+                                <div class="text-xs text-gray-500">{{ user.email }}</div>
+                            </td>
+                            <td class="text-center">
+                                <span *ngIf="user.plan_name"
+                                    class="text-xs font-semibold px-2 py-1 rounded-full border-1 border-round-xl border-white-200 bg-purple-100 text-purple-700">
+                                    {{ 'Plan Élite' }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="flex flex-column">
+                                    <span class="font-medium">{{ user.chat_logs_count }}</span>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-text"
+                                    (click)="viewUsersData(user.user_id)"></button>
+                                <button pButton type="button" icon="pi pi-folder" class="p-button-rounded p-button-text"
+                                    (click)="viewFiles(user)"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog [(visible)]="displayModalUserID" [modal]="true" [closable]="true" [dismissableMask]="true"
+    [style]="{ width: '420px' }" header="Detalles del usuario" [contentStyle]="{ 'padding-bottom': '1.5rem' }">
+
+
+    <!-- Avatar y nombre -->
+    <div class="flex flex-column align-items-center mb-4 align-items-center col-12 justify-content-center">
+        <i class="pi pi-user text-6xl text-500 mb-3 img"></i>
+        <h3 class="text-lg font-bold text-800 mb-2">
+            {{ user?.name }}
+        </h3>
+
+        <!-- Estado y plan -->
+        <div class="flex justify-content-center flex-wrap gap-2">
+            <span class="text-xs font-medium px-2 py-1 border-round" [ngClass]="{
+                    'bg-green-100 text-green-800': user?.status === true,
+                    'bg-red-100 text-red-800': user?.status === false
+                    }">
+            </span>
+
+            <span class="text-xs font-medium px-2 py-1 border-round bg-purple-100 text-purple-700">
+                {{ 'Plan Élite' }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Información general -->
+    <div class="flex flex-column gap-3 text-sm text-800 px-1">
+
+        <div class="flex align-items-start gap-2">
+            <i class="pi pi-phone mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">Telefono</p>
+                <p class="m-0 text-700">{{ user?.phone }}</p>
+            </div>
+        </div>
+
+        <div class="flex align-items-start gap-2">
+            <i class="pi pi-envelope mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">Email</p>
+                <p class="m-0 text-700">{{ user?.email }}</p>
+            </div>
+        </div>
+
+        <div class="flex align-items-start gap-2">
+            <i class="pi pi-briefcase mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">Empresa</p>
+                <p class="m-0 text-700">{{ user?.company_id || 'B2C' }}</p>
+            </div>
+        </div>
+
+        <div class="flex align-items-start gap-2">
+            <i class="pi pi-calendar mt-1 text-500"></i>
+            <div>
+                <p class="font-semibold m-0">Fecha de registro</p>
+                <p class="m-0 text-700">{{ user?.created_at | date: 'yyyy-MM-dd' }}</p>
+            </div>
+        </div>
+
+    </div>
+
+</p-dialog>
+
+<app-file-user *ngIf="display" [sessionData]="selectedSession" [display]="display" (closeModal)="onCloseModal()">
+</app-file-user>

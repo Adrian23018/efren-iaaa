@@ -149,17 +149,4 @@ export class MetricsService {
     );
   }
 
-
-  // getMetrics(interval: string, type:number): Observable<Metrics> {
-  //   const body = {
-  //     interval,type
-  //   };
-
-  //   return this.http.post<MetricsResponse>(
-  //     `${this.apiDasboardUrl}/${environment.endpoints.metricsAdvanced}`,
-  //     body
-  //   ).pipe(
-  //     map(response => MapperTransformData.transformMetricsResponse(response))
-  //   );
-  // }
 }
