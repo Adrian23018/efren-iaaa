@@ -13,6 +13,8 @@ export const routes: Routes = [
       { path: 'empresas', loadComponent: () => import('./pages/companies/companies.component').then(c => c.CompaniesComponent),canActivate: [AuthGuard] },
       { path: 'metricas', loadComponent: () => import('./pages/metrics/metrics.component').then(c => c.MetricsComponent),canActivate: [AuthGuard] },
       { path: 'expedientes', loadComponent: () => import('./pages/files/files.component').then(c => c.FilesComponent),canActivate: [AuthGuard] },
+      { path: 'marketing', loadComponent: () => import('./pages/marketing/marketing.component').then(c => c.MarketingComponent),canActivate: [AuthGuard] },
+
     ]
   }
 ];
