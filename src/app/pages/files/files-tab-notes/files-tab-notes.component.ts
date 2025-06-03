@@ -57,7 +57,6 @@ export class FilesTabNotesComponent implements OnInit,OnChanges {
           this.toastSrvc.showSuccess('Éxito', file.message, false);
         },
         error: (error) => {
-          console.error('Error cargando archivos:', error);
           this.toastSrvc.showError('Error', 'No se ha podidio guardar', false);
         }
       });

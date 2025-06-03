@@ -112,23 +112,6 @@ export class MarketingComponent {
     });
   }
 
-  // getEarliesAlerts(): void {
-  //   this.earlyAlerts = this.metrics.earlyAlerts;
-  // }
-
-  // ngAfterViewInit() {
-  //   this.loadingalerts = true;
-
-  //   Promise.resolve().then(() => {
-  //     this.earlyAlerts = this.metrics?.early_alerts;
-  //     this.earlyAlerts = this.metrics?.early_alerts;
-
-  //     this.loadingalerts = false;
-  //     this.cdr.detectChanges();
-  //   });
-  // }
-
-
   translateAction(action: string): string {
     return this.actionTranslations[action as keyof TypeButtonAlert] || action;
   }

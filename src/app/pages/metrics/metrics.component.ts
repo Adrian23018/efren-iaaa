@@ -152,7 +152,6 @@ export class MetricsComponent {
   }
 
   onExport() {
-    console.log('Exportando datos...');
   }
 
   onPeriodChange(event: any) {
@@ -278,7 +277,6 @@ export class MetricsComponent {
     this.metricsService.getMetricsUsersData(this.metricFilter.period, this.metricFilter.type, page, limit, filter, flag).subscribe({
       next: (data: any) => {
         this.metricaUsers = data;
-        console.log("app-metrics-tab-users ***:", this.metricaUsers);
         this.loadingUser = false;
       },
       error: (err) => {
@@ -307,8 +305,6 @@ export class MetricsComponent {
       next: (data: any) => {
         this.metricsAvance = data;
         this.loadingAvance = false;
-        console.log("test  :", this.metricsAvance);
-
       },
       error: (err) => {
         console.log('Error', err);

@@ -231,8 +231,6 @@ export class DashboardComponent {
   }
 
   handleMetricClick(statistic: any) {
-    console.log("statistic : ", statistic);
-
     switch (statistic.id) {
       case 'userscanceledtodayelite':
         this.cancelledElitePending();
@@ -247,7 +245,6 @@ export class DashboardComponent {
         this.cancelledAllPro();
         break;
       default:
-      // console.log('Click en: ', statistic);
     }
   }
 

@@ -198,9 +198,7 @@ export class FilesComponent implements OnInit {
       }
     })
 
-    this.fileSrv.getcompaniesAll().subscribe((res: any) => {
-      console.log("companies:",res);
-     
+    this.fileSrv.getcompaniesAll().subscribe((res: any) => {     
       if (res.data && res && this.filterParams && this.filterParams.tagsConfigCompanies) {
         this.filterParams.tagsConfigCompanies.companies = res.data || [];
       }

@@ -43,8 +43,6 @@ export class MoleculeUserFilterPanelExpentComponent {
   }
 
   onSelectPlan(value: number) {
-    console.log("value", value);
-
     if (this.custom.planConfig) {
       this.custom.formGroupName?.get(this.custom.planConfig.formControlName)?.setValue(value);
       if (value === 7) {
