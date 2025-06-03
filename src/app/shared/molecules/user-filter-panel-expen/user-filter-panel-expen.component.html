@@ -24,6 +24,14 @@
                     </div>
                 </div>
 
+                <div class="flex flex-column gap-1" *ngIf="custom.showCompanies && custom.tagsConfigCompanies && viewCompany">
+                    <span class="text-sm text-color-secondary">{{ custom.tagsConfigCompanies.label }}</span>
+                    <p-dropdown [options]="custom.tagsConfigCompanies.companies" optionLabel="name" optionValue="id"
+                        [formControlName]="custom.tagsConfigCompanies.formControlName"
+                        placeholder="Selecciona una empresa" class="w-full" [showClear]="true">
+                    </p-dropdown>
+                </div>
+
                 <!-- Estado -->
                 <div class="flex flex-column gap-1" *ngIf="custom.showStatus && custom.statusConfig">
                     <span class="text-sm text-color-secondary">{{custom.statusConfig.label}}</span>
@@ -47,39 +55,6 @@
                             (click)="onSelectPeriod(period.value)"></p-chip>
                     </div>
                 </div>
-
-                <!-- Etiquetas -->
-                <!-- <div class="flex flex-column gap-1" *ngIf="custom.showTags && custom.tagsConfig">
-                    <span class="text-sm text-color-secondary">{{custom.tagsConfig.label}}</span>
-                    <div class="flex gap-2 flex-wrap">
-                    <p-chip
-                        *ngFor="let tag of custom.tagsConfig.tags"
-                        type="button"
-                        (keydown)="$event.preventDefault()"
-                        [label]="tag.label"
-                        [removable]="false"
-                        class="cursor-pointer"
-                        [class.bg-green-200]="custom.formGroupName.get(custom.tagsConfig.formControlName)?.value.includes(tag.value)"
-                        (click)="toggleTag(tag.value)"
-                    ></p-chip>
-                    </div>
-                </div> -->
-
-
-                <!-- <div *ngIf="custom.showDate && custom.dateConfig">
-                    <div 
-                        class="flex flex-wrap gap-2 justify-content-center items-center pt-2 pb-2 col-12">
-                        <p-calendar [showIcon]="true" formControlName="fechaInicio" placeholder="Fecha inicio"
-                            dateFormat="yy-mm-dd" inputClass="w-full md:w-40"></p-calendar>
-
-                        <p-calendar [showIcon]="true" formControlName="fechaFin" placeholder="Fecha fin"
-                            dateFormat="yy-mm-dd" inputClass="w-full md:w-40"></p-calendar>
-
-                        <button pButton type="button" label="Filtrar" icon="pi pi-filter" class="w-full md:w-auto"
-                            ></button>
-
-                    </div>
-                </div> -->
 
                 <div class="flex flex-column gap-1" *ngIf="custom.showDate && custom.dateConfig">
                     <span class="text-sm text-color-secondary">{{ custom.dateConfig.labelInicio }}</span>
@@ -107,7 +82,6 @@
                         display="chip" [filter]="true" [formControlName]="custom.tagsConfigTopis.formControlName"
                         placeholder="Selecciona temas" class="w-full" [showHeader]="false">
                     </p-multiSelect>
-
                 </div>
 
                 <div class="flex flex-column gap-1" *ngIf="custom.showEmotions && custom.tagsConfigEmotions">
@@ -117,7 +91,6 @@
                         [formControlName]="custom.tagsConfigEmotions.formControlName" placeholder="Selecciona emociones"
                         class="w-full" [showHeader]="false">
                     </p-multiSelect>
-
                 </div>
 
                 <!-- Acciones -->

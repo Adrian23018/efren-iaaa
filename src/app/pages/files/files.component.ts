@@ -69,7 +69,6 @@ export class FilesComponent implements OnInit {
     { id: 'events', label: 'Eventos' },
     { id: 'insights', label: 'Insights' },
     { id: 'notes', label: 'Notas' },
-    // { id: 'conversations', label: 'Conversación' },
   ];
 
   formUsers!: FormGroup;
@@ -87,14 +86,17 @@ export class FilesComponent implements OnInit {
         { label: 'Elite', value: 1 },
         { label: 'Pro', value: 2 },
         { label: 'Demo', value: 3 },
-        // { label: 'Cancelado', value: 0 },
-        // { label: 'Demo Finalizada', value: 4 },
-        // { label: 'Dado de baja', value: 5 },
-        // { label: 'Global y Aliados de Efren', value: 6 },
         { label: 'Usuarios B2B', value: 7 },
-        // { label: 'Pago no procesado', value: 8 },
       ],
       formControlName: 'plan'
+    },
+    showCompanies: true,
+    tagsConfigCompanies: {
+      label: 'Selecciona una empresa',
+      formControlName: 'empresaSeleccionada',
+      companies: [
+        { name: 'No hay empresas', id: 'No hay empresas' },
+      ]
     },
     // showStatus: true,
     // statusConfig: {
@@ -180,13 +182,6 @@ export class FilesComponent implements OnInit {
   constructor(private readonly formBuilder: FormBuilder) {
 
     this.fileSrv.getEmotionsTopis().subscribe((res: any) => {
-
-      // let temasFormateados: any = res.filters.temas.map((item: any) => ({ label: item, value: item }));
-      // let emocionesFormateadas: any = res.filters.emociones.map((item: any) => ({ label: item, value: item }));
-
-      console.log("res : ",res);
-      
-
       let temasFormateados: any = res.filters.temas.map((item: any) => ({
         label: item.toLowerCase(),
         value: item.toLowerCase()
@@ -203,6 +198,16 @@ export class FilesComponent implements OnInit {
       }
     })
 
+    this.fileSrv.getcompaniesAll().subscribe((res: any) => {
+      console.log("companies:",res);
+     
+      if (res.data && res && this.filterParams && this.filterParams.tagsConfigCompanies) {
+        this.filterParams.tagsConfigCompanies.companies = res.data || [];
+      }
+    })
+
+    
+
     this.formUsers = this.formBuilder.group({
       name: [''],
       plan: [''],
@@ -213,7 +218,8 @@ export class FilesComponent implements OnInit {
       fechaFin: [null],
       tags: [[]],// <-- ¡Este es el que permite que se envíen las etiquetas!
       topic: [[]],
-      emotions: [[]]
+      emotions: [[]],
+      empresaSeleccionada: [null] 
     });
     this.filterParams.formGroupName = this.formUsers;
 
@@ -227,6 +233,7 @@ export class FilesComponent implements OnInit {
           plan: null,
           status: null,
           period: null,
+          empresaSeleccionada: null
         }, { emitEvent: false });
         this.applyFilters();
       });
@@ -250,7 +257,8 @@ export class FilesComponent implements OnInit {
       fechaFin: null,
       tags: [],
       topic: [],
-      emotions: []
+      emotions: [],
+      empresaSeleccionada: [] 
     }, { emitEvent: false });
 
     const filters = { ... this.formUsers.getRawValue() };
@@ -265,14 +273,11 @@ export class FilesComponent implements OnInit {
   }
 
   dowloadFile() {
-    if (this.selectedFile && this.selectedFile?.weekly_session_id) {
-
       if (this.isFiltroActivo()) {
-        this.fileSrv.downloadCsvFile(this.selectedFile?.weekly_session_id, this.selectedFile?.userId + '-' + this.selectedFile?.user_name, this.formUsers.value, true);
-      } else {
+        this.fileSrv.downloadCsvFile(0, this.selectedFile?.userId + '-' + this.selectedFile?.user_name, this.formUsers.value, true);
+      } else if(this.selectedFile && this.selectedFile?.weekly_session_id) {
         this.fileSrv.downloadPdfFile(this.selectedFile?.weekly_session_id, this.selectedFile?.userId + '-' + this.selectedFile?.user_name, this.formUsers.value, false);
       }
-    }
   }
 
   filtrarPorFechas(): void {
@@ -285,8 +290,6 @@ export class FilesComponent implements OnInit {
     if (filters.fechaFin) {
       filters.fechaFin = this.formatDateOnly(filters.fechaFin);
     }
-
-    // this.myUsers = this.usersService.getUsers(1, 5, filters);
   }
 
   private formatDateOnly(date: Date): string {
@@ -305,6 +308,7 @@ export class FilesComponent implements OnInit {
       // searchDirect: '',
       fechaInicio: null,
       fechaFin: null,
+      empresaSeleccionada: [] 
     }, { emitEvent: false });
 
     const filters = { ... this.formUsers.getRawValue() };

@@ -25,11 +25,11 @@
                             <td>{{ marke.campaign_name }}</td>
                             <td class="text-center font-medium">{{ marke.user_count }}</td>
                             <td class="text-center">
-                                <button [disabled]="!marke.users.length" (click)="viewUsers(marke)" pButton label="Ver"
+                                <button [disabled]="marke.user_count <= 0 " (click)="viewUsers(marke)" pButton label="Ver"
                                     class="p-button-sm p-button-outlined p-button-secondary">
                                 </button>&nbsp;
-                                <button (click)="exportToExcel(marke)" pButton
-                                    class="p-button-sm p-button-success p-button-text" [disabled]="!marke.users.length"
+                                <button [disabled]="marke.user_count <= 0 " (click)="exportToExcel(marke)" pButton
+                                    class="p-button-sm p-button-success p-button-text"
                                     tooltip="Exportar a Excel">
                                     <i class="pi pi-file-excel "></i>
                                     Exportar
@@ -55,8 +55,14 @@
             <div class="bg-white border-round shadow-1">
                 <div class="p-3 border-bottom-1 border-gray-200 flex justify-content-between align-items-center">
                     <h2 class="text-base font-medium m-0">Usuarios de la campaña</h2>
+
+                    <div class="flex align-items-center gap-3 mb-3 just-searh">
+                        <input pInputText [(ngModel)]="filtro" placeholder="Buscar por nombre o correo"
+                            class="w-30rem search-style" />
+                    </div>
+
                 </div>
-                <p-table [value]="userviewCampan" styleClass="p-datatable-sm" [tableStyle]="{'min-width': '50rem'}">
+                <p-table [value]="usuariosFiltrados" styleClass="p-datatable-sm" [tableStyle]="{'min-width': '50rem'}">
                     <ng-template pTemplate="header">
                         <tr>
                             <th scope="col">ID</th>

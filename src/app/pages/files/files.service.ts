@@ -108,4 +108,10 @@ export class FilesService {
     );
   }
 
+  getcompaniesAll(): Observable<any> {
+    return this.http.get<any>(
+      `${this.apiDasboardUrl}/${environment.endpoints.files}/companies-all`
+    );
+  }
+
 }

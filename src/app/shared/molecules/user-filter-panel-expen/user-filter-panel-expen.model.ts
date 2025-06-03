@@ -57,6 +57,8 @@ export interface UserFilterPanelExpe {
     tagsConfigEmotions?: UserFilterPanelTagsEmotionsConfig; // 👈 temas,
     showDate?: boolean;
     dateConfig?: UserFilterPanelDateConfig; // 👈 fecha,
+    showCompanies?: boolean;
+    tagsConfigCompanies?: UserFilterPanelTagsCompaniesConfig; // 👈 empresas
 
 }
 
@@ -85,4 +87,10 @@ export interface UserFilterPanelDateConfig {
   labelFin: string;
   formControlNameInicio: string;
   formControlNameFin: string;
+}
+
+export interface UserFilterPanelTagsCompaniesConfig {
+  label: string;
+  formControlName: string;
+  companies: { name: string; id: string }[];
 }

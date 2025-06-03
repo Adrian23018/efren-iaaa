@@ -9,6 +9,7 @@ import { MapperTransformData } from '@app/shared/utils/transformData';
 })
 export class UsersService {
   private readonly apiUsersUrl = `${environment.baseApiUrl}/${environment.endpoints.users}`;
+  private readonly apiUsersUrlCampaing = `${environment.baseApiUrl}/${environment.endpoints.campaigns}`;
   private http = inject(HttpClient);
   private usersId = 'usersId';
 
@@ -95,24 +96,43 @@ export class UsersService {
     return { data$: data$, isLoading };
   }
 
- downloadCsvFile(userIds: number[], fileName: string) {
-  const body = { userIds }; // o { ids: userIds } según tu backend
+  downloadCsvFile(userIds: number[], fileName: string) {
+    const body = { userIds }; // o { ids: userIds } según tu backend
 
-  this.http.post(`${this.apiUsersUrl}/download`, body, { responseType: 'blob' })
-    .subscribe((blob: Blob) => {
-      
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName + '.csv'; // o '.csv' según el tipo real
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-    }, error => {
-      console.error('Error descargando archivo', error);
-    });
-}
+    this.http.post(`${this.apiUsersUrl}/download`, body, { responseType: 'blob' })
+      .subscribe((blob: Blob) => {
+
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName + '.csv'; // o '.csv' según el tipo real
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }, error => {
+        console.error('Error descargando archivo', error);
+      });
+  }
+
+  downloadCsvFileCampain(id: number, fileName: string) {
+    const body = { id }; // o { ids: userIds } según tu backend
+
+    this.http.post(`${this.apiUsersUrlCampaing}/download`, body, { responseType: 'blob' })
+      .subscribe((blob: Blob) => {
+
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName + '.csv'; // o '.csv' según el tipo real
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }, error => {
+        console.error('Error descargando archivo', error);
+      });
+  }
 
 
 

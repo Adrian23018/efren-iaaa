@@ -9,6 +9,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { DialogModule } from 'primeng/dialog';
 import { UsersService } from '@app/pages/users/users.service';
 import { MarketingService } from './marketing.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-marketing',
@@ -18,6 +19,7 @@ import { MarketingService } from './marketing.service';
     ButtonModule,
     PaginatorModule,
     DialogModule,
+    FormsModule,
   ],
   templateUrl: './marketing.component.html',
   styleUrl: './marketing.component.scss'
@@ -31,6 +33,7 @@ export class MarketingComponent {
   userviewCampan: any = [];
   public displayModal: boolean = false;
   user: any = '';
+  public filtro = '';
 
   actionTranslations: TypeButtonAlert = {
     contact: 'Contacto',
@@ -176,9 +179,17 @@ export class MarketingComponent {
     return namePlan;
   }
 
-  exportToExcel(alerts: any) {
-    const userIds: number[] = alerts.affectedUsers.map((user: any) => user.id);
-    this.usersService.downloadCsvFile(userIds, alerts.tipo_alerta);
+  //buscador de usuarios de una compañía
+  get usuariosFiltrados() {
+    const filtroLimpio = this.filtro?.toLowerCase() || '';
+    return this.userviewCampan.filter((u:any) =>
+      (u.name?.toLowerCase() || '').includes(filtroLimpio) ||
+      (u.email?.toLowerCase() || '').includes(filtroLimpio)
+    );
+  }
+
+  exportToExcel(alerts: any,) {
+    this.usersService.downloadCsvFileCampain(alerts.campaign_id, alerts.campaign_name);
   }
 
 }

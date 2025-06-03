@@ -23,6 +23,7 @@ export const environment = {
         login: 'login',
         download: 'download',
         usersCompany: 'company-users',
-        marketing: 'marketing'
+        marketing: 'marketing',
+        campaigns: 'campaigns'
     }
 };
